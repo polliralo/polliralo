@@ -208,9 +208,16 @@
     });
 
     reducedMotion.addEventListener('change', (event) => {
-      if (event.matches) stop();
-      else if (started) play();
-      else start();
+      if (event.matches) {
+        stop();
+      } else if (!started) {
+        start();
+      } else if (current && !failed) {
+        // Bring the control back, so a video paused by the visitor can still be resumed.
+        toggle.hidden = false;
+        updateToggle();
+        play();
+      }
     });
 
     // Wait for the page (and the still image) to finish loading first.

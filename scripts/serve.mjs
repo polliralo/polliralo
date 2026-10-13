@@ -1,15 +1,18 @@
 // Minimal static server for previewing the site locally. No dependencies.
 // Supports byte-range requests, which Safari needs to play video.
 //
-//   npm start            -> http://localhost:4173
-//   PORT=8080 npm start  -> http://localhost:8080
+//   npm start                 -> http://localhost:4173
+//   PORT=8080 npm start       -> http://localhost:8080
+//   HOST=0.0.0.0 npm start    -> also reachable from other devices on your network
 
 import { createReadStream, statSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, join, normalize, resolve } from 'node:path';
+import { extname, join, normalize, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = resolve(import.meta.dirname, '..', 'site');
+const ROOT = fileURLToPath(new URL('../site', import.meta.url));
 const PORT = Number(process.env.PORT) || 4173;
+const HOST = process.env.HOST || '127.0.0.1';
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -27,9 +30,14 @@ const TYPES = {
 };
 
 function resolvePath(url) {
-  const pathname = decodeURIComponent(new URL(url, 'http://localhost').pathname);
+  let pathname;
+  try {
+    pathname = decodeURIComponent(new URL(url, 'http://localhost').pathname);
+  } catch {
+    return null; // malformed address
+  }
   const file = normalize(join(ROOT, pathname.endsWith('/') ? `${pathname}index.html` : pathname));
-  return file.startsWith(ROOT) ? file : null;
+  return file === ROOT || file.startsWith(ROOT + sep) ? file : null; // stay inside site/
 }
 
 const server = createServer((req, res) => {
@@ -54,7 +62,7 @@ const server = createServer((req, res) => {
 
   const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? '');
   if (range) {
-    const start = range[1] ? Number(range[1]) : stats.size - Number(range[2]);
+    const start = range[1] ? Number(range[1]) : Math.max(0, stats.size - Number(range[2]));
     const end = range[1] && range[2] ? Math.min(Number(range[2]), stats.size - 1) : stats.size - 1;
     if (start >= stats.size || start > end) {
       res.writeHead(416, { 'Content-Range': `bytes */${stats.size}` });
@@ -76,6 +84,6 @@ const server = createServer((req, res) => {
   createReadStream(file).pipe(res);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(`Nivara Coast preview: http://localhost:${PORT}`);
 });

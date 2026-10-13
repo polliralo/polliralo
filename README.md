@@ -6,7 +6,7 @@ The homepage for **NIVARA COAST**, a fictional private-island resort concept. It
 
 ## Preview it on your computer
 
-1. Install [Node.js](https://nodejs.org) 18 or newer.
+1. Install [Node.js](https://nodejs.org) 18.17 or newer (20 or 22 recommended).
 2. In this folder, run `npm install` once.
 3. Run `npm start` and open <http://localhost:4173>.
 
@@ -74,11 +74,14 @@ The tests cover:
 - each image file is large enough for the size it is shown at
 - the video starts after loading, can be paused and is never downloaded when reduced motion is on
 - the page is still complete when the video fails
-- text contrast over the photos, measured on the real rendered pixels: the hero at nine screen sizes and across the whole moving video, and the lagoon and arrival text at seven sizes
+- the right video file and format are chosen for each device (AV1 or H.264), and a paused video can still be resumed
+- printing shows every section, and without JavaScript the navigation stays visible and readable
+- touch tablets in landscape get full-size navigation targets
+- text contrast over the photos, measured on the real rendered pixels: the hero and header at 15 screen and browser-window sizes and across the whole moving video, and the lagoon and arrival text at 12 sizes
 
 **Results at handoff:** lint clean, all tests pass. Lighthouse (lab test on the local preview server):
-- Mobile (simulated slow 4G): Performance 98, Accessibility 100, Best Practices 100, SEO 100. Largest Contentful Paint 2.3 s, Cumulative Layout Shift 0, Total Blocking Time 100 ms.
-- Desktop: 100 in all four categories. Largest Contentful Paint 0.5 s, Cumulative Layout Shift 0.
+- Mobile (simulated slow 4G): Performance 98, Accessibility 100, Best Practices 100, SEO 100. Largest Contentful Paint 2.3 s, Cumulative Layout Shift 0, Total Blocking Time 0 ms.
+- Desktop: 100 in all four categories. Largest Contentful Paint 0.6 s, Cumulative Layout Shift 0.
 
 ## Limitations and what was not verified
 

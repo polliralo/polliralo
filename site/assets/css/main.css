@@ -455,6 +455,22 @@ main:focus {
     box-shadow 450ms var(--ease-out);
 }
 
+/* While transparent over the hero, the header brings its own soft shade, so
+   its words stay readable whatever the photo or video shows behind them. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -3rem;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(var(--shade) / 0.66) 0%, rgb(var(--shade) / 0.56) 45%, rgb(var(--shade) / 0) 100%);
+  pointer-events: none;
+  transition: opacity 450ms var(--ease-out);
+}
+
+.site-header.is-solid::before {
+  opacity: 0;
+}
+
 .site-header.is-solid {
   background: rgb(245 240 231 / 0.94);
   color: var(--ink-900);
@@ -696,15 +712,14 @@ html:has(.menu[open]) {
   opacity: 1;
 }
 
-/* Layered scrim: a band at the top for the header, and a soft shade across
-   the open water where the words sit. The side shade follows the text
-   column, so it stays behind the words on very wide screens too. */
+/* Layered scrim: a soft shade across the open water where the words sit.
+   The side shade follows the text column, so it stays behind the words on
+   very wide screens too. (The header brings its own shade.) */
 .hero__scrim {
   --text-left: max(var(--gutter), (100% - var(--container)) / 2);
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgb(var(--shade) / 0.5) 0%, rgb(var(--shade) / 0) 26%),
     linear-gradient(90deg, rgb(var(--shade) / 0.64) 0%, rgb(var(--shade) / 0.5) calc(var(--text-left) + 26rem), rgb(var(--shade) / 0) calc(var(--text-left) + 58rem)),
     linear-gradient(0deg, rgb(var(--shade) / 0.42) 0%, rgb(var(--shade) / 0) 48%);
 }
@@ -809,7 +824,6 @@ html:has(.menu[open]) {
 
   .hero__scrim {
     background:
-      linear-gradient(180deg, rgb(var(--shade) / 0.5) 0%, rgb(var(--shade) / 0) 20%),
       linear-gradient(0deg, rgb(var(--shade) / 0.86) 0%, rgb(var(--shade) / 0.74) 38%, rgb(var(--shade) / 0.62) 54%, rgb(var(--shade) / 0.24) 70%, rgb(var(--shade) / 0) 84%);
   }
 
@@ -1288,6 +1302,13 @@ html:has(.menu[open]) {
   color: var(--color-text-soft);
 }
 
+@media (min-width: 900px) {
+  /* Over the photo, body text uses the darkest ink. */
+  .lagoon__panel > p:not([class]) {
+    color: var(--color-text);
+  }
+}
+
 /* On wide screens the words sit in the sky, over a soft light haze. */
 @media (min-width: 900px) {
   .lagoon {
@@ -1415,7 +1436,8 @@ html:has(.menu[open]) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 70%;
+  /* Keep the sky when wide, short windows crop the photo: it sits behind the words. */
+  object-position: 50% 15%;
 }
 
 .arrival__media::after {
@@ -1446,7 +1468,7 @@ html:has(.menu[open]) {
   display: grid;
   justify-items: center;
   align-content: start;
-  padding-block: calc(var(--header-h) + clamp(2.5rem, 1.5rem + 3vw, 5rem)) 4rem;
+  padding-block: calc(var(--header-h) + clamp(1.5rem, 7vh, 5rem)) 4rem;
 }
 
 .arrival__content .eyebrow::after {
@@ -1471,7 +1493,7 @@ html:has(.menu[open]) {
   margin-top: 1.4rem;
   font-size: var(--text-lg);
   line-height: 1.6;
-  color: var(--ink-700);
+  color: var(--color-text);
 }
 
 .arrival .button {
@@ -1584,6 +1606,7 @@ html:has(.menu[open]) {
 /* Comfortable touch targets on touch screens, without changing the look */
 @media (pointer: coarse) {
   .wordmark,
+  .site-nav a,
   .site-footer__nav a,
   .site-footer__top {
     display: inline-flex;
@@ -1611,7 +1634,7 @@ html:has(.menu[open]) {
   100% { opacity: 0; transform: scale(1.6); }
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media screen and (prefers-reduced-motion: no-preference) {
   /* Hero words arrive in sequence on load (CSS only, so it never waits on JS). */
   .hero__content > * {
     animation: rise 1100ms var(--ease-out) both;
@@ -1686,3 +1709,31 @@ html:has(.menu[open]) {
     display: none;
   }
 }
+
+/* Printing ---------------------------------------------------------------- */
+
+@media print {
+  .site-header {
+    position: absolute;
+  }
+
+  .site-header::before,
+  .skip-link,
+  .menu-button,
+  .hero__video,
+  .hero__toggle {
+    display: none !important;
+  }
+
+  .hero {
+    min-height: 0;
+    height: 60vh;
+  }
+
+  .section,
+  .lagoon,
+  .arrival {
+    break-inside: avoid-page;
+  }
+}
+

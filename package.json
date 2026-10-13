@@ -4,6 +4,9 @@
   "private": true,
   "description": "NIVARA COAST, a fictional private-island resort concept. Static website (HTML, CSS, vanilla JS).",
   "type": "module",
+  "engines": {
+    "node": ">=18.17"
+  },
   "scripts": {
     "start": "node scripts/serve.mjs",
     "media": "node scripts/build-media.mjs",

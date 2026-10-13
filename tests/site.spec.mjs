@@ -299,6 +299,87 @@ test.describe('hero video', () => {
   });
 });
 
+test.describe('robustness', () => {
+  test('printing shows every section', async ({ page }) => {
+    await page.goto('/');
+    await page.emulateMedia({ media: 'print' });
+    const hidden = await page.locator('[data-reveal]').evaluateAll(
+      (els) => els.filter((el) => getComputedStyle(el).opacity !== '1').length,
+    );
+    expect(hidden).toBe(0);
+    await expect(page.locator('[data-header]')).toHaveCSS('position', 'absolute');
+  });
+
+  test('without JavaScript the navigation is visible and the header scrolls away', async ({ browser }, testInfo) => {
+    const mobile = testInfo.project.name === 'mobile';
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 } });
+    const page = await context.newPage();
+    await page.goto('/');
+    await expect(page.locator('[data-header]')).toHaveCSS('position', 'absolute');
+    await expect(page.locator('.site-nav')).toBeVisible();
+    await expect(page.locator('[data-menu-open]')).toBeHidden();
+    await expect(page.locator('#villas')).toBeVisible();
+    await context.close();
+  });
+
+  test('touch tablets get full-size navigation targets', async ({ browser }, testInfo) => {
+    onlyDesktop(testInfo);
+    const context = await browser.newContext({ viewport: { width: 1024, height: 768 }, hasTouch: true, isMobile: true });
+    const page = await context.newPage();
+    await page.goto('/');
+    const heights = await page.locator('.site-nav a').evaluateAll((links) => links.map((a) => a.getBoundingClientRect().height));
+    for (const h of heights) expect(h).toBeGreaterThanOrEqual(44);
+    await context.close();
+  });
+});
+
+test.describe('hero video choices', () => {
+  // The test browser cannot decode H.264, so these check which file the page
+  // asks for, by pretending the browser supports a given set of formats.
+  async function requestedVideo(browser, { av1, h264, powerEfficient }) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await context.addInitScript(({ av1, h264, powerEfficient }) => {
+      HTMLMediaElement.prototype.canPlayType = function canPlayType(type) {
+        if (type.includes('av01')) return av1 ? 'probably' : '';
+        if (type.includes('avc1')) return h264 ? 'probably' : '';
+        return '';
+      };
+      if (navigator.mediaCapabilities) {
+        navigator.mediaCapabilities.decodingInfo = async () => ({ supported: true, smooth: true, powerEfficient });
+      }
+    }, { av1, h264, powerEfficient });
+    const page = await context.newPage();
+    const request = page.waitForRequest((req) => req.url().endsWith('.mp4'), { timeout: 15_000 });
+    await page.goto('/');
+    const url = (await request).url();
+    await context.close();
+    return url.split('/').pop();
+  }
+
+  test('uses H.264 where AV1 is not available', async ({ browser }, testInfo) => {
+    onlyDesktop(testInfo);
+    expect(await requestedVideo(browser, { av1: false, h264: true, powerEfficient: true })).toBe('hero-1080.mp4');
+  });
+
+  test('uses H.264 where AV1 would drain the battery, AV1 where it is efficient', async ({ browser }, testInfo) => {
+    onlyDesktop(testInfo);
+    expect(await requestedVideo(browser, { av1: true, h264: true, powerEfficient: false })).toBe('hero-1080.mp4');
+    expect(await requestedVideo(browser, { av1: true, h264: true, powerEfficient: true })).toBe('hero-1080-av1.mp4');
+  });
+
+  test('a paused video can still be resumed after reduced motion is switched on and off', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('[data-hero-video]')).toHaveClass(/is-playing/, { timeout: 20_000 });
+    await page.getByRole('button', { name: 'Pause background video' }).click();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('[data-video-toggle]')).toBeHidden();
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await expect(page.getByRole('button', { name: 'Play background video' })).toBeVisible();
+    await page.getByRole('button', { name: 'Play background video' }).click();
+    await expect(page.locator('[data-hero-video]')).toHaveClass(/is-playing/);
+  });
+});
+
 test.describe('accessibility', () => {
   test('skip link is the first stop and moves focus to the content', async ({ page }) => {
     await page.goto('/');
@@ -336,9 +417,14 @@ test.describe('accessibility', () => {
 
 // Text over photography: measure the background actually behind the words
 // (with the shading applied), the way a visitor sees it.
+async function textColour(page, selector) {
+  const value = await page.locator(selector).first().evaluate((el) => getComputedStyle(el).color);
+  return value.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
+}
+
 async function backgroundContrast(page, selector, textRgb, mode) {
   // The area the words actually cover: the union of their line boxes.
-  const box = await page.locator(selector).evaluate((el) => {
+  const box = await page.locator(selector).first().evaluate((el) => {
     const range = document.createRange();
     range.selectNodeContents(el);
     const rects = [...range.getClientRects()].filter((r) => r.width > 0 && r.height > 0);
@@ -371,14 +457,20 @@ async function backgroundContrast(page, selector, textRgb, mode) {
 }
 
 test.describe('legibility over photography', () => {
+  // Full screens plus typical browser-window sizes (screen height minus toolbars).
   const HERO_SIZES = {
-    desktop: [[1024, 768], [1280, 800], [1440, 900], [1920, 1080], [2560, 1440]],
+    desktop: [[1024, 768], [1280, 650], [1280, 800], [1366, 657], [1440, 790], [1440, 900], [1536, 730], [1920, 970], [1920, 1080], [2560, 1440]],
     mobile: [[360, 740], [375, 667], [390, 844], [412, 915], [768, 1024]],
+  };
+  const HEADER_TEXT = {
+    desktop: ['.site-header .wordmark', '.site-nav li:first-child a', '.site-nav li:last-child a'],
+    mobile: ['.site-header .wordmark', '.site-header .menu-button span'],
   };
   test('hero words stay readable over the image', async ({ browser }, testInfo) => {
     const ivory = [251, 248, 242];
     // Large headline text needs 3:1, smaller text 4.5:1 (WCAG AA).
     const targets = { '.hero__title': 3, '.hero__lede': 4.5, '.hero__eyebrow': 4.5 };
+    for (const selector of HEADER_TEXT[testInfo.project.name]) targets[selector] = 4.5;
     const results = [];
     for (const [width, height] of HERO_SIZES[testInfo.project.name]) {
       const context = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce' });
@@ -396,9 +488,10 @@ test.describe('legibility over photography', () => {
   });
 
   test('hero words stay readable on every part of the moving video', async ({ browser }, testInfo) => {
-    const sizes = testInfo.project.name === 'mobile' ? [[390, 844], [360, 740]] : [[1440, 900], [1920, 1080]];
+    const sizes = testInfo.project.name === 'mobile' ? [[390, 844], [360, 740]] : [[1366, 657], [1440, 900], [1920, 1080]];
     const ivory = [251, 248, 242];
     const targets = { '.hero__title': 3, '.hero__lede': 4.5, '.hero__eyebrow': 4.5 };
+    for (const selector of HEADER_TEXT[testInfo.project.name]) targets[selector] = 4.5;
     const results = [];
     for (const [width, height] of sizes) {
       const context = await browser.newContext({ viewport: { width, height } });
@@ -433,10 +526,11 @@ test.describe('legibility over photography', () => {
 
   test('lagoon and arrival words stay readable over the sky', async ({ browser }, testInfo) => {
     const mobile = testInfo.project.name === 'mobile';
-    const sizes = mobile ? [[360, 740], [390, 844], [768, 1024]] : [[1024, 768], [1280, 800], [1440, 900], [1920, 1080]];
+    const sizes = mobile
+      ? [[360, 740], [390, 844], [768, 1024]]
+      : [[1024, 768], [1280, 650], [1280, 800], [1366, 657], [1440, 790], [1440, 900], [1536, 730], [1920, 970], [1920, 1080]];
     // The lagoon words sit over the photo only on wide screens.
     const checks = mobile ? ['.arrival__lede', '.arrival__title'] : ['.lagoon__panel p:not(.eyebrow)', '.lagoon__panel h2', '.arrival__lede', '.arrival__title'];
-    const ink = [16, 42, 51];
     const results = [];
     for (const [width, height] of sizes) {
       const context = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce' });
@@ -446,7 +540,7 @@ test.describe('legibility over photography', () => {
       for (const selector of checks) {
         await page.locator(selector).evaluate((el) => el.closest('section').scrollIntoView({ behavior: 'instant' }));
         await page.waitForTimeout(150);
-        const ratio = await backgroundContrast(page, selector, ink, 'dark-text');
+        const ratio = await backgroundContrast(page, selector, await textColour(page, selector), 'dark-text');
         const target = selector.includes('h2') || selector.includes('title') ? 3 : 4.5;
         results.push({ at: `${width}x${height}`, selector, ratio: Number(ratio.toFixed(2)), target });
       }

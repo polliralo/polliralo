@@ -4,7 +4,7 @@
 //   npm run media                 (everything)
 //   npm run media -- images       (only the listed steps: images, video, posters, meta)
 //
-// Needs: Node 18+, the `sharp` dev dependency, and ffmpeg on the PATH.
+// Needs: Node 18.17+, the `sharp` dev dependency, and ffmpeg/ffprobe on the PATH.
 //
 // To swap a photo: replace the file in media/originals/images (keep the
 // name), run `npm run media`, and the site picks it up with no HTML edits.
@@ -14,10 +14,11 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { isAbsolute, join, resolve } from 'node:path';
+import { isAbsolute, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-const ROOT = resolve(import.meta.dirname, '..');
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SRC_IMG = join(ROOT, 'media/originals/images');
 const SRC_VIDEO = join(ROOT, 'media/originals/video/hero-aerial.mp4');
 const OUT_IMG = join(ROOT, 'site/assets/img');
@@ -83,43 +84,56 @@ async function buildImage({ src, out, crop, widths }) {
   console.log(`image  ${out}: ${sizes.join(', ')}w (${srcWidth}x${srcHeight} source)`);
 }
 
+function frameCount(file) {
+  const out = execFileSync('ffprobe', [
+    '-v', 'error', '-select_streams', 'v:0', '-count_frames',
+    '-show_entries', 'stream=nb_read_frames', '-of', 'csv=p=0', file,
+  ]);
+  return Number(out.toString().trim());
+}
+
 function buildVideo(tmp) {
   // Seamless loop: play the clip forward, then backward. The two turnaround
-  // frames are dropped so the motion never pauses on a repeated frame.
+  // frames (the last and the first) are dropped from the backward half so
+  // the motion never pauses on a repeated frame.
+  const frames = frameCount(SRC_VIDEO);
   const master = join(tmp, 'master.mp4');
   run('ffmpeg', [
     '-v', 'error', '-y', '-i', SRC_VIDEO,
     '-filter_complex',
-    '[0:v]split[f][r0];[r0]reverse,trim=start_frame=1:end_frame=239,setpts=PTS-STARTPTS[r];[f][r]concat=n=2:v=1:a=0[v]',
+    `[0:v]split[f][r0];[r0]reverse,trim=start_frame=1:end_frame=${frames - 1},setpts=PTS-STARTPTS[r];[f][r]concat=n=2:v=1:a=0[v]`,
     '-map', '[v]', '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '8', '-pix_fmt', 'yuv420p', master,
   ]);
 
   // `soften` raises the compression a little for the phone crop, where the
   // lower half sits under the text shade and fine water detail is not seen.
+  // `level` is the H.264 level announced to browsers in site/assets/js/main.js
+  // (avc1.640028 = High 4.0, avc1.64001f = High 3.1); keep the two in step.
   const variants = [
-    { out: 'hero-1080', vf: null, soften: 0 },
-    { out: 'hero-720', vf: 'scale=1280:-2', soften: 0 },
+    { out: 'hero-1080', vf: null, soften: 0, level: '4.0' },
+    { out: 'hero-720', vf: 'scale=1280:-2', soften: 0, level: '3.1' },
     {
       out: 'hero-portrait',
       vf: `crop=${PORTRAIT_CROP.width}:${PORTRAIT_CROP.height}:${PORTRAIT_CROP.left}:${PORTRAIT_CROP.top}`,
       soften: 2,
+      level: '3.1',
     },
   ];
   // Two encodes of each: AV1 (smaller, used where the device decodes it
   // efficiently) and H.264 (plays in practically every browser).
   // Neither has an audio track: the hero video is silent background media.
   const codecs = [
-    { suffix: '-av1.mp4', crf: 40, args: ['-c:v', 'libsvtav1', '-preset', '5', '-g', '240', '-svtav1-params', 'tune=0'] },
-    { suffix: '.mp4', crf: 28, args: ['-c:v', 'libx264', '-preset', 'slow', '-profile:v', 'high'] },
+    { suffix: '-av1.mp4', crf: 40, args: () => ['-c:v', 'libsvtav1', '-preset', '5', '-g', '240', '-svtav1-params', 'tune=0'] },
+    { suffix: '.mp4', crf: 28, args: (level) => ['-c:v', 'libx264', '-preset', 'slow', '-profile:v', 'high', '-level:v', level] },
   ];
-  for (const { out, vf, soften } of variants) {
+  for (const { out, vf, soften, level } of variants) {
     for (const { suffix, crf, args } of codecs) {
       const name = `${out}${suffix}`;
       const file = join(OUT_VIDEO, name);
       run('ffmpeg', [
         '-v', 'error', '-y', '-i', master,
         ...(vf ? ['-vf', vf] : []),
-        '-an', ...args, '-crf', String(crf + soften), '-pix_fmt', 'yuv420p', '-movflags', '+faststart', file,
+        '-an', ...args(level), '-crf', String(crf + soften), '-pix_fmt', 'yuv420p', '-movflags', '+faststart', file,
       ]);
       console.log(`video  ${name}: ${kb(file)} KB`);
     }
