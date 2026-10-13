@@ -1,0 +1,20 @@
+{
+  "name": "nivara-coast",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NIVARA COAST, a fictional private-island resort concept. Static website (HTML, CSS, vanilla JS).",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "media": "node scripts/build-media.mjs",
+    "screens": "node scripts/screenshots.mjs",
+    "lint": "html-validate site/index.html",
+    "test": "playwright test",
+    "check": "npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "html-validate": "^9.0.0",
+    "sharp": "^0.34.0"
+  }
+}
