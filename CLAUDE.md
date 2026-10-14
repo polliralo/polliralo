@@ -13,8 +13,12 @@
 - Content rules: no invented prices, reviews, ratings, availability, address, contact details or staff; keep the fictional-concept note in the footer; the standard Overwater Villa has no private pool; no long dashes in site copy.
 - README.md is the client handoff: keep it current when things change.
 
-## Next project: menswear e-commerce shop
-- Product photos live in `shop/media/originals/` (`studio/`, `still-life/`, `lifestyle/`, `wide/`); never edit them. `shop/media/originals/CATALOG.md` lists every product and photo. The site itself is not built yet; brand name, prices, sizes and fabric details must come from the user (never invent them). The user sends photos in batches, so add new ones to the same folders and update the catalogue.
+## Next project: MONO, menswear e-commerce shop
+- **Do not start building until the user explicitly says so.** They are choosing the design and UI direction first. Until then, only collect and organise what they send.
+- Brief: `shop/docs/master-brief.md` (the user's master instruction). Photo-to-brief mapping, gaps and open decisions: `shop/docs/build-notes.md`.
+- Photos live in `shop/media/originals/` (`studio/`, `still-life/`, `lifestyle/`, `wide/`); never edit them. `shop/media/originals/CATALOG.md` lists every product and photo. The user sends photos in batches: add new ones to the same folders and update the catalogue and build notes.
+- MONO is a fictional demo brand: demo prices are allowed only if clearly labelled as demo data; never invent reviews, ratings, customer counts or product claims.
+- Use every skill available in the session when it helps (repo skills below plus the account's synced skills).
 
 ## Skills
 This repo has these skills in `.claude/skills/`. Use them together for any website, UI, or design work:

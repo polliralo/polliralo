@@ -1,6 +1,6 @@
 # Shop photo catalogue
 
-Original photos for the menswear e-commerce site. These are the untouched masters: never edit them; optimised copies for the site will be generated from them.
+Original photos for the MONO menswear e-commerce site. How they map to the brief: `shop/docs/build-notes.md`. These are the untouched masters: never edit them; optimised copies for the site will be generated from them.
 
 Four kinds of photo:
 
