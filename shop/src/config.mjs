@@ -15,5 +15,6 @@ export const SEO_MODE = 'demo';
 export const SITE_NAME = 'MONO';
 export const TAGLINE = 'Less noise. Better essentials.';
 export const DEFAULT_DESCRIPTION = 'MONO is a demo menswear store: shirts, T-shirts, polos, watches, sunglasses and accessories with quiet, considered design.';
-export const DEFAULT_OG_IMAGE = '/assets/img/og-default.jpg';
+// Share cards (1200 x 630) are made by shop/scripts/og.mjs into assets/img/og/.
+export const DEFAULT_OG_IMAGE = '/assets/img/og/default.jpg';
 export const THEME_COLOR = '#F5F2EC';

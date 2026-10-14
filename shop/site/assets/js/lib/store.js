@@ -75,6 +75,19 @@ export function loadStore() {
   return loading;
 }
 
+/**
+ * Run fn(state) once the catalogue has loaded, then again whenever it changes
+ * (an admin edit in this tab or another). Use it to bring pre-rendered markup
+ * in line with edited prices, stock or new products.
+ */
+export function onStore(fn) {
+  return loadStore().then((s) => {
+    fn(s);
+    window.addEventListener('mono:catalog', () => fn(getState()));
+    return s;
+  });
+}
+
 /** Synchronous access after loadStore() has resolved. */
 export function getState() {
   if (!state) throw new Error('loadStore() has not finished yet');
@@ -82,6 +95,7 @@ export function getState() {
 }
 
 export const getMeta = () => getState().meta;
+export const getSizeGuide = () => seed?.sizeGuide ?? null;
 export const getCategories = () => getState().categories;
 export const getCategory = (slug) => getState().categories.find((c) => c.slug === slug) ?? null;
 export const getLooks = () => getState().looks;

@@ -1,17 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4174;
+// SHOP_TEST_PORT lets several test runs work side by side.
+const PORT = Number(process.env.SHOP_TEST_PORT) || 4174;
 
 export default defineConfig({
   testDir: 'shop/tests',
   fullyParallel: true,
   reporter: [['list']],
+  outputDir: `test-results/shop-${PORT}`,
   timeout: 60_000,
   use: {
     baseURL: `http://localhost:${PORT}`,
   },
   webServer: {
     command: 'node shop/scripts/serve.mjs',
+    env: { PORT: String(PORT) },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: true,
   },

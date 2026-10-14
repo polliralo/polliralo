@@ -12,6 +12,7 @@ const FONT_PRELOADS = ['jost-400', 'jost-500', 'bodoni-moda-400'];
 // Chrome prerenders product pages on hover so the image morph starts instantly.
 const SPECULATION = JSON.stringify({
   prerender: [{ where: { href_matches: '/products/*' }, eagerness: 'moderate' }],
+  prefetch: [{ where: { href_matches: '/collections/*' }, eagerness: 'moderate' }],
 });
 
 // Names the one morphing image at navigation time: product card -> product
@@ -26,7 +27,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
  *   path, title, description, content,
  *   css: ['home'], js: ['home'],        // assets/css/pages/<name>.css, assets/js/pages/<name>.js
  *   jsonld: [object, ...], noindex, ogImage, ogType, preload: ['<link ...>'],
- *   bodyClass, categories, activeCategory, fullTitle,
+ *   bodyClass, categories, activeCategory, fullTitle, ogImageAlt,
  *   robots: 'noindex, nofollow'   // only used with noindex; default 'noindex'
  * })
  */
@@ -35,6 +36,7 @@ export function layout(page) {
     path, title, description = DEFAULT_DESCRIPTION, content,
     css = [], js = [], jsonld = [], noindex = false, ogImage = DEFAULT_OG_IMAGE, ogType = 'website',
     preload = [], bodyClass = '', categories = [], activeCategory = null, fullTitle = null, robots = null,
+    ogImageAlt = 'MONO, modern menswear essentials',
   } = page;
   const docTitle = fullTitle ?? (title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Premium Men's Fashion and Accessories`);
   const canonical = absolute(path);
@@ -54,8 +56,11 @@ ${noindex ? `<meta name="robots" content="${robots ?? 'noindex'}">` : `<link rel
 <meta property="og:title" content="${esc(title ?? SITE_NAME)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(canonical)}">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="${esc(og)}">
+${ogImage.includes('/og/') ? '<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n' : ''}<meta property="og:image:alt" content="${esc(ogImageAlt)}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="${esc(ogImageAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

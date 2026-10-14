@@ -24,6 +24,7 @@ const SRC = join(SHOP, 'src');
 
 const catalog = JSON.parse(readFileSync(join(SRC, 'data/catalog.json'), 'utf8'));
 const media = JSON.parse(readFileSync(join(SRC, 'data/media.json'), 'utf8'));
+const sizeGuide = JSON.parse(readFileSync(join(SRC, 'data/size-guide.json'), 'utf8'));
 render.configure({ media });
 
 const version = createHash('sha1').update(JSON.stringify(catalog)).digest('hex').slice(0, 10);
@@ -31,6 +32,7 @@ const version = createHash('sha1').update(JSON.stringify(catalog)).digest('hex')
 const ctx = {
   catalog,
   media,
+  sizeGuide,
   version,
   config,
   r: render,
@@ -65,7 +67,11 @@ const routes = [
   { path: '/404.html', template: 'not-found' },
 ];
 
-const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
+// --only takes one or more comma-separated template names (substring match).
+const onlyArg = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
+const onlyList = onlyArg ? onlyArg.split(',').map((s) => s.trim()).filter(Boolean) : null;
+const selected = (route) => !onlyList || onlyList.some((name) => route.template.includes(name));
+const only = Boolean(onlyList);
 
 function outFile(path) {
   if (path.endsWith('.html')) return join(SITE, path);
@@ -84,9 +90,10 @@ async function loadTemplate(name) {
 
 let failures = 0;
 const indexable = [];
+const seen = { title: new Map(), description: new Map() };
 
 for (const route of routes) {
-  if (only && !route.template.includes(only)) continue;
+  if (!selected(route)) continue;
   try {
     const tpl = await loadTemplate(route.template);
     const page = await tpl(ctx, route);
@@ -94,16 +101,32 @@ for (const route of routes) {
     const file = outFile(route.path);
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, htmlDoc);
-    if (!page.noindex && route.path !== '/404.html') indexable.push(route.path);
+    if (!page.noindex && route.path !== '/404.html') {
+      indexable.push(route.path);
+      const docTitle = page.fullTitle ?? `${page.title} | ${config.SITE_NAME}`;
+      seen.title.set(docTitle, [...(seen.title.get(docTitle) ?? []), route.path]);
+      const desc = page.description ?? config.DEFAULT_DESCRIPTION;
+      seen.description.set(desc, [...(seen.description.get(desc) ?? []), route.path]);
+    }
   } catch (err) {
     failures += 1;
     console.error(`\n✗ ${route.path} (${route.template})\n${err.stack ?? err}`);
   }
 }
 
+/* ----- Every indexable page needs its own title and description ----- */
+for (const [kind, map] of Object.entries(seen)) {
+  for (const [value, paths] of map) {
+    if (paths.length > 1) {
+      failures += 1;
+      console.error(`\n✗ Duplicate ${kind} on ${paths.join(', ')}: "${value}"`);
+    }
+  }
+}
+
 /* ----- Data for the browser ----- */
 mkdirSync(join(SITE, 'assets/data'), { recursive: true });
-writeFileSync(join(SITE, 'assets/data/store.json'), JSON.stringify({ version, catalog, media }));
+writeFileSync(join(SITE, 'assets/data/store.json'), JSON.stringify({ version, catalog, media, sizeGuide }));
 // The bare manifest is only needed by the build; keep the site folder tidy.
 if (existsSync(join(SITE, 'assets/data/media.json'))) rmSync(join(SITE, 'assets/data/media.json'));
 
@@ -146,7 +169,7 @@ if (!only) {
   }
 }
 
-const built = routes.filter((r) => !only || r.template.includes(only)).length - failures;
+const built = routes.filter(selected).length;
 console.log(`\nBuilt ${built} pages${failures ? `, ${failures} failed` : ''}. Catalogue version ${version}.`);
 if (!config.SITE_URL) console.log('SITE_URL is empty: canonical links are paths and no sitemap.xml was written.');
 process.exit(failures ? 1 : 0);

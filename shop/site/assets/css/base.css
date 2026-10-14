@@ -399,6 +399,84 @@ dialog.is-closing::backdrop { animation: fade-out var(--d-base) var(--ease-out) 
   .card-quick { padding: 10px 52px 10px 10px; }
 }
 
+/* ---------- Shared page pieces (used by several page templates) ---------- */
+
+/* Page heading block: breadcrumbs, eyebrow, h1, intro. */
+.page-head { position: relative; padding-block: clamp(28px, 4vw, 56px) clamp(28px, 3.5vw, 48px); }
+.page-head .crumbs { margin-bottom: clamp(20px, 3vw, 36px); }
+.page-head h1 { font-family: var(--serif); font-weight: 400; font-size: var(--fs-display); line-height: 1.02; letter-spacing: -0.015em; margin-top: 14px; }
+.page-head h1 em { font-style: italic; }
+.page-head .lede { margin-top: 16px; }
+
+/* Giant faint Bodoni word behind cut-outs and headings (decorative). */
+.ghost-word {
+  position: absolute; z-index: 0; pointer-events: none; user-select: none; white-space: nowrap;
+  font-family: var(--serif); font-weight: 400; font-size: var(--fs-ghost); line-height: .8; letter-spacing: -0.03em;
+  color: var(--ghost);
+}
+
+/* Price with its demo label. */
+.price { display: inline-flex; align-items: center; gap: 10px; font-variant-numeric: tabular-nums; }
+.price .tag { font-weight: 500; }
+
+/* Horizontal product rail (related items, rows on phones). lib/rail.js wires the arrows. */
+.rail-wrap { position: relative; }
+.rail {
+  display: grid; grid-auto-flow: column; grid-auto-columns: var(--rail-col, calc((100% - 3 * var(--rail-gap, 20px)) / 4)); gap: var(--rail-gap, 20px);
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail > * { scroll-snap-align: start; }
+@media (max-width: 1179px) { .rail { --rail-col: calc((100% - 2 * var(--rail-gap, 20px)) / 3); } }
+@media (max-width: 759px) { .rail { --rail-col: 68%; --rail-gap: 12px; } }
+.rail-nav { display: flex; gap: 8px; }
+.rail-nav button { width: 44px; height: 44px; border: 1px solid #CFC7BB; display: grid; place-items: center; transition: border-color var(--d-fast), opacity var(--d-fast); }
+.rail-nav button:disabled { opacity: .35; cursor: default; }
+@media (hover: hover) { .rail-nav button:not(:disabled):hover { border-color: var(--ink); } }
+
+/* Disclosure rows (product details, policies, FAQs). */
+.acc { border-top: 1px solid var(--line); }
+.acc:last-of-type { border-bottom: 1px solid var(--line); }
+.acc summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 56px; padding-block: 14px; font-size: 0.75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+}
+.acc summary::-webkit-details-marker { display: none; }
+.acc summary::after { content: ""; width: 11px; height: 11px; flex: none; background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat, linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat; transition: transform var(--d-base) var(--ease-out); }
+.acc[open] summary::after { transform: rotate(45deg); }
+.acc-body { padding-bottom: 22px; color: var(--ink-soft); }
+.acc-body ul { padding-left: 1.1em; display: grid; gap: 6px; }
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .acc { interpolate-size: allow-keywords; }
+    .acc::details-content { height: 0; overflow: clip; transition: height var(--d-base) var(--ease-out), content-visibility var(--d-base) allow-discrete; }
+    .acc[open]::details-content { height: auto; }
+  }
+}
+
+/* Long-form text (policies, about). */
+.prose { max-width: 68ch; }
+.prose h2 { font-family: var(--serif); font-weight: 400; font-size: var(--fs-xl); margin-top: 2.2em; margin-bottom: .5em; }
+.prose h3 { font-size: var(--fs-md); margin-top: 1.6em; margin-bottom: .4em; }
+.prose p + p, .prose p + ul, .prose ul + p { margin-top: 1em; }
+.prose ul, .prose ol { padding-left: 1.2em; display: grid; gap: 6px; margin-top: .8em; }
+.prose a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Tables (size guide, admin, order summaries). */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+.table th, .table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.table thead th { font-size: 0.6875rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; color: var(--muted); }
+
+/* Dark section ground. */
+.on-night { background: var(--night); color: var(--night-text); }
+.on-night .muted, .on-night .lede { color: var(--night-muted); }
+.on-night .eyebrow { color: var(--night-muted); }
+.on-night .btn { --btn-bg: var(--night-text); --btn-fg: var(--night); --btn-bd: var(--night-text); }
+.on-night .btn-ghost { --btn-bg: transparent; --btn-fg: var(--night-text); --btn-bd: rgba(237, 232, 223, .5); }
+.on-night .tag { border-color: rgba(237, 232, 223, .3); color: var(--night-muted); }
+.on-night :focus-visible { outline-color: var(--night-text); }
+
 /* ---------- Breadcrumbs ---------- */
 .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px 10px; list-style: none; padding: 0; font-size: 0.6875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .crumbs li + li::before { content: "/"; margin-right: 10px; color: var(--faint); }
