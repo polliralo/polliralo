@@ -6,7 +6,7 @@
 - Client-facing work (website copy, README, docs) is in English: the user builds for English-speaking clients.
 
 ## Current project: NIVARA COAST website
-- Fictional private-island resort concept. Static site in `site/` (plain HTML, CSS, vanilla JS, no build step). Deploy = upload the contents of `site/`.
+- Fictional private-island resort concept. Static site in `site/` (plain HTML, CSS, vanilla JS, no build step). Deploy = upload the contents of `site/` (`npm run zip` makes `dist/nivara-coast-site.zip` with index.html at the top; `dist/` is not in Git).
 - Originals live in `media/originals/` (never edit them). `npm run media` rebuilds every optimised image in `site/assets/`; steps: `images`, `lqip` (blurred previews written into main.css), `meta` (`--only <name>` limits it to named images). The hero is a still photo (`hero-desktop.png` wide, `hero-phone.jpg` portrait); the site has no video.
 - Art direction: restrained, editorial luxury. Cormorant Garamond (display) + Manrope (text, nav, labels, buttons). Palette tokens at the top of `main.css`: ink #173B3A, ivory #F7F5EF, white, lagoon #69C8C8 (sparingly, never as text on light), sand #E8DED0. Photos stay in full daylight colour: type on photos is ivory over a soft deep-water gradient behind the words only (never a white haze). No booking widgets, promo banners, icon rows, wave edges or decorations. Brand rules: `docs/brand-guidelines.md`.
 - Preview: `npm start` (http://localhost:4173). Checks: `npm run check` (html-validate + Playwright tests, desktop and phone). Run it before every commit.

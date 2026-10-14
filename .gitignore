@@ -3,3 +3,4 @@ test-results/
 playwright-report/
 .qa/
 .DS_Store
+dist/

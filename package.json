@@ -11,6 +11,7 @@
     "start": "node scripts/serve.mjs",
     "media": "node scripts/build-media.mjs",
     "screens": "node scripts/screenshots.mjs",
+    "zip": "node scripts/build-zip.mjs",
     "lint": "html-validate site/index.html",
     "test": "playwright test",
     "check": "npm run lint && npm test"

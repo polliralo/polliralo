@@ -16,6 +16,8 @@ Use `npm start` rather than double-clicking `site/index.html`. Some browsers blo
 
 Upload **the contents of the `site/` folder** to any static web host (Hostinger, Netlify, Cloudflare Pages, GitHub Pages and so on). Nothing else is needed on the server.
 
+The easiest way is the ready-made zip: run `npm run zip` and upload `dist/nivara-coast-site.zip` (about 10 MB, 117 files). `index.html` sits at the top of the zip with `assets/` beside it, which is the layout hosts expect. On Hostinger, open File Manager, go to `public_html`, upload the zip there and choose Extract; on Netlify, drag the unzipped folder onto the Deploys page. Run `npm run zip` again after any change, so the zip always matches the site.
+
 Once the site has a real domain, open `site/index.html` and find the comment marked `DEPLOY STEP`. Change `og:image` to a full URL and add `og:url` and `<link rel="canonical">` with the new address, so link previews on social apps show the right image. Most hosts compress files automatically; check yours does (gzip or brotli).
 
 ## What's in this folder
@@ -29,7 +31,8 @@ Once the site has a real domain, open `site/index.html` and find the comment mar
 | `site/assets/img/` | Optimised photos in AVIF and WebP, in several widths, plus one JPEG fallback each. |
 | `site/assets/fonts/` | Cormorant Garamond and Manrope, trimmed to the Latin characters (both under the SIL Open Font License). |
 | `media/originals/` | Your untouched original photos. These are **not** deployed. The earlier hero video is kept in `media/originals/video/` but the site no longer uses it. |
-| `scripts/` | Tools: `build-media.mjs` (rebuilds every image and the blurred previews), `build-fonts.py`, `serve.mjs` (preview server) and `screenshots.mjs` (review screenshots). |
+| `scripts/` | Tools: `build-media.mjs` (rebuilds every image and the blurred previews), `build-zip.mjs` (the upload zip), `build-fonts.py`, `serve.mjs` (preview server) and `screenshots.mjs` (review screenshots). |
+| `dist/` | The upload zip made by `npm run zip`. Not stored in Git; make it again any time. |
 | `tests/` | Automated browser checks. |
 | `docs/` | `brand-guidelines.md` (colours, type, logo, voice, photography rules) and the preview screenshots for this README. |
 
