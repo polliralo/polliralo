@@ -2,6 +2,8 @@
 
 Preparation for the shop build in `master-brief.md`. **Nothing is built yet.** The owner is choosing the design and UI direction first and will say when to start.
 
+**Design direction (14 October 2026):** the owner chose five reference designs; the proposed combination, preview images and the points where it differs from the brief are in `design-references.md`. The photos still needed for that design, with prompts, are in `photo-shotlist.md`. In short: the hero becomes a Percival-style product slider using the studio photos (cut out, in `shop/media/cutouts/`), so the two hero photos below move to lower sections unless the owner prefers the brief's photo hero.
+
 ## How the supplied photos fit the brief
 
 All paths are under `shop/media/originals/`. Sizes are in pixels.
@@ -66,12 +68,13 @@ The black card holder appears only in group shots, so it is left out of the firs
 
 1. **T-Shirts category image** in concrete architecture with graphic shadows.
 2. **Product gallery depth.** Clothing has no back view, fabric close-up or collar/cuff detail; six products have a single photo. The brief wants gallery images that "show meaningful additional information".
-3. **Catalogue consistency within a category** (brief section 4):
+3. **Catalogue consistency within a category** (brief section 4). The clothing is solved: all six studio photos are cut out onto one canvas. Accessories still need the two edits in `photo-shotlist.md`:
    - Sunglasses: aviator on warm sand, rectangular on dark charcoal. They should share one surface.
    - Accessories: belt on grey stone, wallet on dark wood. Same problem.
    - Watches: steel grey and dark slate are close enough.
-   - Clothing: all on the same grey backdrop, which is good. The navy polo has a different model from the other five studio shots; this is acceptable but noticeable side by side.
-4. **Desktop hero width.** 1810 px is a little under the 1920 px the brief suggests.
+   - Clothing: the backdrops differed in tone, now solved by the cut-outs. The navy polo has a different model from the other five studio shots; acceptable, optional fix in `photo-shotlist.md`.
+4. **Desktop hero width.** 1810 px is a little under the 1920 px the brief suggests. Only matters if the brief's photo hero is kept.
+5. **Shop the look photos.** Two full-length looks of one model wearing MONO products (`photo-shotlist.md` items 3 and 5).
 
 ## Decisions to make at build time
 

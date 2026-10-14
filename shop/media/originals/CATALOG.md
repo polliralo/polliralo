@@ -9,6 +9,8 @@ Four kinds of photo:
 - `lifestyle/`: the product worn or styled in a real setting, portrait 1122 × 1402 (4:5). Use as a second image on product pages and in editorial blocks.
 - `wide/`: landscape scenes, about 16:9 (two are wider or squarer, noted below). Use for the homepage hero, collection banners and campaign strips.
 
+Cut-outs: the six studio photos also exist with the background removed (transparent PNG, same size) in `shop/media/cutouts/`, made with rembg's `birefnet-portrait` model so every model can stand on one canvas. They are derived files; the originals here stay untouched.
+
 Prices, sizes, fabric content and stock are not known yet and must come from the client. Nothing here should be invented on the site.
 
 ## Products seen in the photos

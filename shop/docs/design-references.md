@@ -1,8 +1,10 @@
-# MONO design references
+# MONO design references and direction
 
-UI and UX references the owner likes, collected while they choose the design direction. Nothing is built from these until the owner says to start.
+UI and UX references the owner likes, what each one brings, and the proposed combination for MONO. **Nothing is built yet**; the owner decides when to start.
 
-## Pinterest pins (sent 14 October 2026)
+## Sources
+
+Pinterest pins sent on 14 October 2026 (the cloud session cannot open Pinterest, so the owner sent the pin videos instead):
 
 1. https://pin.it/6ZjOWsoG3
 2. https://pin.it/58FNJeb02
@@ -12,10 +14,88 @@ UI and UX references the owner likes, collected while they choose the design dir
 6. https://pin.it/2G32XC62K
 7. https://pin.it/4dG454U0M
 
-These could not be opened from the cloud session: its network policy blocks `pin.it` (and Pinterest in general). To view them in a future session, either the owner sends screenshots or a screen recording, or the environment's network settings allow `pin.it`, `www.pinterest.com` and `i.pinimg.com`.
+Five videos arrived. Each is studied below; the numbering here follows the videos, not the links. If two of the links were different designs, they still need screenshots.
 
-The owner is sending a screen recording of the references instead. Notes on each design go below once it has been reviewed.
+## What each reference brings
 
-## Notes
+### A. Percival product slider (menswear jackets)
 
-(none yet)
+A light grey canvas, one model cut out on it, a huge faint serif category word ("Over Jackets") behind him, sizes stacked vertically on the left with the chosen one circled, four angle thumbnails on the right, a short details block (eyebrow, name, two lines, price), and a bar at the bottom in the product's own colour showing "01 — 03" and the next product's name. Arrows move to the next product; the model slides out and the next slides in.
+
+- **Keep:** the whole product-led hero, the faint giant word, the vertical size picker, the angle thumbnails, the product-coloured bar.
+- **Leave:** nothing; it needs a phone version (see "Phone").
+
+### B. "Fashion." pastel women's landing page
+
+Lime canvas, a rounded headline, two cut-out models, a floating mini product card, a "Hottest picks" product row, a three-column product spotlight (name and story | big photo | price, size chips, colour swatches, add to cart) with "complete the look" mini cards, customer reviews, newsletter and footer.
+
+- **Keep:** the three-column spotlight, "complete the look", size chips and colour swatches, the product row rhythm, newsletter plus footer structure.
+- **Leave:** lime and lilac colours, doodles and sparkles, playful rounded type, the customer reviews (MONO has no real reviews, and fake ones are not allowed).
+
+### C. "Tied green V-neck shirt" product view
+
+Condensed uppercase product name, a "+" on the hero product that opens its details, size chips with a "Size guide" link beside them, four angle thumbnails that swap the big photo, a round "Add" button, a vertical "01 / 05" counter, the next collection peeking in from the right.
+
+- **Keep:** thumbnails that swap the main photo, size chips with the guide link, the quick "+" to open details, the counter.
+- **Leave:** the red round button, the "Sale" link, squiggles, the dated "Summer 2020" vertical label.
+
+### D. Marc Jacobs runway lookbook
+
+A line-up of models with the front one sharp and the rest softly blurred, "LOOK 16" with a "Shop the look" link, and a side panel listing every item in that look (photo, name, price, wishlist heart, quick add). Pointing at another model brings that look into focus and swaps the panel. Two-row header with wide-spaced small capitals.
+
+- **Keep:** "Shop the look" with the item panel, "LOOK 01" numbering, switching between looks, the calm wide-spaced capitals.
+- **Leave:** the long blurred line-up (it needs many full-length cut-outs and is heavy on phones); two looks with a simple switch give the same idea.
+
+### E. Percival editorial carousel (bronze jacket)
+
+One product told through several photos of it at different sizes (full length, a big close crop from behind, a back view), a giant serif name layered behind and in front of the photos, a details block, an olive bar with the count, and an "Autumn Sale" panel.
+
+- **Keep:** one product through several angles, the layered serif name, the olive accent.
+- **Leave:** the sale panel (no invented promotions).
+
+## The combination (proposed)
+
+**Percival is the base (A + E):** a light warm canvas, models cut out and standing on it, a giant faint Bodoni word behind them, clean sans product names, and an accent bar in each product's own colour. **Marc Jacobs (D)** sets the header and the small wide-spaced capitals and gives the "Shop the look" section. **B and C** give the shopping controls: thumbnails that swap the photo, size chips with a size guide link, colour swatches and "complete the look".
+
+Preview images (built from the real photos, not the website): `preview/1-home-first-screen.jpg`, `preview/2-home-categories-and-new-arrivals.jpg`, `preview/3-shop-the-look.jpg`, `preview/4-product-page.jpg`, `preview/5-home-phone.jpg`.
+
+### Homepage, top to bottom
+
+1. Thin announcement bar: "Demo store · prices are for illustration only".
+2. Header: MONO wordmark left, the six categories centre, Search and Bag right.
+3. **Hero: featured product slider (A).** One slide per clothing product (six). Canvas, giant category word, cut-out model, vertical sizes with a size guide link, details block (eyebrow, name, one line, price with a demo tag, Add to bag, View details), angle thumbnails on the right, the product-coloured bar with "01 — 06" and the next product's name, arrows. No autoplay: arrows, swipe and keyboard only.
+4. Shop by category: six lifestyle photos, labels under the photos (never on them).
+5. New arrivals: product cards. Clothing is shown as cut-outs on the canvas, so every card matches; accessories use their still lifes.
+6. **Shop the look (D):** a full-length look photo, "LOOK 01 / LOOK 02" switch, and the item panel. Needs new photos.
+7. Watches spotlight (B's three columns on a dark ground): story | wrist photo | buy panel with "complete the look" (wallet, belt).
+8. Editorial strip: the wide campaign photos (two men walking, rooftop sunglasses, the accessories table), moving gently sideways like E.
+9. Short, honest brand note.
+10. Demo newsletter and footer.
+
+### Product page
+
+Angle thumbnails on the left (A, C), the big cut-out on the canvas with the faint serif word behind (A, E), and the buy panel on the right (B, C): eyebrow, name, price with a demo tag, one-line description, colour swatches, size chips with "Size guide", quantity, Add to bag, "Demo checkout. No payment is taken.", "Complete the look", then "Details & care" and "Delivery & returns". Related products below.
+
+### Phone
+
+- Hero about 336 px tall: the cut-out stands on the right, the giant word behind him, name, price and "Shop now" on the left, and the count bar. Swipe between products. This meets the brief's compact mobile hero rule.
+- Shop by category comes straight after, as a sideways row.
+- Two-column product grid.
+- Product page: swipeable photos with dots and a sticky Add to bag bar.
+
+### Design tokens
+
+- **Type:** Bodoni Moda (display: the giant words and section titles) with Jost (everything else: navigation, product names, prices, labels, buttons). This is the "Luxury Minimalist" pairing from the ui-ux-pro-max typography data, and it matches the references: a Didone serif like Percival's and a geometric sans for Marc Jacobs-style capitals.
+- **Colour:** page ivory `#F5F2EC`, canvas `#E9E4DD`, giant word `#DDD5C9`, ink `#1C1C1A`, muted text `#5F5A52`, border `#DDD7CE`, brand accent muted olive `#5C5F45`. Each product also has its own accent for the slider bar (olive `#5C5F45`, navy `#1F2A3F`, charcoal `#3A3A38`, and so on).
+- **Style:** minimal grid, square corners, no shadows, no decorations.
+- **Motion:** product changes slide and fade in about 0.5 s; small hover changes; nothing moves on its own; reduced motion respected.
+
+## Photo handling
+
+The six studio photos had different backdrops, from light cool grey (`#C8C9CB`) to darker warm grey (`#96908B`), so they could not sit side by side or on one canvas. They have been cut out (background removed) with rembg's `birefnet-portrait` model, run locally and free; the edges, hair included, are clean. The cut-outs are in `shop/media/cutouts/`; the originals are untouched.
+
+## Points that differ from the master brief (owner to confirm)
+
+1. **Hero.** The brief asks for an urban-architecture photo hero on desktop and a separate 4:3 photo on phones. The references the owner chose all lead with a product on a plain canvas. Proposal: follow the references for the hero and use the architecture photos lower down (category tiles, editorial strip). The phone hero stays compact, as the brief requires.
+2. **Fonts.** The brief says to reuse existing fonts if they fit. Nivara already uses Cormorant Garamond and Manrope; MONO gets Bodoni Moda and Jost so the two portfolio sites look different.
+3. **Currency.** The preview shows BDT; still to be confirmed.
