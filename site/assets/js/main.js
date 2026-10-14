@@ -145,7 +145,8 @@
     const places = guide ? [...guide.querySelectorAll('.place')] : [];
     if (!photo || !stage || !label || !places.length) return;
 
-    const sideBySide = window.matchMedia('(min-width: 1080px)');
+    // Keep in step with the island guide's side-by-side breakpoint in main.css.
+    const sideBySide = window.matchMedia('(min-width: 900px)');
     let active = null;
     let held = null; // a place the mouse is resting on
     let labelTimer = 0;
@@ -185,7 +186,8 @@
       // on phones, it sits a little below the photo.
       let line = viewport * 0.5;
       if (!sideBySide.matches) {
-        const below = stage.getBoundingClientRect().bottom;
+        // On short screens the photo scrolls away; its edge then stops at 0.
+        const below = Math.max(0, stage.getBoundingClientRect().bottom);
         line = Math.min(viewport * 0.85, below + (viewport - below) * 0.3);
       }
       let current = places[0];

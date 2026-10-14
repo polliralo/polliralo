@@ -57,8 +57,8 @@ Once the site has a real domain, open `site/index.html` and find the comment mar
   - *Overwater Villa*: the stone bath facing the sea, and the villas at the end of the boardwalk (a crop of the jetty photo). It is never described as having a pool.
   - *Overwater Pool Villa*: the villa with its plunge pool, and the bedroom that opens onto the pool deck.
   - *Beach Pool Villa*: the villa on the sand, and the bedroom looking over the garden, pool and beach.
-- **Island guide (the signature).** The aerial photo stays in view while the list of places scrolls past. As each place reaches the reading line, a soft ring and label glide across the photo to it. Pointing at a place, or tapping it, lights it straight away. No numbered markers sit on the photo. The island section uses a different aerial from the hero, so no photo appears twice.
-- **Lagoon, dining, arrival.** The lagoon photo stays untouched with its words on a white panel laid over its edge. Dining is the one dark section. Arrival closes the page at sunset with ivory type, and a dark footer grounds the page.
+- **Island guide (the signature).** The aerial photo stays in view while the list of places scrolls past. As each place reaches the reading line, a soft ring and label glide across the photo to it. Pointing at a place, or tapping it, lights it straight away. No numbered markers sit on the photo. On wide screens the photo runs off the right edge and is held in the middle of the screen; on phones it sits under the header, never taking more than about half the screen; on very short screens (a phone held sideways) it simply scrolls by. The island section uses a different aerial from the hero, so no photo appears twice.
+- **Lagoon, dining, arrival.** The lagoon photo runs the full width, untouched, with its words beneath it like a magazine caption. Dining is the one dark section. Arrival closes the page at sunset with ivory type, and a dark footer grounds the page.
 - **Loading.** Every photo shows a tiny blurred preview straight away, then fades in when it arrives, so a slow connection never shows empty boxes.
 - **Order of the page.** Hero, villa card, The idea, The Villas, The Island, The Lagoon, Dining, Arrival (the closing call to action), then the footer. "Explore the Villas" goes to the villas. "Discover the Island" goes to the island guide.
 - **Honesty.** There are no prices, reviews, ratings, availability, address or contact details, and no structured data claiming a real hotel. The footer and the phone menu say the resort is a fictional concept.
@@ -88,7 +88,7 @@ The tests cover:
 - no sideways scrolling from 320px to 1920px wide
 - every in-page link has a real target; the hero buttons, the villa card and the phone menu scroll to the right section, clear of the header
 - the header turns solid after the hero, and its button appears only then
-- the island guide follows the scroll and the mouse, and the page still shows every place without JavaScript
+- the island guide follows the scroll and the mouse, every place can be read while scrolling (including a phone held sideways and a short laptop window), and the page still shows every place without JavaScript
 - the phone menu keeps keyboard focus inside, closes with Esc and returns focus
 - the skip link, focus outlines, link names, and 44px touch targets on phones and touch tablets
 - heading order, alt text (the small villa thumbnails are marked decorative), modern image formats, and every photo visible after loading
@@ -96,7 +96,7 @@ The tests cover:
 - with reduced motion everything shows at once; printing shows every section; without JavaScript the navigation and all photos stay visible
 - text contrast over the photos, measured on the real rendered pixels: the hero and header at 17 screen and window sizes, and the arrival section at 12 sizes
 
-**Results at handoff:** lint clean and all 62 browser checks pass (a further 18 run only on the desktop or only on the phone setup, so each is skipped on the other). Lighthouse (lab test on the local preview server):
+**Results at handoff:** lint clean and all 63 browser checks pass (a further 19 run only on the desktop or only on the phone setup, so each is skipped on the other). An independent review also checked every section by eye at 12 screen sizes; the problems it found are fixed. Lighthouse (lab test on the local preview server):
 - Mobile (simulated slow 4G): Performance 98, Accessibility 100, Best Practices 100, SEO 100. Largest Contentful Paint 2.3 s, Cumulative Layout Shift 0, Total Blocking Time 10 ms.
 - Desktop: 100 in all four categories. Largest Contentful Paint 0.7 s, Cumulative Layout Shift 0.
 

@@ -561,6 +561,39 @@ test.describe('island guide', () => {
     await expect(page.locator('.island__label')).toHaveText('The beach');
   });
 
+  test('every place can be read while scrolling, even on short screens', async ({ browser }, testInfo) => {
+    onlyDesktop(testInfo);
+    // Phones held sideways, a short laptop window, an iPad in landscape and a phone.
+    for (const viewport of [{ width: 844, height: 390 }, { width: 1024, height: 600 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
+      const page = await browser.newPage({ viewport });
+      await page.goto('/');
+      const unread = await page.evaluate(async () => {
+        // Readable means on screen and not covered by the header or the photo.
+        const readable = (el) => {
+          const box = el.getBoundingClientRect();
+          if (box.top < 0 || box.bottom > window.innerHeight) return false;
+          const hit = document.elementFromPoint(box.left + Math.min(24, box.width / 2), box.top + box.height / 2);
+          return Boolean(hit && el.contains(hit));
+        };
+        const places = [...document.querySelectorAll('.place')];
+        const seen = new Set();
+        const guide = document.querySelector('[data-island]').getBoundingClientRect();
+        const start = guide.top + window.scrollY - window.innerHeight;
+        const end = guide.bottom + window.scrollY;
+        for (let y = start; y <= end; y += 30) {
+          window.scrollTo({ top: y, behavior: 'instant' });
+          await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+          places.forEach((place, i) => {
+            if (readable(place.querySelector('.place__name')) && readable(place.querySelector('.place__text'))) seen.add(i + 1);
+          });
+        }
+        return places.map((_, i) => i + 1).filter((n) => !seen.has(n));
+      });
+      expect(unread, `${viewport.width}x${viewport.height}`).toEqual([]);
+      await page.close();
+    }
+  });
+
   test('pointing at a place lights it straight away', async ({ page }, testInfo) => {
     onlyDesktop(testInfo);
     await page.goto('/');

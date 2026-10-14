@@ -78,6 +78,8 @@ Sizes scale smoothly with the screen width between these limits:
 
 Italics carry the emphasis: one italic phrase per headline at most ("A quieter kind of *paradise.*").
 
+Numerals in Cormorant use lining figures (`font-variant-numeric: lining-nums`), so 01, 02, 03 never read as "o1". Running text uses `text-wrap: pretty`, so no paragraph ends on a single word.
+
 ---
 
 ## 3. Logo
@@ -116,7 +118,7 @@ Copy rules: no long dashes (use commas and full stops), no stock marketing words
 ## 6. Layout and components
 
 - **Corners:** 10px for photos, cards and panels; 6px for thumbnails; full pill only for buttons.
-- **Depth:** white cards and panels overlap photos with one soft, warm shadow. Nothing else casts a shadow.
+- **Depth:** white cards and panels overlap photos with one soft, warm shadow. Nothing else casts a shadow. Use the overlap for the villa card and the villa spreads only; elsewhere let a photo run full width with its words beneath it.
 - **Rules:** thin ink lines at 14 percent (dividers) or 50 percent (section tops).
 - **Signature details:** a short horizon line before every label; italic numerals (01, 02, 03); the island guide, where a ring glides across the aerial photo to each place as you read.
 - **Buttons:** ink pill with an ivory circle and arrow on light grounds; ivory pill with an ink circle on photos.
