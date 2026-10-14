@@ -9,26 +9,32 @@ export const absolute = (path) => (SITE_URL ? SITE_URL + path : path);
 
 const FONT_PRELOADS = ['jost-400', 'jost-500', 'bodoni-moda-400'];
 
+// Chrome prerenders product pages on hover so the image morph starts instantly.
 const SPECULATION = JSON.stringify({
-  prerender: [{
-    where: { and: [{ href_matches: '/*' }, { not: { href_matches: '/admin/*' } }, { not: { href_matches: '/checkout/*' } }, { not: { href_matches: '/order-confirmation/*' } }] },
-    eagerness: 'moderate',
-  }],
+  prerender: [{ where: { href_matches: '/products/*' }, eagerness: 'moderate' }],
 });
+
+// Names the one morphing image at navigation time: product card -> product
+// page and back (shop/docs/research/motion.md, section 2). Classic inline
+// script because pagereveal fires before the first render.
+const VT_SCRIPT = `(function(){var N='product-media',K='mono:vt-from';function pdp(p){return /^\\/products\\/[^/]+\\/?$/.test(p)}function slug(p){return p.split('/').filter(Boolean)[1]}function seen(el){var r=el.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight}function card(s){return document.querySelector('[data-slug="'+s+'"] [data-vt-media]')}
+addEventListener('pageswap',function(e){try{sessionStorage.setItem(K,location.pathname)}catch(x){}if(!e.viewTransition||!e.activation)return;var to=new URL(e.activation.entry.url).pathname,el=null;if(pdp(to))el=card(slug(to));else if(pdp(location.pathname))el=document.getElementById('pdp-media');if(!el||!seen(el))return;el.style.viewTransitionName=N;e.viewTransition.finished.finally(function(){el.style.viewTransitionName=''})});
+addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;var from=null;try{from=window.navigation&&navigation.activation&&navigation.activation.from?new URL(navigation.activation.from.url).pathname:sessionStorage.getItem(K)}catch(x){}var el=null;if(pdp(location.pathname))el=document.getElementById('pdp-media');else if(from&&pdp(from)){var c=card(slug(from));if(c&&seen(c))el=c}if(el){el.style.viewTransitionName=N;vt.ready.finally(function(){el.style.viewTransitionName=''})}function skip(){vt.skipTransition()}addEventListener('pointerdown',skip,{once:true});addEventListener('keydown',skip,{once:true});vt.finished.finally(function(){removeEventListener('pointerdown',skip);removeEventListener('keydown',skip)})})})();`;
 
 /**
  * layout({
  *   path, title, description, content,
  *   css: ['home'], js: ['home'],        // assets/css/pages/<name>.css, assets/js/pages/<name>.js
  *   jsonld: [object, ...], noindex, ogImage, ogType, preload: ['<link ...>'],
- *   bodyClass, categories, activeCategory, fullTitle
+ *   bodyClass, categories, activeCategory, fullTitle,
+ *   robots: 'noindex, nofollow'   // only used with noindex; default 'noindex'
  * })
  */
 export function layout(page) {
   const {
     path, title, description = DEFAULT_DESCRIPTION, content,
     css = [], js = [], jsonld = [], noindex = false, ogImage = DEFAULT_OG_IMAGE, ogType = 'website',
-    preload = [], bodyClass = '', categories = [], activeCategory = null, fullTitle = null,
+    preload = [], bodyClass = '', categories = [], activeCategory = null, fullTitle = null, robots = null,
   } = page;
   const docTitle = fullTitle ?? (title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Premium Men's Fashion and Accessories`);
   const canonical = absolute(path);
@@ -41,8 +47,8 @@ export function layout(page) {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(docTitle)}</title>
 <meta name="description" content="${esc(description)}">
-<link rel="canonical" href="${esc(canonical)}">
-${noindex ? '<meta name="robots" content="noindex, follow">\n' : ''}<meta name="theme-color" content="${THEME_COLOR}">
+${noindex ? `<meta name="robots" content="${robots ?? 'noindex'}">` : `<link rel="canonical" href="${esc(canonical)}">`}
+<meta name="theme-color" content="${THEME_COLOR}">
 <meta property="og:site_name" content="${SITE_NAME}">
 <meta property="og:type" content="${esc(ogType)}">
 <meta property="og:title" content="${esc(title ?? SITE_NAME)}">
@@ -53,6 +59,7 @@ ${noindex ? '<meta name="robots" content="noindex, follow">\n' : ''}<meta name="
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>${VT_SCRIPT}</script>
 <script>(function(d){d.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('motion');setTimeout(function(){if(!d.classList.contains('store-ready'))d.classList.remove('motion')},4000)})(document.documentElement)</script>
 ${FONT_PRELOADS.map((f) => `<link rel="preload" href="/assets/fonts/${f}.woff2" as="font" type="font/woff2" crossorigin>`).join('\n')}
 ${preload.join('\n')}

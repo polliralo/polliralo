@@ -107,20 +107,31 @@ writeFileSync(join(SITE, 'assets/data/store.json'), JSON.stringify({ version, ca
 // The bare manifest is only needed by the build; keep the site folder tidy.
 if (existsSync(join(SITE, 'assets/data/media.json'))) rmSync(join(SITE, 'assets/data/media.json'));
 
-/* ----- robots.txt and sitemap.xml ----- */
+/* ----- robots.txt, _headers and sitemap.xml -----
+   Utility pages (bag, checkout, search, admin) carry a noindex meta tag. They
+   are NOT blocked in robots.txt: a blocked page is never fetched, so its
+   noindex would never be seen (shop/docs/research/seo.md, section 3). */
 const robots = [
   'User-agent: *',
-  'Disallow: /admin/',
-  'Disallow: /cart/',
-  'Disallow: /checkout/',
-  'Disallow: /order-confirmation/',
-  'Disallow: /search/',
-  'Disallow: /product/',
+  'Allow: /',
   '',
   config.SITE_URL ? `Sitemap: ${config.SITE_URL}/sitemap.xml` : '# Add "Sitemap: <SITE_URL>/sitemap.xml" here once SITE_URL is set in shop/src/config.mjs.',
   '',
 ].join('\n');
 if (!only) writeFileSync(join(SITE, 'robots.txt'), robots);
+
+// Cloudflare (and Netlify) read _headers from the upload folder.
+const headers = `/admin/*
+  X-Robots-Tag: noindex, nofollow
+/assets/img/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+`;
+if (!only) writeFileSync(join(SITE, '_headers'), headers);
 
 if (!only) {
   const sitemapFile = join(SITE, 'sitemap.xml');

@@ -7,6 +7,11 @@
 // run `npm run shop:build` again and upload the site.
 export const SITE_URL = '';
 
+// SEO_MODE: 'demo' (default) keeps commerce markup out of the pages, because the
+// products and prices are fictional. 'live' adds Product/ProductGroup/Offer
+// JSON-LD; switch to it only with real prices, stock, checkout and policies.
+export const SEO_MODE = 'demo';
+
 export const SITE_NAME = 'MONO';
 export const TAGLINE = 'Less noise. Better essentials.';
 export const DEFAULT_DESCRIPTION = 'MONO is a demo menswear store: shirts, T-shirts, polos, watches, sunglasses and accessories with quiet, considered design.';

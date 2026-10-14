@@ -1,6 +1,6 @@
 // Small UI helpers shared by every page: dialogs with open/close motion,
 // toasts, a polite live region, scroll reveals, image fade-in and the
-// "fly to bag" animation.
+// bag count pulse.
 
 import { esc, picture } from './render.js';
 
@@ -128,38 +128,24 @@ export function enhance(root = document) {
   observeReveals(root);
 }
 
-/* ----- Fly to bag ----- */
-
-export function flyToBag(sourceImg) {
-  const target = $$('[data-open-cart]').find((el) => el.offsetParent !== null);
-  if (!sourceImg || !target || reducedMotion()) { bumpBag(); return; }
-  const from = sourceImg.getBoundingClientRect();
-  const to = target.getBoundingClientRect();
-  if (!from.width || !to.width) { bumpBag(); return; }
-  const ghost = document.createElement('div');
-  ghost.className = 'fly';
-  const w = Math.min(from.width, 220);
-  const h = w * (from.height / from.width);
-  Object.assign(ghost.style, { left: `${from.left + (from.width - w) / 2}px`, top: `${from.top + (from.height - h) / 2}px`, width: `${w}px`, height: `${h}px` });
-  const img = document.createElement('img');
-  img.src = sourceImg.currentSrc || sourceImg.src;
-  img.alt = '';
-  ghost.append(img);
-  document.body.append(ghost);
-  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-  const anim = ghost.animate([
-    { transform: 'translate(0, 0) scale(1)', opacity: 1, offset: 0 },
-    { transform: `translate(${dx * 0.55}px, ${dy * 0.35 - 40}px) scale(.55)`, opacity: 1, offset: 0.55 },
-    { transform: `translate(${dx}px, ${dy}px) scale(.08)`, opacity: 0.2, offset: 1 },
-  ], { duration: 780, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' });
-  anim.onfinish = () => { ghost.remove(); bumpBag(); };
-}
+/* ----- Header bag count pulse ----- */
 
 export function bumpBag() {
+  if (reducedMotion()) return;
   $$('[data-bag-count]').forEach((el) => {
     el.classList.remove('bump');
     void el.offsetWidth;
     el.classList.add('bump');
   });
+}
+
+/* ----- Same-page view transitions (gallery swaps, grid re-sorts) ----- */
+
+/** Run a DOM update inside document.startViewTransition when supported. */
+export function withTransition(update) {
+  if (!document.startViewTransition || reducedMotion()) {
+    update();
+    return null;
+  }
+  return document.startViewTransition(update);
 }

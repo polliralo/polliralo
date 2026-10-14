@@ -38,7 +38,7 @@ document.addEventListener('click', (e) => {
   if (t.matches('[data-open-search]')) { openDialog(search, { opener: t }); $('input', search)?.focus(); }
   if (t.matches('[data-open-cart]')) openCart(t);
 });
-document.addEventListener('mono:open-cart', () => openCart());
+document.addEventListener('mono:open-cart', (e) => openCart(null, e.detail?.highlight));
 
 // Links inside the menu close it before navigating (keeps the view transition clean).
 menu?.addEventListener('click', (e) => { if (e.target.closest('a')) menu.close(); });
@@ -64,20 +64,24 @@ function updateBagCounts() {
 }
 
 /* ----- Bag drawer ----- */
-function openCart(opener) {
+function openCart(opener, highlight = null) {
   if (!drawer) { window.location.href = '/cart/'; return; }
   loadStore().then(() => {
-    renderDrawer();
-    openDialog(drawer, { opener });
+    renderDrawer(highlight);
+    if (!drawer.open) openDialog(drawer, { opener });
   });
 }
 
-function renderDrawer() {
+function renderDrawer(highlight = null) {
   const list = $('[data-drawer-lines]', drawer);
   const foot = $('[data-drawer-foot]', drawer);
   const empty = $('[data-drawer-empty]', drawer);
   const ls = renderLines(list, { compact: true });
   bindLineControls(list);
+  if (highlight) {
+    const row = list.querySelector(`[data-slug="${CSS.escape(highlight.slug)}"][data-variant="${CSS.escape(highlight.variant)}"]`);
+    if (row) { row.classList.add('is-new'); row.scrollIntoView({ block: 'nearest' }); }
+  }
   const count = cart.count();
   $('[data-drawer-count]', drawer).textContent = count ? `(${count})` : '';
   empty.hidden = ls.length > 0;
@@ -101,8 +105,8 @@ document.addEventListener('click', (e) => {
   if (chip) {
     const card = chip.closest('.card');
     const slug = card?.dataset.slug;
-    addToBag(slug, chip.dataset.quickSize, { sourceImg: $('.card-img img', card) });
     closeQuick(card);
+    addToBag(slug, chip.dataset.quickSize);
     return;
   }
   if (!btn) {
@@ -115,7 +119,7 @@ document.addEventListener('click', (e) => {
     const product = getProduct(btn.dataset.quickAdd);
     if (!product) return;
     if (!needsChoice(product)) {
-      addToBag(product.slug, product.variants[0].id, { sourceImg: $('.card-img img', card) });
+      addToBag(product.slug, product.variants[0].id);
       return;
     }
     const panel = $('[data-quick-panel]', card);
@@ -201,22 +205,6 @@ document.addEventListener('submit', (e) => {
   msg.textContent = form.dataset.demoForm || 'Thanks. This is a demo, so nothing was sent or saved.';
   form.reset();
   announce(msg.textContent);
-});
-
-/* ----- Card image morphs into the product page image ----- */
-document.addEventListener('click', (e) => {
-  const link = e.target.closest('.card a, .mini-card');
-  if (!link || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
-  const card = link.closest('.card, .mini-card');
-  const img = card && $('.card-img:not(.card-img-alt) img, .frame img', card);
-  if (!img) return;
-  $$('[style*="view-transition-name"]').forEach((el) => { if (el !== img) el.style.viewTransitionName = ''; });
-  $$('.pdp-media-vt').forEach((el) => { el.style.viewTransitionName = 'none'; });
-  img.style.viewTransitionName = 'pdp-media';
-}, true);
-// Coming back with the back button: clear the name so it is not reused.
-window.addEventListener('pageshow', () => {
-  $$('.card img[style*="view-transition-name"], .mini-card img[style*="view-transition-name"]').forEach((el) => { el.style.viewTransitionName = ''; });
 });
 
 export { icon };

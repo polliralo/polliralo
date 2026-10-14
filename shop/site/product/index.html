@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Product | MONO</title>
 <meta name="description" content="MONO is a demo menswear store: shirts, T-shirts, polos, watches, sunglasses and accessories with quiet, considered design.">
-<link rel="canonical" href="/product/">
-<meta name="robots" content="noindex, follow">
+<meta name="robots" content="noindex">
 <meta name="theme-color" content="#F5F2EC">
 <meta property="og:site_name" content="MONO">
 <meta property="og:type" content="website">
@@ -18,6 +17,9 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>(function(){var N='product-media',K='mono:vt-from';function pdp(p){return /^\/products\/[^/]+\/?$/.test(p)}function slug(p){return p.split('/').filter(Boolean)[1]}function seen(el){var r=el.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight}function card(s){return document.querySelector('[data-slug="'+s+'"] [data-vt-media]')}
+addEventListener('pageswap',function(e){try{sessionStorage.setItem(K,location.pathname)}catch(x){}if(!e.viewTransition||!e.activation)return;var to=new URL(e.activation.entry.url).pathname,el=null;if(pdp(to))el=card(slug(to));else if(pdp(location.pathname))el=document.getElementById('pdp-media');if(!el||!seen(el))return;el.style.viewTransitionName=N;e.viewTransition.finished.finally(function(){el.style.viewTransitionName=''})});
+addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;var from=null;try{from=window.navigation&&navigation.activation&&navigation.activation.from?new URL(navigation.activation.from.url).pathname:sessionStorage.getItem(K)}catch(x){}var el=null;if(pdp(location.pathname))el=document.getElementById('pdp-media');else if(from&&pdp(from)){var c=card(slug(from));if(c&&seen(c))el=c}if(el){el.style.viewTransitionName=N;vt.ready.finally(function(){el.style.viewTransitionName=''})}function skip(){vt.skipTransition()}addEventListener('pointerdown',skip,{once:true});addEventListener('keydown',skip,{once:true});vt.finished.finally(function(){removeEventListener('pointerdown',skip);removeEventListener('keydown',skip)})})})();</script>
 <script>(function(d){d.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('motion');setTimeout(function(){if(!d.classList.contains('store-ready'))d.classList.remove('motion')},4000)})(document.documentElement)</script>
 <link rel="preload" href="/assets/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jost-500.woff2" as="font" type="font/woff2" crossorigin>
@@ -25,7 +27,7 @@
 
 <link rel="stylesheet" href="/assets/css/base.css">
 
-<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/admin/*"}},{"not":{"href_matches":"/checkout/*"}},{"not":{"href_matches":"/order-confirmation/*"}}]},"eagerness":"moderate"}]}</script>
+<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/products/*"},"eagerness":"moderate"}]}</script>
 
 <script type="module" src="/assets/js/app.js"></script>
 
