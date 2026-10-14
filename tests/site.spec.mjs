@@ -21,11 +21,7 @@ test.describe('page', () => {
     page.on('console', (msg) => msg.type() === 'error' && problems.push(`console: ${msg.text()}`));
     page.on('pageerror', (error) => problems.push(`page error: ${error.message}`));
     page.on('response', (res) => res.status() >= 400 && problems.push(`${res.status()} ${res.url()}`));
-    page.on('requestfailed', (req) => {
-      // Browsers routinely cancel media range requests; that is not a failure.
-      const aborted = req.failure()?.errorText.includes('ERR_ABORTED');
-      if (!(aborted && req.resourceType() === 'media')) problems.push(`failed: ${req.url()}`);
-    });
+    page.on('requestfailed', (req) => problems.push(`failed: ${req.url()}`));
     await page.goto('/');
     await scrollThrough(page);
     await page.waitForLoadState('networkidle');
@@ -69,11 +65,14 @@ test.describe('page', () => {
     for (const src of sources) expect(src, src).toMatch(/\.(avif|webp)$/);
   });
 
-  test('picks image files big enough for how large they are shown', async ({ browser }, testInfo) => {
+  test('picks the image file that fits how large each photo is shown', async ({ browser }, testInfo) => {
     const mobile = testInfo.project.name === 'mobile';
     const setups = mobile
-      ? [{ width: 360, height: 740, dpr: 2 }, { width: 390, height: 844, dpr: 3 }]
-      : [{ width: 1280, height: 800, dpr: 1 }, { width: 1440, height: 900, dpr: 2 }, { width: 1920, height: 1080, dpr: 1 }];
+      ? [{ width: 360, height: 740, dpr: 2 }, { width: 390, height: 844, dpr: 3 }, { width: 412, height: 915, dpr: 2.625 }, { width: 768, height: 1024, dpr: 2 }]
+      : [
+        { width: 1024, height: 768, dpr: 1 }, { width: 1280, height: 800, dpr: 1 }, { width: 1366, height: 768, dpr: 1 },
+        { width: 1440, height: 900, dpr: 2 }, { width: 1920, height: 1080, dpr: 1 }, { width: 2560, height: 1440, dpr: 1 },
+      ];
     const problems = [];
     for (const { width, height, dpr } of setups) {
       const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: dpr, reducedMotion: 'reduce' });
@@ -97,15 +96,19 @@ test.describe('page', () => {
             .filter((c) => c.w);
           const chosen = candidates.find((c) => c.url.endsWith(file))?.w ?? img.naturalWidth;
           const largest = candidates.length ? Math.max(...candidates.map((c) => c.w)) : chosen;
-          return { file, natural: chosen, shown: Math.round(shown), largest };
+          // A smaller file that would still have been sharp enough (2% rounding allowed).
+          const smaller = candidates.filter((c) => c.w >= shown * 1.02 && c.w < chosen).map((c) => c.w);
+          return { file, natural: chosen, shown: Math.round(shown), largest, smaller: smaller.join(' ') };
         }), dpr);
       for (const f of found) {
-        // Upscaling is only a sizes mistake when a larger file was available.
-        if (f.natural < f.largest && f.shown > f.natural * 1.2) problems.push({ at: `${width}x${height}@${dpr}x`, ...f });
+        // Too small: upscaling is only a sizes mistake when a larger file was available.
+        if (f.natural < f.largest && f.shown > f.natural * 1.2) problems.push({ at: `${width}x${height}@${dpr}x`, issue: 'too small', ...f });
+        // Too big: a smaller file would have looked the same and loaded faster.
+        if (f.smaller) problems.push({ at: `${width}x${height}@${dpr}x`, issue: 'too big', ...f });
       }
       await context.close();
     }
-    console.log(problems.map((p) => `${p.at} ${p.file} natural ${p.natural} shown ${p.shown} largest ${p.largest}`).join('\n'));
+    console.log(problems.map((p) => `${p.at} ${p.issue} ${p.file} natural ${p.natural} shown ${p.shown} largest ${p.largest}`).join('\n'));
     expect(problems).toEqual([]);
   });
 
@@ -121,6 +124,57 @@ test.describe('page', () => {
     await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute('href', 'favicon.svg');
     await expect(page.locator('footer')).toContainText('fictional concept');
     await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
+  });
+});
+
+test.describe('content and assets', () => {
+  test('loads the brand fonts', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    const loaded = await page.evaluate(() => ({
+      display: document.fonts.check('500 40px "Cormorant Garamond"'),
+      italic: document.fonts.check('italic 500 40px "Cormorant Garamond"'),
+      text: document.fonts.check('400 16px "Manrope"'),
+    }));
+    expect(loaded).toEqual({ display: true, italic: true, text: true });
+  });
+
+  test('copy uses no long dashes', async ({ page }) => {
+    await page.goto('/');
+    const text = await page.evaluate(() => [
+      document.body.innerText,
+      document.title,
+      ...[...document.querySelectorAll('meta[content], [alt]')].map((el) => el.getAttribute('content') ?? el.getAttribute('alt')),
+    ].join('\n'));
+    expect(text).not.toMatch(/[\u2013\u2014]/);
+  });
+
+  test('the hero is a still photograph, with no video on the page', async ({ page }) => {
+    const videoRequests = [];
+    page.on('request', (req) => /\.(mp4|webm|mov)$/.test(req.url()) && videoRequests.push(req.url()));
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('video')).toHaveCount(0);
+    expect(videoRequests).toEqual([]);
+  });
+
+  test('portrait phones get the portrait hero photo, other screens the wide one', async ({ browser }, testInfo) => {
+    onlyDesktop(testInfo);
+    const cases = [
+      { width: 360, height: 740, phone: true },
+      { width: 390, height: 844, phone: true },
+      { width: 412, height: 915, phone: true },
+      { width: 768, height: 1024, phone: false }, // portrait tablet
+      { width: 844, height: 390, phone: false }, // phone held sideways
+      { width: 1440, height: 900, phone: false },
+    ];
+    for (const { width, height, phone } of cases) {
+      const page = await browser.newPage({ viewport: { width, height } });
+      await page.goto('/');
+      const src = await page.locator('.hero__image').evaluate((img) => img.currentSrc);
+      expect(src.includes('hero-phone'), `${width}x${height}: ${src}`).toBe(phone);
+      await page.close();
+    }
   });
 });
 
@@ -182,7 +236,7 @@ test.describe('navigation', () => {
   test('villa links land each villa just below the header', async ({ page }) => {
     await page.goto('/');
     for (const id of ['overwater-villa', 'overwater-pool-villa', 'beach-pool-villa']) {
-      await page.locator(`.villa-index a[href="#${id}"]`).click();
+      await page.locator(`.villa-strip__link[href="#${id}"]`).click();
       await expect(page).toHaveURL(new RegExp(`#${id}$`));
       // Wait for the smooth scroll to finish, then check it stopped below the header.
       await expect
@@ -210,6 +264,17 @@ test.describe('navigation', () => {
     await expect(header).not.toHaveClass(/is-solid/);
     await page.evaluate(() => document.getElementById('intro').scrollIntoView({ behavior: 'instant' }));
     await expect(header).toHaveClass(/is-solid/);
+  });
+
+  test('the header button appears only once the hero button has scrolled away', async ({ page }, testInfo) => {
+    onlyDesktop(testInfo);
+    await page.goto('/');
+    const cta = page.locator('.header-cta');
+    await expect(cta).toBeHidden();
+    await page.evaluate(() => document.getElementById('intro').scrollIntoView({ behavior: 'instant' }));
+    await expect(cta).toBeVisible();
+    await cta.click();
+    await expect(page).toHaveURL(/#villas$/);
   });
 });
 
@@ -255,50 +320,6 @@ test.describe('mobile menu', () => {
   });
 });
 
-test.describe('hero video', () => {
-  test('starts after load, matches the screen shape and can be paused', async ({ page }, testInfo) => {
-    await page.goto('/');
-    const video = page.locator('[data-hero-video]');
-    await expect(video).toHaveClass(/is-playing/, { timeout: 20_000 });
-    const src = await video.evaluate((v) => v.currentSrc);
-    expect(src).toContain(testInfo.project.name === 'mobile' ? 'hero-portrait' : 'hero-');
-    expect(await video.evaluate((v) => v.muted)).toBe(true);
-
-    await page.getByRole('button', { name: 'Pause background video' }).click();
-    await expect(page.getByRole('button', { name: 'Play background video' })).toBeVisible();
-    expect(await video.evaluate((v) => v.paused)).toBe(true);
-    await page.getByRole('button', { name: 'Play background video' }).click();
-    await expect.poll(() => video.evaluate((v) => v.paused)).toBe(false);
-  });
-
-  test('with reduced motion, no video is downloaded and all content shows', async ({ browser }) => {
-    const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
-    const page = await context.newPage();
-    const videoRequests = [];
-    page.on('request', (req) => req.url().endsWith('.mp4') && videoRequests.push(req.url()));
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2500);
-    expect(videoRequests).toEqual([]);
-    await expect(page.locator('[data-video-toggle]')).toBeHidden();
-    const hidden = await page.locator('[data-reveal]').evaluateAll(
-      (els) => els.filter((el) => getComputedStyle(el).opacity !== '1').length,
-    );
-    expect(hidden).toBe(0);
-    await context.close();
-  });
-
-  test('the page stays complete when the video cannot load', async ({ page }) => {
-    await page.route('**/*.mp4', (route) => route.abort());
-    await page.goto('/');
-    await page.waitForTimeout(3000);
-    await expect(page.locator('[data-hero-video]')).not.toHaveClass(/is-playing/);
-    await expect(page.locator('[data-video-toggle]')).toBeHidden();
-    await expect(page.locator('.hero__poster')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  });
-});
-
 test.describe('robustness', () => {
   test('printing shows every section', async ({ page }) => {
     await page.goto('/');
@@ -322,61 +343,37 @@ test.describe('robustness', () => {
     await context.close();
   });
 
-  test('touch tablets get full-size navigation targets', async ({ browser }, testInfo) => {
+  test('touch tablets get full-size header targets', async ({ browser }, testInfo) => {
     onlyDesktop(testInfo);
-    const context = await browser.newContext({ viewport: { width: 1024, height: 768 }, hasTouch: true, isMobile: true });
-    const page = await context.newPage();
-    await page.goto('/');
-    const heights = await page.locator('.site-nav a').evaluateAll((links) => links.map((a) => a.getBoundingClientRect().height));
-    for (const h of heights) expect(h).toBeGreaterThanOrEqual(44);
-    await context.close();
+    // Portrait and landscape tablets: the menu button on smaller ones, the
+    // full navigation on larger ones.
+    for (const viewport of [{ width: 1024, height: 768 }, { width: 1180, height: 820 }, { width: 1366, height: 1024 }]) {
+      const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true });
+      const page = await context.newPage();
+      await page.goto('/');
+      const targets = await page.locator('.site-header a, .site-header button').evaluateAll((els) =>
+        els
+          .filter((el) => el.offsetParent !== null && getComputedStyle(el).visibility !== 'hidden')
+          .map((el) => ({ text: el.textContent.trim(), height: Math.round(el.getBoundingClientRect().height) })),
+      );
+      expect(targets.length, `${viewport.width}px`).toBeGreaterThan(1);
+      expect(targets.filter((t) => t.height < 44), `${viewport.width}px`).toEqual([]);
+      await context.close();
+    }
   });
 });
 
-test.describe('hero video choices', () => {
-  // The test browser cannot decode H.264, so these check which file the page
-  // asks for, by pretending the browser supports a given set of formats.
-  async function requestedVideo(browser, { av1, h264, powerEfficient }) {
-    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await context.addInitScript(({ av1, h264, powerEfficient }) => {
-      HTMLMediaElement.prototype.canPlayType = function canPlayType(type) {
-        if (type.includes('av01')) return av1 ? 'probably' : '';
-        if (type.includes('avc1')) return h264 ? 'probably' : '';
-        return '';
-      };
-      if (navigator.mediaCapabilities) {
-        navigator.mediaCapabilities.decodingInfo = async () => ({ supported: true, smooth: true, powerEfficient });
-      }
-    }, { av1, h264, powerEfficient });
+test.describe('motion', () => {
+  test('with reduced motion, all content shows at once', async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
     const page = await context.newPage();
-    const request = page.waitForRequest((req) => req.url().endsWith('.mp4'), { timeout: 15_000 });
     await page.goto('/');
-    const url = (await request).url();
+    await page.waitForLoadState('networkidle');
+    const hidden = await page.locator('[data-reveal]').evaluateAll(
+      (els) => els.filter((el) => getComputedStyle(el).opacity !== '1').length,
+    );
+    expect(hidden).toBe(0);
     await context.close();
-    return url.split('/').pop();
-  }
-
-  test('uses H.264 where AV1 is not available', async ({ browser }, testInfo) => {
-    onlyDesktop(testInfo);
-    expect(await requestedVideo(browser, { av1: false, h264: true, powerEfficient: true })).toBe('hero-1080.mp4');
-  });
-
-  test('uses H.264 where AV1 would drain the battery, AV1 where it is efficient', async ({ browser }, testInfo) => {
-    onlyDesktop(testInfo);
-    expect(await requestedVideo(browser, { av1: true, h264: true, powerEfficient: false })).toBe('hero-1080.mp4');
-    expect(await requestedVideo(browser, { av1: true, h264: true, powerEfficient: true })).toBe('hero-1080-av1.mp4');
-  });
-
-  test('a paused video can still be resumed after reduced motion is switched on and off', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('[data-hero-video]')).toHaveClass(/is-playing/, { timeout: 20_000 });
-    await page.getByRole('button', { name: 'Pause background video' }).click();
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await expect(page.locator('[data-video-toggle]')).toBeHidden();
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await expect(page.getByRole('button', { name: 'Play background video' })).toBeVisible();
-    await page.getByRole('button', { name: 'Play background video' }).click();
-    await expect(page.locator('[data-hero-video]')).toHaveClass(/is-playing/);
   });
 });
 
@@ -405,7 +402,7 @@ test.describe('accessibility', () => {
     onlyDesktop(testInfo);
     await page.goto('/');
     await page.keyboard.press('Tab'); // skip link
-    await page.keyboard.press('Tab'); // wordmark
+    await page.keyboard.press('Tab'); // brand
     const outline = await page.evaluate(() => {
       const style = getComputedStyle(document.activeElement);
       return { width: parseFloat(style.outlineWidth), style: style.outlineStyle };
@@ -462,15 +459,19 @@ test.describe('legibility over photography', () => {
     desktop: [[1024, 768], [1280, 650], [1280, 800], [1366, 657], [1440, 790], [1440, 900], [1536, 730], [1920, 970], [1920, 1080], [2560, 1440]],
     mobile: [[360, 740], [375, 667], [390, 844], [412, 915], [768, 1024]],
   };
-  const HEADER_TEXT = {
-    desktop: ['.site-header .wordmark', '.site-nav li:first-child a', '.site-nav li:last-child a'],
-    mobile: ['.site-header .wordmark', '.site-header .menu-button span'],
-  };
+  // Whichever of these is on screen at a given width is measured.
+  const HEADER_TEXT = ['.site-header .brand__name', '.site-nav li:first-child a', '.site-nav li:last-child a', '.site-header .menu-button span'];
   test('hero words stay readable over the image', async ({ browser }, testInfo) => {
-    const ivory = [251, 248, 242];
-    // Large headline text needs 3:1, smaller text 4.5:1 (WCAG AA).
-    const targets = { '.hero__title': 3, '.hero__lede': 4.5, '.hero__eyebrow': 4.5 };
-    for (const selector of HEADER_TEXT[testInfo.project.name]) targets[selector] = 4.5;
+    // Large headline text needs 3:1, smaller text 4.5:1 (WCAG AA). The
+    // headline is measured without its italic word, which is checked alone.
+    const targets = {
+      '.hero__title': 3,
+      '.hero__title em': 3,
+      '.hero__lede': 4.5,
+      '.hero__eyebrow': 4.5,
+      '.hero .text-link': 4.5,
+    };
+    for (const selector of HEADER_TEXT) targets[selector] = 4.5;
     const results = [];
     for (const [width, height] of HERO_SIZES[testInfo.project.name]) {
       const context = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce' });
@@ -478,49 +479,13 @@ test.describe('legibility over photography', () => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
       for (const [selector, target] of Object.entries(targets)) {
-        const ratio = await backgroundContrast(page, selector, ivory, 'light-text');
+        if (!(await page.locator(selector).first().isVisible())) continue;
+        const ratio = await backgroundContrast(page, selector, await textColour(page, selector), 'dark-text');
         results.push({ at: `${width}x${height}`, selector, ratio: Number(ratio.toFixed(2)), target });
       }
       await context.close();
     }
     console.log(results.map((r) => `${r.at} ${r.selector} ${r.ratio}`).join('\n'));
-    expect(results.filter((r) => r.ratio < r.target)).toEqual([]);
-  });
-
-  test('hero words stay readable on every part of the moving video', async ({ browser }, testInfo) => {
-    const sizes = testInfo.project.name === 'mobile' ? [[390, 844], [360, 740]] : [[1366, 657], [1440, 900], [1920, 1080]];
-    const ivory = [251, 248, 242];
-    const targets = { '.hero__title': 3, '.hero__lede': 4.5, '.hero__eyebrow': 4.5 };
-    for (const selector of HEADER_TEXT[testInfo.project.name]) targets[selector] = 4.5;
-    const results = [];
-    for (const [width, height] of sizes) {
-      const context = await browser.newContext({ viewport: { width, height } });
-      const page = await context.newPage();
-      await page.goto('/');
-      const video = page.locator('[data-hero-video]');
-      await expect(video).toHaveClass(/is-playing/, { timeout: 20_000 });
-      await expect.poll(() => video.evaluate((v) => getComputedStyle(v).opacity)).toBe('1');
-      await page.getByRole('button', { name: 'Pause background video' }).click();
-      // Sample across the whole 16-second loop.
-      for (const time of [0.5, 3, 5.5, 8, 10.5, 13, 15.5]) {
-        await video.evaluate(
-          (v, t) => new Promise((resolve) => {
-            v.addEventListener('seeked', resolve, { once: true });
-            v.currentTime = t;
-          }),
-          time,
-        );
-        for (const [selector, target] of Object.entries(targets)) {
-          const ratio = await backgroundContrast(page, selector, ivory, 'light-text');
-          results.push({ at: `${width}x${height} @${time}s`, selector, ratio: Number(ratio.toFixed(2)), target });
-        }
-      }
-      await context.close();
-    }
-    const worst = Object.keys(targets).map((selector) =>
-      results.filter((r) => r.selector === selector).sort((a, b) => a.ratio - b.ratio)[0],
-    );
-    console.log(worst.map((r) => `worst ${r.selector} ${r.ratio} at ${r.at}`).join('\n'));
     expect(results.filter((r) => r.ratio < r.target)).toEqual([]);
   });
 

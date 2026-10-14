@@ -1,5 +1,6 @@
 // NIVARA COAST: small progressive enhancements. Every section, link and image
-// works without this file; it only adds motion, the menu and the hero video.
+// works without this file; it only adds motion, the phone menu and small
+// navigation helpers.
 
 (() => {
   'use strict';
@@ -55,178 +56,10 @@
       if (event.target.closest('a[href^="#"]')) close();
     });
     // If the window grows to desktop width while the menu is open, close it.
-    window.matchMedia('(min-width: 900px)').addEventListener('change', (event) => {
+    // Keep this in step with the header breakpoint in main.css.
+    window.matchMedia('(min-width: 1080px)').addEventListener('change', (event) => {
       if (event.matches && dialog.open) close();
     });
-  }
-
-  /* Hero video: starts only after the page has loaded, never on data-saver or
-     very slow connections, never with reduced motion, and pauses off screen.
-     If anything fails, the still image underneath simply stays. */
-
-  // One file per screen shape, each in AV1 (smaller) and H.264 (plays almost
-  // everywhere). Files live in the folder named by the video's data-video-path.
-  const HERO_VIDEOS = {
-    large: { file: 'hero-1080', width: 1920, height: 1080, av1: 'av01.0.08M.08', h264: 'avc1.640028' },
-    medium: { file: 'hero-720', width: 1280, height: 720, av1: 'av01.0.05M.08', h264: 'avc1.64001f' },
-    portrait: { file: 'hero-portrait', width: 608, height: 1080, av1: 'av01.0.04M.08', h264: 'avc1.64001f' },
-  };
-
-  async function pickCodec(video, variant) {
-    const av1 = `video/mp4; codecs="${variant.av1}"`;
-    const h264 = `video/mp4; codecs="${variant.h264}"`;
-    const canAv1 = video.canPlayType(av1) !== '';
-    const canH264 = video.canPlayType(h264) !== '';
-    if (canAv1 && canH264 && navigator.mediaCapabilities) {
-      // Prefer AV1 only where the device decodes it efficiently (saves battery).
-      try {
-        const info = await navigator.mediaCapabilities.decodingInfo({
-          type: 'file',
-          video: { contentType: av1, width: variant.width, height: variant.height, bitrate: 1_800_000, framerate: 30 },
-        });
-        return info.supported && info.powerEfficient ? 'av1' : 'h264';
-      } catch {
-        return 'h264';
-      }
-    }
-    if (canAv1) return 'av1';
-    if (canH264) return 'h264';
-    return null;
-  }
-
-  function initHeroVideo() {
-    const video = document.querySelector('[data-hero-video]');
-    const toggle = document.querySelector('[data-video-toggle]');
-    if (!video || !toggle) return;
-
-    const connection = navigator.connection;
-    if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType ?? '')) return;
-
-    const label = toggle.querySelector('[data-video-toggle-label]');
-    const path = video.dataset.videoPath ?? '';
-    const portrait = window.matchMedia('(max-aspect-ratio: 3/4)');
-    let started = false;
-    let userPaused = false;
-    let inView = true;
-    let failed = false;
-    let current = null; // { key, codec }
-
-    const pickVariant = () => {
-      if (portrait.matches) return 'portrait';
-      const pixels = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
-      return pixels > 1400 ? 'large' : 'medium';
-    };
-
-    const fileFor = (key, codec) => `${path}${HERO_VIDEOS[key].file}${codec === 'av1' ? '-av1' : ''}.mp4`;
-
-    const load = (key, codec) => {
-      current = { key, codec };
-      video.classList.remove('is-playing');
-      video.src = fileFor(key, codec);
-    };
-
-    const setSource = async () => {
-      const key = pickVariant();
-      if (current?.key === key) return;
-      const codec = await pickCodec(video, HERO_VIDEOS[key]);
-      if (!codec) {
-        failed = true;
-        return;
-      }
-      load(key, codec);
-    };
-
-    const updateToggle = () => {
-      const paused = video.paused;
-      toggle.dataset.state = paused ? 'paused' : 'playing';
-      label.textContent = paused ? 'Play background video' : 'Pause background video';
-    };
-
-    const play = () => {
-      if (failed || !current || userPaused || !inView || reducedMotion.matches) return;
-      // Autoplay can be refused (for example in low power mode): keep the still.
-      video.play()?.catch(() => {});
-    };
-
-    const stop = () => {
-      video.pause();
-      video.classList.remove('is-playing');
-      toggle.hidden = true;
-    };
-
-    const start = async () => {
-      if (started || reducedMotion.matches) return;
-      started = true;
-      await setSource();
-      play();
-    };
-
-    video.addEventListener('playing', () => {
-      video.classList.add('is-playing');
-      toggle.hidden = false;
-      updateToggle();
-    });
-    video.addEventListener('pause', updateToggle);
-    video.addEventListener('error', () => {
-      // If the AV1 file cannot be decoded, try the H.264 file once.
-      if (current?.codec === 'av1' && video.canPlayType(`video/mp4; codecs="${HERO_VIDEOS[current.key].h264}"`)) {
-        load(current.key, 'h264');
-        play();
-        return;
-      }
-      failed = true;
-      stop();
-    });
-
-    toggle.addEventListener('click', () => {
-      if (video.paused) {
-        userPaused = false;
-        play();
-      } else {
-        userPaused = true;
-        video.pause();
-      }
-    });
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([entry]) => {
-        inView = entry.isIntersecting;
-        if (inView) play();
-        else video.pause();
-      }).observe(video);
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) video.pause();
-      else play();
-    });
-
-    portrait.addEventListener('change', async () => {
-      if (!started || failed) return;
-      await setSource();
-      play();
-    });
-
-    reducedMotion.addEventListener('change', (event) => {
-      if (event.matches) {
-        stop();
-      } else if (!started) {
-        start();
-      } else if (current && !failed) {
-        // Bring the control back, so a video paused by the visitor can still be resumed.
-        toggle.hidden = false;
-        updateToggle();
-        play();
-      }
-    });
-
-    // Wait for the page (and the still image) to finish loading first.
-    const whenIdle = () =>
-      'requestIdleCallback' in window
-        ? window.requestIdleCallback(start, { timeout: 1500 })
-        : window.setTimeout(start, 300);
-    if (document.readyState === 'complete') whenIdle();
-    else window.addEventListener('load', whenIdle, { once: true });
   }
 
   /* Scroll reveals: content eases in as it enters the screen. */
@@ -308,7 +141,6 @@
 
   initHeader();
   initMenu();
-  initHeroVideo();
   initReveal();
   initSectionHighlight();
   initIslandMap();

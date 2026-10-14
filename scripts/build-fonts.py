@@ -2,9 +2,8 @@
 """Download and slim the two web fonts used by the site.
 
 Fonts (both SIL Open Font License, served by Google Fonts):
-  - Newsreader (display serif): roman as a variable font (weights 300-500),
-    italic as a single 300 weight. The optical-size axis is pinned to 60,
-    which keeps the files small and suits headline sizes.
+  - Cormorant Garamond (display serif): roman and italic as variable fonts,
+    weights 400-600.
   - Manrope (text and interface sans): variable font, weights 400-600.
 
 Only the Latin subset is kept. Output goes to site/assets/fonts/.
@@ -26,14 +25,14 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/130.0 Safari/537.36")
 
 FAMILIES = {
-    "Newsreader": "family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800",
+    "Cormorant Garamond": "family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700",
     "Manrope": "family=Manrope:wght@200..800",
 }
 
 # (family, style) -> (output file, axis limits)
 TARGETS = {
-    ("Newsreader", "normal"): ("newsreader-roman.woff2", {"opsz": 60, "wght": (300, 500)}),
-    ("Newsreader", "italic"): ("newsreader-italic.woff2", {"opsz": 60, "wght": 300}),
+    ("Cormorant Garamond", "normal"): ("cormorant-roman.woff2", {"wght": (400, 600)}),
+    ("Cormorant Garamond", "italic"): ("cormorant-italic.woff2", {"wght": (400, 600)}),
     ("Manrope", "normal"): ("manrope.woff2", {"wght": (400, 600)}),
 }
 
