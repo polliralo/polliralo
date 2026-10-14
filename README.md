@@ -18,7 +18,7 @@ Upload **the contents of the `site/` folder** to any static web host (Hostinger,
 
 The easiest way is the ready-made zip: run `npm run zip` and upload `dist/nivara-coast-site.zip` (about 10 MB, 117 files). `index.html` sits at the top of the zip with `assets/` beside it, which is the layout hosts expect. On Hostinger, open File Manager, go to `public_html`, upload the zip there and choose Extract; on Netlify, drag the unzipped folder onto the Deploys page. Run `npm run zip` again after any change, so the zip always matches the site.
 
-Once the site has a real domain, open `site/index.html` and find the comment marked `DEPLOY STEP`. Change `og:image` to a full URL and add `og:url` and `<link rel="canonical">` with the new address, so link previews on social apps show the right image. Most hosts compress files automatically; check yours does (gzip or brotli).
+The site is live at <https://tight-grass-cb84.mohammedabdulazizcxb.workers.dev/> (Cloudflare Workers), and the sharing tags already use that address, so link previews on social apps show the right image. If the site moves to its own domain, open `site/index.html`, find the comment marked `DEPLOY STEP` and change the three addresses under it (canonical, `og:url` and `og:image`) to the new one, then run `npm run zip` and upload again. Most hosts compress files automatically; check yours does (gzip or brotli).
 
 ## What's in this folder
 
@@ -52,8 +52,8 @@ Once the site has a real domain, open `site/index.html` and find the comment mar
   Lagoon `#69C8C8` is too light for text on pale grounds, so text in the lagoon family uses a deeper shade on light grounds (`#1D6A6C`) and a lighter one on photos and dark grounds (`#A6E1E0`).
 - **Type.** *Cormorant Garamond* for headlines, with one italic word or phrase for emphasis. *Manrope* for body text, navigation, labels and buttons.
 - **Hero.** The photographs stay in full daylight colour. Ivory type sits on a soft pool of deep-water shading that covers only the area behind the words (plus a slightly darker sky at the very top, like a photographer's graduated filter, so the menu reads clearly). On desktops and tablets the wide aerial fills the screen; on portrait phones the portrait aerial sits above the words and sinks into deep teal, so no word ever sits on the busy villa roofs. A phone browser asking for the desktop site still gets the landscape layout, never a stretched portrait crop.
-- **Villa card.** A white card with a small photo of each villa overlaps the bottom of the hero (the floating-card idea from the main reference, used for real navigation instead of a fake search bar). The header's "Explore the Villas" button appears once the hero has scrolled away, so the first screen never shows the same button twice.
-- **Villas.** Each villa is laid out like a magazine spread: a large photo, the inside view tucked against it in a white frame, and a white panel with the story, the facts and a numeral (01, 02, 03) overlapping the photo.
+- **Villa card.** A white card with a small photo of each villa rests on the bottom edge of the hero (the floating-card idea from the main reference, used for real navigation instead of a fake search bar). Only its empty top margin touches the photo; the words start below it. The header's "Explore the Villas" button appears once the hero has scrolled away, so the first screen never shows the same button twice.
+- **Villas.** Each villa is laid out like a magazine spread: a large photo, the inside view in a white frame laid over the photo's lower corner, and the story with its facts and a numeral (01, 02, 03). Words never sit on top of a photo: on wide screens they sit beside it on the sand-coloured ground, on mid-size screens beneath it, and on phones in a white panel tucked just under the photo's edge.
   - *Overwater Villa*: the stone bath facing the sea, and the villas at the end of the boardwalk (a crop of the jetty photo). It is never described as having a pool.
   - *Overwater Pool Villa*: the villa with its plunge pool, and the bedroom that opens onto the pool deck.
   - *Beach Pool Villa*: the villa on the sand, and the bedroom looking over the garden, pool and beach.
@@ -88,6 +88,7 @@ The tests cover:
 - no sideways scrolling from 320px to 1920px wide
 - every in-page link has a real target; the hero buttons, the villa card and the phone menu scroll to the right section, clear of the header
 - the header turns solid after the hero, and its button appears only then
+- no words sit on top of a photo anywhere on the page (the hero and arrival overlays aside), checked at 8 screen sizes including a phone asking for the desktop site
 - the island guide follows the scroll and the mouse, every place can be read while scrolling (including a phone held sideways and a short laptop window), and the page still shows every place without JavaScript
 - the phone menu keeps keyboard focus inside, closes with Esc and returns focus
 - the skip link, focus outlines, link names, and 44px touch targets on phones and touch tablets
@@ -96,7 +97,7 @@ The tests cover:
 - with reduced motion everything shows at once; printing shows every section; without JavaScript the navigation and all photos stay visible
 - text contrast over the photos, measured on the real rendered pixels: the hero and header at 17 screen and window sizes, and the arrival section at 12 sizes
 
-**Results at handoff:** lint clean and all 63 browser checks pass (a further 19 run only on the desktop or only on the phone setup, so each is skipped on the other). An independent review also checked every section by eye at 12 screen sizes; the problems it found are fixed. Lighthouse (lab test on the local preview server):
+**Results at handoff:** lint clean and all 65 browser checks pass (a further 19 run only on the desktop or only on the phone setup, so each is skipped on the other). An independent review also checked every section by eye at 12 screen sizes; the problems it found are fixed. Lighthouse (lab test on the local preview server):
 - Mobile (simulated slow 4G): Performance 98, Accessibility 100, Best Practices 100, SEO 100. Largest Contentful Paint 2.3 s, Cumulative Layout Shift 0, Total Blocking Time 10 ms.
 - Desktop: 100 in all four categories. Largest Contentful Paint 0.7 s, Cumulative Layout Shift 0.
 
@@ -113,5 +114,5 @@ The tests cover:
 - A booking engine (link or embedded widget) or an enquiry form connected to a form service or backend. Right now the calls to action scroll to page sections.
 - Real contact details and address. Only then add Hotel or LocalBusiness structured data.
 - Privacy and cookie pages, plus a consent banner if analytics are added.
-- The domain, social sharing tags (see "Put it online") and, if non-developers will edit the content, a CMS.
+- Its own domain (the sharing tags then need the new address; see "Put it online") and, if non-developers will edit the content, a CMS.
 - Confirmed usage rights for all photography.

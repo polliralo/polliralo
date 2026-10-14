@@ -177,9 +177,11 @@
   --dur-reveal: 900ms;
 }
 
+/* The villa card's top edge rests on the hero photo; only its empty top
+   padding overlaps, so no word sits on the photo. */
 @media (min-width: 900px) {
   :root {
-    --card-overlap: 3.75rem;
+    --card-overlap: 1.25rem;
   }
 }
 
@@ -1137,14 +1139,14 @@ html:has(.menu[open]) {
   }
 
   .villa-card {
-    padding: 1rem 1rem 0.75rem;
+    padding: calc(var(--card-overlap) + 0.5rem) 1rem 0.75rem;
     border-radius: var(--radius-md);
     background: var(--card-bg);
     box-shadow: var(--card-shadow);
   }
 
   .villa-card__label {
-    margin: 0.25rem 0 0.25rem 1rem;
+    margin: 0 0 0.25rem 1rem;
   }
 
   .villa-card__name {
@@ -1273,8 +1275,8 @@ html:has(.menu[open]) {
 
 /* 10. Villas -------------------------------------------------------------- */
 
-/* Each villa: a large photo with the inside view tucked against it, and a
-   white panel that overlaps the photo, like a page laid over a print. */
+/* Each villa: a large photo, the inside view in a white frame and the
+   story with its facts. Words never sit on top of a photo. */
 .villas {
   background: var(--color-surface-alt);
 }
@@ -1288,6 +1290,7 @@ html:has(.menu[open]) {
   margin-top: clamp(4.5rem, 3rem + 6vw, 9rem);
 }
 
+/* The two photos are separate grid items, so they can be placed freely. */
 .villa__media {
   display: contents;
 }
@@ -1298,11 +1301,13 @@ html:has(.menu[open]) {
   margin-inline: calc(-1 * var(--gutter));
 }
 
+/* Phones: a white panel tucked just under the photo's edge. Only its empty
+   top padding overlaps the photo; the first word starts below the photo. */
 .villa__panel {
   order: 2;
   position: relative;
   z-index: 1;
-  margin-top: -2.5rem;
+  margin-top: -1.25rem;
   padding: 1.75rem 1.5rem 2rem;
   border-radius: var(--radius-md);
   background: var(--card-bg);
@@ -1410,35 +1415,33 @@ html:has(.menu[open]) {
   line-height: 1.5;
 }
 
-/* Mid-size screens: the photo runs full width; the panel overlaps its lower
-   edge on one side and the inside view hangs from the other. */
+/* From 900px the words never sit on a photo: they sit on the sand beside or
+   beneath it, and only the framed inside view is laid over the main photo's
+   edge. */
 @media (min-width: 900px) {
   .villa {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--col-gap);
   }
 
-  .villa__media {
-    position: relative;
-    display: block;
-    grid-column: 1 / -1;
-    grid-row: 1;
-    /* Room for the inside view, which hangs below the main photo. */
-    padding-bottom: calc(10% + 2.5rem);
+  .villa__panel {
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
   }
 
   .villa__main {
     margin-inline: 0;
-    aspect-ratio: 16 / 9;
     border-radius: var(--radius-md);
   }
 
   .villa__inset {
-    position: absolute;
-    right: 4%;
-    bottom: 0;
-    width: 34%;
-    margin: 0;
+    position: relative;
+    z-index: 1;
+    align-self: start;
+    margin-top: -4rem;
   }
 
   .villa__inset-frame {
@@ -1446,63 +1449,70 @@ html:has(.menu[open]) {
     border-radius: calc(var(--radius-md) + 2px);
     box-shadow: var(--panel-shadow);
   }
+}
+
+/* Mid-size screens: the photo runs full width; the words and the inside
+   view sit side by side beneath it. */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .villa__main {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    aspect-ratio: 16 / 9;
+  }
 
   .villa__panel {
     grid-column: 1 / span 7;
-    grid-row: 1;
-    align-self: end;
-    margin: 0 0 0 4%;
-    padding: 2.5rem 2.75rem;
+    grid-row: 2;
+    padding-top: 2.75rem;
   }
 
-  .villa--reverse .villa__inset {
-    right: auto;
-    left: 4%;
+  .villa__inset {
+    grid-column: 9 / span 4;
+    grid-row: 2;
   }
 
   .villa--reverse .villa__panel {
     grid-column: 6 / span 7;
-    margin: 0 4% 0 0;
+  }
+
+  .villa--reverse .villa__inset {
+    grid-column: 1 / span 4;
   }
 }
 
-/* Wide screens: photo and panel side by side, the panel overlapping the
-   photo's edge, with the inside view tucked under the photo. */
+/* Wide screens: photo and words side by side, with the inside view hanging
+   from the photo's outer lower corner. */
 @media (min-width: 1200px) {
-  .villa__media {
-    grid-column: 1 / span 8;
-    padding-bottom: calc(14% + 2.75rem);
-  }
-
   .villa__main {
-    aspect-ratio: 3 / 2;
-  }
-
-  .villa__inset {
-    right: auto;
-    left: 7%;
-    width: 42%;
+    grid-column: 1 / span 7;
+    grid-row: 1;
+    aspect-ratio: 4 / 3;
   }
 
   .villa__panel {
     grid-column: 8 / span 5;
+    grid-row: 1 / span 2;
     align-self: center;
-    margin: 0;
-    padding: 3rem 3.25rem;
+    padding-left: clamp(2rem, 1rem + 2vw, 4rem);
   }
 
-  .villa--reverse .villa__media {
-    grid-column: 5 / span 8;
+  .villa__inset {
+    grid-column: 2 / span 3;
+    grid-row: 2;
   }
 
-  .villa--reverse .villa__inset {
-    left: auto;
-    right: 7%;
+  .villa--reverse .villa__main {
+    grid-column: 6 / span 7;
   }
 
   .villa--reverse .villa__panel {
     grid-column: 1 / span 5;
-    margin: 0;
+    padding-left: 0;
+    padding-right: clamp(2rem, 1rem + 2vw, 4rem);
+  }
+
+  .villa--reverse .villa__inset {
+    grid-column: 9 / span 3;
   }
 }
 
@@ -1821,7 +1831,7 @@ html:has(.menu[open]) {
 @media (min-width: 900px) {
   .lagoon__media {
     aspect-ratio: auto;
-    height: clamp(30rem, 84vh, 54rem);
+    height: clamp(30rem, min(84vh, 62vw), 54rem);
   }
 
   .lagoon__caption {
@@ -1954,6 +1964,14 @@ html:has(.menu[open]) {
       rgb(var(--abyss-rgb) / 0.58) 45%,
       rgb(var(--abyss-rgb) / 0) 88%),
     linear-gradient(180deg, rgb(var(--abyss-rgb) / 0.3) 0, rgb(var(--abyss-rgb) / 0) 40%);
+}
+
+/* Tall windows at desktop width (a phone asking for the desktop site): the
+   section follows the width too, so the photo is not cropped to a sliver. */
+@media (min-width: 900px) {
+  .arrival {
+    min-height: clamp(40rem, min(105vh, 80vw), 64rem);
+  }
 }
 
 /* On phones the photo runs past the bottom edge, which lowers the horizon

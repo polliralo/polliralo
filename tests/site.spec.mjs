@@ -212,6 +212,60 @@ test.describe('layout', () => {
     });
   }
 
+  test('words never sit on top of a photo (apart from the hero and arrival overlays)', async ({ browser }, testInfo) => {
+    const sizes = testInfo.project.name === 'mobile'
+      ? [[360, 740], [390, 844], [768, 1024]]
+      : [[980, 1844], [1024, 768], [1280, 800], [1440, 900], [1920, 1080]];
+    const problems = [];
+    for (const [width, height] of sizes) {
+      const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
+      await page.goto('/');
+      await page.evaluate(() => document.fonts.ready);
+      const found = await page.evaluate(() => {
+        // The part of each photo a visitor can see: its box, cut down by any
+        // ancestor that clips overflow.
+        const visibleBox = (el) => {
+          const r = el.getBoundingClientRect();
+          const box = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+          for (let a = el.parentElement; a; a = a.parentElement) {
+            const style = getComputedStyle(a);
+            if (style.overflowX === 'visible' && style.overflowY === 'visible') continue;
+            const c = a.getBoundingClientRect();
+            box.left = Math.max(box.left, c.left);
+            box.top = Math.max(box.top, c.top);
+            box.right = Math.min(box.right, c.right);
+            box.bottom = Math.min(box.bottom, c.bottom);
+          }
+          return box;
+        };
+        const photos = [...document.querySelectorAll('.photo, .villa-card__thumb, .hero__media, .villa__inset-frame')]
+          .map((el) => ({ el, box: visibleBox(el) }));
+        const overlays = '.hero__content, .arrival__content, .island__photo, .site-header, .menu';
+        const out = [];
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          const parent = node.parentElement;
+          if (!node.data.trim() || !parent || parent.closest(overlays) || !parent.offsetParent) continue;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          for (const line of range.getClientRects()) {
+            for (const { el, box } of photos) {
+              if (el.contains(parent)) continue;
+              const w = Math.min(line.right, box.right) - Math.max(line.left, box.left);
+              const h = Math.min(line.bottom, box.bottom) - Math.max(line.top, box.top);
+              if (w > 1 && h > 1) out.push(`"${node.data.trim().slice(0, 30)}" on ${el.className}`);
+            }
+          }
+        }
+        return [...new Set(out)];
+      });
+      problems.push(...found.map((f) => `${width}x${height}: ${f}`));
+      await page.close();
+    }
+    expect(problems).toEqual([]);
+  });
+
   test('touch targets are at least 44px tall on phones', async ({ page }, testInfo) => {
     onlyMobile(testInfo);
     await page.goto('/');

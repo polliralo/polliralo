@@ -118,7 +118,8 @@ Copy rules: no long dashes (use commas and full stops), no stock marketing words
 ## 6. Layout and components
 
 - **Corners:** 10px for photos, cards and panels; 6px for thumbnails; full pill only for buttons.
-- **Depth:** white cards and panels overlap photos with one soft, warm shadow. Nothing else casts a shadow. Use the overlap for the villa card and the villa spreads only; elsewhere let a photo run full width with its words beneath it.
+- **Depth:** one soft, warm shadow, used only for the villa card, the framed inside views and the phone villa panels. Nothing else casts a shadow.
+- **Words and photos:** words never sit on top of a photo, except the hero and arrival lines, which have their own deep-water shading. A card or frame may rest on a photo's edge, but only its empty margin overlaps; the words start beyond the photo.
 - **Rules:** thin ink lines at 14 percent (dividers) or 50 percent (section tops).
 - **Signature details:** a short horizon line before every label; italic numerals (01, 02, 03); the island guide, where a ring glides across the aerial photo to each place as you read.
 - **Buttons:** ink pill with an ivory circle and arrow on light grounds; ivory pill with an ink circle on photos.
