@@ -13,6 +13,9 @@
 - Content rules: no invented prices, reviews, ratings, availability, address, contact details or staff; keep the fictional-concept note in the footer; the standard Overwater Villa has no private pool; no long dashes in site copy.
 - README.md is the client handoff: keep it current when things change.
 
+## Next project: menswear e-commerce shop
+- Product photos live in `shop/media/originals/` (`studio/`, `lifestyle/`, `wide/`); never edit them. `shop/media/originals/CATALOG.md` lists every product and photo. The site itself is not built yet; brand name, prices, sizes and fabric details must come from the user (never invent them). The user sends photos in batches, so add new ones to the same folders and update the catalogue.
+
 ## Skills
 This repo has these skills in `.claude/skills/`. Use them together for any website, UI, or design work:
 - `10k-websites`: overall website build flow (cinematic scroll site, deploy).
