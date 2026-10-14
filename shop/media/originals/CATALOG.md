@@ -2,9 +2,10 @@
 
 Original photos for the menswear e-commerce site. These are the untouched masters: never edit them; optimised copies for the site will be generated from them.
 
-Three kinds of photo:
+Four kinds of photo:
 
-- `studio/`: product shots on a plain grey backdrop, portrait 1122 × 1402 (4:5). Use on product cards and product pages.
+- `studio/`: clothing worn by a model on a plain grey backdrop, portrait 1122 × 1402 (4:5). Use on product cards and product pages.
+- `still-life/`: accessories on their own on a surface (stone, wood, steel), portrait 1122 × 1402 (4:5). Use on product cards and product pages.
 - `lifestyle/`: the product worn or styled in a real setting, portrait 1122 × 1402 (4:5). Use as a second image on product pages and in editorial blocks.
 - `wide/`: landscape scenes, about 16:9 (two are wider or squarer, noted below). Use for the homepage hero, collection banners and campaign strips.
 
@@ -12,7 +13,7 @@ Prices, sizes, fabric content and stock are not known yet and must come from the
 
 ## Products seen in the photos
 
-| Product | Colour | Studio | Lifestyle | Wide |
+| Product | Colour | Studio or still life | Lifestyle | Wide |
 | --- | --- | --- | --- | --- |
 | Oxford shirt, button-down collar | Ivory | `studio/ivory-oxford-shirt.png` | | |
 | Oxford shirt, button-down collar | Light blue | | `lifestyle/blue-oxford-shirt-library.png` | |
@@ -27,14 +28,18 @@ Prices, sizes, fabric content and stock are not known yet and must come from the
 | Textured crew-neck T-shirt | Charcoal | `studio/charcoal-textured-tee.png` | `lifestyle/charcoal-tee-wardrobe.png` | |
 | Heavyweight crew-neck T-shirt | Ivory | `studio/ivory-heavy-tee.png` | | |
 | Tailored trousers | Charcoal, navy, black, stone | worn in most photos | | |
-| Rectangular sunglasses | Black | | `lifestyle/black-sunglasses-chore-jacket.png`, `lifestyle/black-sunglasses-grey-linen-shirt.png` | `wide/black-sunglasses-rooftop.png` |
-| Dress watch, steel case, leather strap | Black dial, brown strap | | `lifestyle/black-dial-watch-wrist.png` | `wide/black-dial-watch-desk.png` |
-| Bifold wallet | Dark brown | | `lifestyle/leather-wallet-belt-cardholder-flatlay.png` | `wide/leather-wallet-belt-cardholder-table.png` |
-| Leather belt, brushed steel buckle | Black | | same two photos | |
+| Rectangular sunglasses | Black | `still-life/black-rectangular-sunglasses.png` | `lifestyle/black-sunglasses-chore-jacket.png`, `lifestyle/black-sunglasses-grey-linen-shirt.png` | `wide/black-sunglasses-rooftop.png` |
+| Aviator sunglasses | Silver frame, dark lenses | `still-life/silver-aviator-sunglasses.png` | | |
+| Dress watch, steel case, leather strap | Black dial, brown strap | `still-life/steel-watch-black-dial-brown-strap.png` | `lifestyle/black-dial-watch-wrist.png` | `wide/black-dial-watch-desk.png` |
+| Dress watch, steel bracelet | White dial | `still-life/steel-watch-white-dial-bracelet.png` | | |
+| Bifold wallet | Dark brown | `still-life/brown-bifold-wallet.png` | `lifestyle/leather-wallet-belt-cardholder-flatlay.png` | `wide/leather-wallet-belt-cardholder-table.png` |
+| Leather belt, brushed steel buckle | Black | `still-life/black-leather-belt.png` | same two photos | |
 | Card holder | Black | | same two photos | |
 
 ## Gaps to fill
 
-- No studio shots yet for: blue Oxford, linen shirts, overshirt, chore jacket, cream knitted polo, trousers, sunglasses, watch, wallet, belt, card holder.
+- No studio shots yet for: blue Oxford, linen shirts, overshirt, chore jacket, cream knitted polo, trousers.
+- No still life yet for the card holder.
+- The aviator sunglasses and the white-dial watch have a still life only, with no lifestyle photo.
 - Ivory Oxford, blue stripe shirt, navy polo and ivory tee have a studio shot only, with no lifestyle photo.
 - The models change between photos, which is fine for a shop but worth keeping in mind for the homepage, where one face across the hero and banners reads as a stronger brand.
