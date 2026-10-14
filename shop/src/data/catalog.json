@@ -1,0 +1,391 @@
+{
+  "meta": {
+    "brand": "MONO",
+    "tagline": "Less noise. Better essentials.",
+    "currency": "USD",
+    "demo": true,
+    "note": "Fictional demo store. Every product, price and stock number is demo data."
+  },
+  "categories": [
+    {
+      "slug": "shirts",
+      "name": "Shirts",
+      "title": "Men's Shirts",
+      "description": "An ivory Oxford and a fine blue stripe, cut clean for open collars and rolled sleeves.",
+      "image": { "key": "life-blue-oxford-library", "alt": "Man in a light blue button-down shirt by a window in a wood-panelled library" }
+    },
+    {
+      "slug": "t-shirts",
+      "name": "T-Shirts",
+      "title": "Men's T-Shirts",
+      "description": "Crew necks that keep their shape: one textured in charcoal, one heavy and plain in ivory.",
+      "image": { "key": "life-ivory-tee-concrete", "alt": "Man in an ivory crew-neck T-shirt leaning on a sunlit concrete wall" }
+    },
+    {
+      "slug": "polos",
+      "name": "Polos",
+      "title": "Men's Polo Shirts",
+      "description": "Piqué-knit polos with a flat-knit collar and a neat two-button placket, in olive and navy.",
+      "image": { "key": "life-olive-polo-terrace", "alt": "Man in an olive polo on a sunlit terrace above the sea" }
+    },
+    {
+      "slug": "watches",
+      "name": "Watches",
+      "title": "Men's Watches",
+      "description": "Two-hand dress watches with quiet dials, on a brown strap or a link bracelet.",
+      "image": { "key": "life-watch-wrist", "alt": "Black-dial watch on a brown strap, worn with a grey wool sleeve at a desk" }
+    },
+    {
+      "slug": "sunglasses",
+      "name": "Sunglasses",
+      "title": "Men's Sunglasses",
+      "description": "A strong black rectangle and a thin silver aviator.",
+      "image": { "key": "life-sunglasses-linen", "alt": "Man in black rectangular sunglasses and a grey shirt against a concrete wall in the sun" }
+    },
+    {
+      "slug": "accessories",
+      "name": "Accessories",
+      "title": "Men's Accessories",
+      "description": "A brown bifold wallet and a black dress belt to finish the outfit.",
+      "image": { "key": "life-accessories-flatlay", "alt": "Brown bifold wallet, black belt and black card holder on a dark wood table" }
+    }
+  ],
+  "products": [
+    {
+      "slug": "ivory-oxford-shirt",
+      "sku": "MONO-SH-01",
+      "name": "Ivory Oxford Shirt",
+      "category": "shirts",
+      "price": 64,
+      "colour": { "name": "Ivory", "hex": "#EDE8DC" },
+      "accent": "#8C8270",
+      "group": null,
+      "summary": "A button-down Oxford shirt in soft ivory.",
+      "description": "A button-down Oxford shirt in soft ivory, with a box pleat at the back and a gently curved hem. Wear it open over a tee or buttoned up under a jacket.",
+      "details": ["Button-down collar", "Box pleat at the back yoke", "Curved hem", "Single-button cuffs"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 6 },
+        { "id": "M", "label": "M", "stock": 9 },
+        { "id": "L", "label": "L", "stock": 7 },
+        { "id": "XL", "label": "XL", "stock": 4 },
+        { "id": "XXL", "label": "XXL", "stock": 2 }
+      ],
+      "images": [
+        { "key": "cut-ivory-oxford-shirt-front", "alt": "Ivory Oxford shirt worn buttoned, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-ivory-oxford-shirt-back", "alt": "Ivory Oxford shirt, back view showing the box pleat and curved hem", "kind": "cutout", "view": "Back" },
+        { "key": "ivory-oxford-shirt-closeup", "alt": "Close-up of the button-down collar and Oxford weave", "kind": "photo", "view": "Detail" },
+        { "key": "cut-look-02", "alt": "Full outfit: ivory Oxford shirt, black belt, charcoal trousers and white-dial watch", "kind": "cutout", "view": "Styled" }
+      ],
+      "completeTheLook": ["black-dress-belt", "white-dial-watch", "silver-aviator-sunglasses"],
+      "featured": true,
+      "newArrival": true
+    },
+    {
+      "slug": "blue-stripe-shirt",
+      "sku": "MONO-SH-02",
+      "name": "Blue Stripe Shirt",
+      "category": "shirts",
+      "price": 64,
+      "colour": { "name": "Blue and white stripe", "hex": "#B9CBE3" },
+      "accent": "#4F6F99",
+      "group": null,
+      "summary": "Fine blue and white stripes with a point collar.",
+      "description": "Fine blue and white stripes on a shirt with a sharp point collar, a box pleat at the back and a curved hem. Neat enough for the office, easy enough for the weekend.",
+      "details": ["Point collar", "Fine vertical stripes", "Box pleat at the back yoke", "Curved hem"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 0 },
+        { "id": "M", "label": "M", "stock": 8 },
+        { "id": "L", "label": "L", "stock": 6 },
+        { "id": "XL", "label": "XL", "stock": 5 },
+        { "id": "XXL", "label": "XXL", "stock": 3 }
+      ],
+      "images": [
+        { "key": "cut-blue-stripe-shirt-front", "alt": "Blue and white striped shirt worn buttoned, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-blue-stripe-shirt-back", "alt": "Blue and white striped shirt, back view", "kind": "cutout", "view": "Back" },
+        { "key": "blue-stripe-shirt-closeup", "alt": "Close-up of the point collar and fine blue stripes", "kind": "photo", "view": "Detail" }
+      ],
+      "completeTheLook": ["white-dial-watch", "black-dress-belt", "brown-bifold-wallet"],
+      "featured": true,
+      "newArrival": false
+    },
+    {
+      "slug": "charcoal-textured-tee",
+      "sku": "MONO-TS-01",
+      "name": "Charcoal Textured Tee",
+      "category": "t-shirts",
+      "price": 32,
+      "colour": { "name": "Charcoal", "hex": "#3A3A38" },
+      "accent": "#3A3A38",
+      "group": null,
+      "summary": "A charcoal crew neck with a subtle tonal pattern.",
+      "description": "A charcoal crew-neck tee with a subtle tonal pattern running through the fabric, a ribbed neckline and a straight, relaxed body.",
+      "details": ["Ribbed crew neck", "Tonal surface pattern", "Straight, relaxed body", "Short sleeves"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 10 },
+        { "id": "M", "label": "M", "stock": 12 },
+        { "id": "L", "label": "L", "stock": 9 },
+        { "id": "XL", "label": "XL", "stock": 6 },
+        { "id": "XXL", "label": "XXL", "stock": 3 }
+      ],
+      "images": [
+        { "key": "cut-charcoal-textured-tee-front", "alt": "Charcoal textured crew-neck tee, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-charcoal-textured-tee-back", "alt": "Charcoal textured tee, back view", "kind": "cutout", "view": "Back" },
+        { "key": "charcoal-textured-tee-closeup", "alt": "Close-up of the ribbed neckline and tonal pattern", "kind": "photo", "view": "Detail" },
+        { "key": "life-charcoal-tee-wardrobe", "alt": "Man in the charcoal tee standing by an open wardrobe", "kind": "photo", "view": "Styled" }
+      ],
+      "completeTheLook": ["black-rectangular-sunglasses", "black-dial-watch", "brown-bifold-wallet"],
+      "featured": true,
+      "newArrival": true
+    },
+    {
+      "slug": "ivory-heavyweight-tee",
+      "sku": "MONO-TS-02",
+      "name": "Ivory Heavyweight Tee",
+      "category": "t-shirts",
+      "price": 34,
+      "colour": { "name": "Ivory", "hex": "#EEE9DF" },
+      "accent": "#8E8676",
+      "group": null,
+      "summary": "A clean ivory crew neck with a structured shape.",
+      "description": "A clean ivory tee with a structured shape, a ribbed crew neck and a slightly dropped shoulder. The plain one you reach for first.",
+      "details": ["Ribbed crew neck", "Slightly dropped shoulder", "Straight hem", "Short sleeves"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 7 },
+        { "id": "M", "label": "M", "stock": 11 },
+        { "id": "L", "label": "L", "stock": 10 },
+        { "id": "XL", "label": "XL", "stock": 5 },
+        { "id": "XXL", "label": "XXL", "stock": 0 }
+      ],
+      "images": [
+        { "key": "cut-ivory-heavy-tee-front", "alt": "Ivory heavyweight crew-neck tee, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-ivory-heavy-tee-back", "alt": "Ivory heavyweight tee, back view", "kind": "cutout", "view": "Back" },
+        { "key": "ivory-heavy-tee-closeup", "alt": "Close-up of the ribbed crew neck", "kind": "photo", "view": "Detail" },
+        { "key": "life-ivory-tee-concrete", "alt": "Man in the ivory tee leaning on a sunlit concrete wall", "kind": "photo", "view": "Styled" }
+      ],
+      "completeTheLook": ["silver-aviator-sunglasses", "black-dial-watch", "black-dress-belt"],
+      "featured": true,
+      "newArrival": true
+    },
+    {
+      "slug": "olive-pique-polo",
+      "sku": "MONO-PL-01",
+      "name": "Olive Piqué Polo",
+      "category": "polos",
+      "price": 48,
+      "colour": { "name": "Olive", "hex": "#5C5F45" },
+      "accent": "#5C5F45",
+      "group": "pique-polo",
+      "summary": "A piqué-knit polo in muted olive.",
+      "description": "A piqué-knit polo in muted olive, with a flat-knit collar, a two-button placket, ribbed sleeve bands and small side vents at the hem.",
+      "details": ["Flat-knit collar", "Two-button placket", "Ribbed sleeve bands", "Side vents at the hem"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 5 },
+        { "id": "M", "label": "M", "stock": 9 },
+        { "id": "L", "label": "L", "stock": 8 },
+        { "id": "XL", "label": "XL", "stock": 4 },
+        { "id": "XXL", "label": "XXL", "stock": 2 }
+      ],
+      "images": [
+        { "key": "cut-olive-pique-polo-front", "alt": "Olive piqué polo, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-olive-pique-polo-back", "alt": "Olive piqué polo, back view", "kind": "cutout", "view": "Back" },
+        { "key": "olive-pique-polo-closeup", "alt": "Close-up of the collar, two-button placket and piqué knit", "kind": "photo", "view": "Detail" },
+        { "key": "cut-look-01", "alt": "Full outfit: olive polo, stone trousers, black sunglasses and black-dial watch", "kind": "cutout", "view": "Styled" },
+        { "key": "life-olive-polo-terrace", "alt": "Man in an olive polo on a sunlit terrace above the sea", "kind": "photo", "view": "Outdoors" }
+      ],
+      "completeTheLook": ["black-rectangular-sunglasses", "black-dial-watch", "brown-bifold-wallet"],
+      "featured": true,
+      "newArrival": true
+    },
+    {
+      "slug": "navy-pique-polo",
+      "sku": "MONO-PL-02",
+      "name": "Navy Piqué Polo",
+      "category": "polos",
+      "price": 48,
+      "colour": { "name": "Navy", "hex": "#1F2A3F" },
+      "accent": "#1F2A3F",
+      "group": "pique-polo",
+      "summary": "The same piqué polo in deep navy.",
+      "description": "The same piqué-knit polo in deep navy, with a flat-knit collar, a two-button placket, ribbed sleeve bands and small side vents at the hem.",
+      "details": ["Flat-knit collar", "Two-button placket", "Ribbed sleeve bands", "Side vents at the hem"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 6 },
+        { "id": "M", "label": "M", "stock": 10 },
+        { "id": "L", "label": "L", "stock": 7 },
+        { "id": "XL", "label": "XL", "stock": 3 },
+        { "id": "XXL", "label": "XXL", "stock": 0 }
+      ],
+      "images": [
+        { "key": "cut-navy-pique-polo-front", "alt": "Navy piqué polo, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-navy-pique-polo-back", "alt": "Navy piqué polo, back view", "kind": "cutout", "view": "Back" },
+        { "key": "navy-pique-polo-closeup", "alt": "Close-up of the navy collar and two-button placket", "kind": "photo", "view": "Detail" }
+      ],
+      "completeTheLook": ["white-dial-watch", "silver-aviator-sunglasses", "black-dress-belt"],
+      "featured": true,
+      "newArrival": false
+    },
+    {
+      "slug": "black-dial-watch",
+      "sku": "MONO-WT-01",
+      "name": "Black Dial Watch",
+      "category": "watches",
+      "price": 180,
+      "colour": { "name": "Black dial, brown strap", "hex": "#2B2B2B" },
+      "accent": "#3B2A22",
+      "group": null,
+      "summary": "A slim two-hand watch with a black dial and a brown strap.",
+      "description": "A slim two-hand watch with a black dial, a polished case, thin baton markers and a brown strap. Nothing on the dial that does not need to be there.",
+      "details": ["Two hands, no date", "Black dial with baton markers", "Polished round case", "Brown strap with pin buckle"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [{ "id": "OS", "label": "One size", "stock": 5 }],
+      "images": [
+        { "key": "watch-black-dial", "alt": "Black-dial watch with a brown strap standing on dark slate", "kind": "photo", "view": "Product" },
+        { "key": "life-watch-wrist", "alt": "The black-dial watch worn with a grey wool sleeve at a desk", "kind": "photo", "view": "Worn" },
+        { "key": "wide-watch-desk", "alt": "The black-dial watch on a wrist beside a leather notebook", "kind": "photo", "view": "Detail" }
+      ],
+      "completeTheLook": ["brown-bifold-wallet", "black-dress-belt", "olive-pique-polo"],
+      "featured": false,
+      "newArrival": true
+    },
+    {
+      "slug": "white-dial-watch",
+      "sku": "MONO-WT-02",
+      "name": "White Dial Watch",
+      "category": "watches",
+      "price": 195,
+      "colour": { "name": "White dial, link bracelet", "hex": "#E9E9E7" },
+      "accent": "#6B6F73",
+      "group": null,
+      "summary": "The same quiet design with a white dial and a link bracelet.",
+      "description": "The same quiet two-hand design with a white dial, slim grey markers and a polished link bracelet.",
+      "details": ["Two hands, no date", "White dial with baton markers", "Polished round case", "Link bracelet"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [{ "id": "OS", "label": "One size", "stock": 3 }],
+      "images": [
+        { "key": "watch-white-dial", "alt": "White-dial watch on a link bracelet standing on brushed steel", "kind": "photo", "view": "Product" },
+        { "key": "cut-look-02", "alt": "The white-dial watch worn with an ivory Oxford shirt and charcoal trousers", "kind": "cutout", "view": "Styled" }
+      ],
+      "completeTheLook": ["ivory-oxford-shirt", "black-dress-belt", "silver-aviator-sunglasses"],
+      "featured": false,
+      "newArrival": false
+    },
+    {
+      "slug": "black-rectangular-sunglasses",
+      "sku": "MONO-SG-01",
+      "name": "Black Rectangular Sunglasses",
+      "category": "sunglasses",
+      "price": 58,
+      "colour": { "name": "Black", "hex": "#151515" },
+      "accent": "#232323",
+      "group": null,
+      "summary": "Black rectangular frames with dark lenses.",
+      "description": "Black rectangular frames with dark lenses and a strong, straight brow line. They suit a linen shirt as well as a jacket.",
+      "details": ["Rectangular frame", "Dark lenses", "Straight brow line", "Comes as one size"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [{ "id": "OS", "label": "One size", "stock": 8 }],
+      "images": [
+        { "key": "sunglasses-black-rectangular", "alt": "Black rectangular sunglasses on a dark charcoal surface", "kind": "photo", "view": "Product" },
+        { "key": "life-sunglasses-jacket", "alt": "Man wearing the black rectangular sunglasses with a dark jacket", "kind": "photo", "view": "Worn" },
+        { "key": "cut-look-01", "alt": "The black sunglasses worn with an olive polo and stone trousers", "kind": "cutout", "view": "Styled" }
+      ],
+      "completeTheLook": ["olive-pique-polo", "black-dial-watch", "charcoal-textured-tee"],
+      "featured": false,
+      "newArrival": true
+    },
+    {
+      "slug": "silver-aviator-sunglasses",
+      "sku": "MONO-SG-02",
+      "name": "Silver Aviator Sunglasses",
+      "category": "sunglasses",
+      "price": 62,
+      "colour": { "name": "Silver frame", "hex": "#B9BBBD" },
+      "accent": "#5E6266",
+      "group": null,
+      "summary": "A thin silver aviator with a double bridge.",
+      "description": "A thin silver frame with a double bridge and dark lenses: the classic aviator shape, kept light.",
+      "details": ["Aviator shape", "Double bridge", "Thin silver-tone frame", "Dark lenses"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [{ "id": "OS", "label": "One size", "stock": 6 }],
+      "images": [
+        { "key": "sunglasses-silver-aviator", "alt": "Silver aviator sunglasses on a dark charcoal surface", "kind": "photo", "view": "Product" },
+        { "key": "cut-look-02", "alt": "The silver aviators held in hand with an ivory Oxford shirt", "kind": "cutout", "view": "Styled" }
+      ],
+      "completeTheLook": ["ivory-heavyweight-tee", "white-dial-watch", "navy-pique-polo"],
+      "featured": false,
+      "newArrival": false
+    },
+    {
+      "slug": "brown-bifold-wallet",
+      "sku": "MONO-AC-01",
+      "name": "Brown Bifold Wallet",
+      "category": "accessories",
+      "price": 45,
+      "colour": { "name": "Deep brown", "hex": "#4A3123" },
+      "accent": "#4A3123",
+      "group": null,
+      "summary": "A slim bifold in deep brown with tonal stitching.",
+      "description": "A slim bifold wallet in deep brown with tonal stitching around the edge. Flat enough for a front pocket.",
+      "details": ["Bifold", "Tonal edge stitching", "Slim profile"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [{ "id": "OS", "label": "One size", "stock": 9 }],
+      "images": [
+        { "key": "wallet-brown-bifold", "alt": "Brown bifold wallet on a dark wood table in window light", "kind": "photo", "view": "Product" },
+        { "key": "life-accessories-flatlay", "alt": "The brown wallet beside a black belt and card holder", "kind": "photo", "view": "Set" },
+        { "key": "wide-accessories-table", "alt": "Brown wallet, black belt and card holder on a wooden table", "kind": "photo", "view": "Table" }
+      ],
+      "completeTheLook": ["black-dress-belt", "black-dial-watch", "ivory-oxford-shirt"],
+      "featured": false,
+      "newArrival": false
+    },
+    {
+      "slug": "black-dress-belt",
+      "sku": "MONO-AC-02",
+      "name": "Black Dress Belt",
+      "category": "accessories",
+      "price": 40,
+      "colour": { "name": "Black", "hex": "#151515" },
+      "accent": "#232323",
+      "group": null,
+      "summary": "A black belt with tonal stitching and a brushed buckle.",
+      "description": "A black dress belt with tonal stitching and a brushed silver-tone buckle. Wear it with tailored trousers or chinos.",
+      "details": ["Brushed silver-tone pin buckle", "Tonal edge stitching", "Sized by waist"],
+      "option": { "type": "waist", "label": "Waist" },
+      "variants": [
+        { "id": "32", "label": "32", "stock": 4 },
+        { "id": "34", "label": "34", "stock": 6 },
+        { "id": "36", "label": "36", "stock": 5 },
+        { "id": "38", "label": "38", "stock": 2 }
+      ],
+      "images": [
+        { "key": "belt-black", "alt": "Black dress belt coiled on a walnut table in window light", "kind": "photo", "view": "Product" },
+        { "key": "cut-look-02", "alt": "The black belt worn with an ivory Oxford shirt and charcoal trousers", "kind": "cutout", "view": "Styled" },
+        { "key": "life-accessories-flatlay", "alt": "The black belt beside a brown wallet and a card holder", "kind": "photo", "view": "Set" }
+      ],
+      "completeTheLook": ["ivory-oxford-shirt", "brown-bifold-wallet", "white-dial-watch"],
+      "featured": false,
+      "newArrival": false
+    }
+  ],
+  "looks": [
+    {
+      "id": "look-01",
+      "name": "Look 01",
+      "line": "The olive polo with black sunglasses and a black-dial watch on a brown strap.",
+      "image": { "key": "cut-look-01", "alt": "Model in an olive polo, stone trousers, white sneakers, black sunglasses and a black-dial watch" },
+      "products": ["olive-pique-polo", "black-rectangular-sunglasses", "black-dial-watch"]
+    },
+    {
+      "id": "look-02",
+      "name": "Look 02",
+      "line": "The ivory Oxford with a black belt, a white-dial watch and silver aviators in hand.",
+      "image": { "key": "cut-look-02", "alt": "Model in an ivory Oxford shirt, charcoal trousers and black belt, holding silver aviator sunglasses" },
+      "products": ["ivory-oxford-shirt", "black-dress-belt", "white-dial-watch", "silver-aviator-sunglasses"]
+    }
+  ]
+}

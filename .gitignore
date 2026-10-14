@@ -4,3 +4,4 @@ playwright-report/
 .qa/
 .DS_Store
 dist/
+shop/.qa/

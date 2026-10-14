@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /order-confirmation/
+Disallow: /search/
+Disallow: /product/
+
+# Add "Sitemap: <SITE_URL>/sitemap.xml" here once SITE_URL is set in shop/src/config.mjs.

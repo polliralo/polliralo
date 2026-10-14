@@ -1,0 +1,121 @@
+// Builds every web image for the MONO shop from the untouched originals in
+// shop/media/originals and the background-removed cut-outs in shop/media/cutouts.
+//
+//   npm run shop:media                 (everything)
+//   npm run shop:media -- --only belt  (only keys containing "belt")
+//
+// Writes shop/site/assets/img/<key>-<width>.<ext> and a manifest
+// (shop/src/data/media.json). The build copies it into assets/data/store.json,
+// which the page templates and the browser code use to build <picture> elements.
+//
+// Cut-outs keep their transparency (AVIF + WebP only). Photos get AVIF + WebP
+// in every width plus one JPEG fallback.
+
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
+
+const SHOP = fileURLToPath(new URL('..', import.meta.url));
+const ORIG = join(SHOP, 'media/originals');
+const CUT = join(SHOP, 'media/cutouts');
+const OUT = join(SHOP, 'site/assets/img');
+const MANIFEST = join(SHOP, 'src/data/media.json');
+
+const AVIF = { quality: 55, effort: 6 };
+const AVIF_ALPHA = { quality: 60, effort: 6 };
+const WEBP = { quality: 78, effort: 5 };
+const WEBP_ALPHA = { quality: 82, alphaQuality: 90, effort: 5 };
+const JPEG = { quality: 80, mozjpeg: true, progressive: true };
+
+const PORTRAIT = [360, 560, 800, 1120];
+const WIDE = [640, 1024, 1440, 1672];
+
+const cut = (key, file) => ({ key, src: join(CUT, file), widths: PORTRAIT, alpha: true });
+const photo = (key, file, widths = PORTRAIT) => ({ key, src: join(ORIG, file), widths, alpha: false });
+
+const IMAGES = [
+  // Studio cut-outs: every model stands on the same canvas.
+  cut('cut-ivory-oxford-shirt-front', 'ivory-oxford-shirt.png'),
+  cut('cut-ivory-oxford-shirt-back', 'ivory-oxford-shirt-back.png'),
+  cut('cut-blue-stripe-shirt-front', 'blue-stripe-shirt.png'),
+  cut('cut-blue-stripe-shirt-back', 'blue-stripe-shirt-back.png'),
+  cut('cut-charcoal-textured-tee-front', 'charcoal-textured-tee.png'),
+  cut('cut-charcoal-textured-tee-back', 'charcoal-textured-tee-back.png'),
+  cut('cut-ivory-heavy-tee-front', 'ivory-heavy-tee.png'),
+  cut('cut-ivory-heavy-tee-back', 'ivory-heavy-tee-back.png'),
+  cut('cut-olive-pique-polo-front', 'olive-pique-polo.png'),
+  cut('cut-olive-pique-polo-back', 'olive-pique-polo-back.png'),
+  cut('cut-navy-pique-polo-front', 'navy-pique-polo.png'),
+  cut('cut-navy-pique-polo-back', 'navy-pique-polo-back.png'),
+  cut('cut-look-01', 'look-01.png'),
+  cut('cut-look-02', 'look-02.png'),
+  // Close-ups.
+  photo('ivory-oxford-shirt-closeup', 'studio/ivory-oxford-shirt-closeup.png'),
+  photo('blue-stripe-shirt-closeup', 'studio/blue-stripe-shirt-closeup.png'),
+  photo('charcoal-textured-tee-closeup', 'studio/charcoal-textured-tee-closeup.png'),
+  photo('ivory-heavy-tee-closeup', 'studio/ivory-heavy-tee-closeup.png'),
+  photo('olive-pique-polo-closeup', 'studio/olive-pique-polo-closeup.png'),
+  photo('navy-pique-polo-closeup', 'studio/navy-pique-polo-closeup.png'),
+  // Accessory still lifes.
+  photo('watch-black-dial', 'still-life/steel-watch-black-dial-brown-strap.png'),
+  photo('watch-white-dial', 'still-life/steel-watch-white-dial-bracelet.png'),
+  photo('sunglasses-black-rectangular', 'still-life/black-rectangular-sunglasses.png'),
+  photo('sunglasses-silver-aviator', 'still-life/silver-aviator-sunglasses-charcoal.png'),
+  photo('wallet-brown-bifold', 'still-life/brown-bifold-wallet.png'),
+  photo('belt-black', 'still-life/black-leather-belt-walnut.png'),
+  // Lifestyle.
+  photo('life-blue-oxford-library', 'lifestyle/blue-oxford-shirt-library.png'),
+  photo('life-ivory-tee-concrete', 'lifestyle/ivory-tee-concrete.png'),
+  photo('life-olive-polo-terrace', 'lifestyle/olive-polo-sea-terrace.png'),
+  photo('life-watch-wrist', 'lifestyle/black-dial-watch-wrist.png'),
+  photo('life-sunglasses-linen', 'lifestyle/black-sunglasses-grey-linen-shirt.png'),
+  photo('life-sunglasses-jacket', 'lifestyle/black-sunglasses-chore-jacket.png'),
+  photo('life-accessories-flatlay', 'lifestyle/leather-wallet-belt-cardholder-flatlay.png'),
+  photo('life-charcoal-tee-wardrobe', 'lifestyle/charcoal-tee-wardrobe.png'),
+  // Wide.
+  photo('wide-watch-desk', 'wide/black-dial-watch-desk.png', WIDE),
+  photo('wide-accessories-table', 'wide/leather-wallet-belt-cardholder-table.png', WIDE),
+];
+
+const toHex = ({ r, g, b }) => '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+async function build(img) {
+  if (!existsSync(img.src)) throw new Error(`Missing source for ${img.key}: ${img.src}`);
+  const meta = await sharp(img.src).metadata();
+  const top = meta.width;
+  const widths = [...new Set([...img.widths.filter((w) => w < top), Math.min(top, img.widths.at(-1))])].sort((a, b) => a - b);
+  for (const w of widths) {
+    const pipe = () => sharp(img.src).resize({ width: w });
+    await pipe().avif(img.alpha ? AVIF_ALPHA : AVIF).toFile(join(OUT, `${img.key}-${w}.avif`));
+    await pipe().webp(img.alpha ? WEBP_ALPHA : WEBP).toFile(join(OUT, `${img.key}-${w}.webp`));
+  }
+  let fallback;
+  if (img.alpha) {
+    fallback = `${img.key}-${widths.find((w) => w >= 800) ?? widths.at(-1)}.webp`;
+  } else {
+    const fw = widths.find((w) => w >= 800) ?? widths.at(-1);
+    fallback = `${img.key}-${fw}.jpg`;
+    await sharp(img.src).resize({ width: fw }).jpeg(JPEG).toFile(join(OUT, fallback));
+  }
+  let color = null;
+  if (!img.alpha) {
+    const { dominant } = await sharp(img.src).resize({ width: 64 }).stats();
+    color = toHex(dominant);
+  }
+  return { key: img.key, width: meta.width, height: meta.height, widths, alpha: img.alpha, fallback, color };
+}
+
+const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
+mkdirSync(OUT, { recursive: true });
+
+const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : {};
+for (const img of IMAGES) {
+  if (only && !img.key.includes(only)) continue;
+  const entry = await build(img);
+  manifest[entry.key] = { w: entry.width, h: entry.height, widths: entry.widths, alpha: entry.alpha, fallback: entry.fallback, color: entry.color };
+  console.log(`${entry.key.padEnd(34)} ${entry.widths.join(', ')}`);
+}
+const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
+writeFileSync(MANIFEST, JSON.stringify(sorted, null, 2) + '\n');
+console.log(`\n${Object.keys(sorted).length} images in the manifest.`);

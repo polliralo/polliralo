@@ -14,7 +14,14 @@
     "zip": "node scripts/build-zip.mjs",
     "lint": "html-validate site/index.html",
     "test": "playwright test",
-    "check": "npm run lint && npm test"
+    "check": "npm run lint && npm test",
+    "shop:start": "node shop/scripts/serve.mjs",
+    "shop:media": "node shop/scripts/media.mjs",
+    "shop:build": "node shop/scripts/build.mjs",
+    "shop:lint": "html-validate --config shop/.htmlvalidate.json \"shop/site/**/*.html\"",
+    "shop:test": "playwright test --config playwright.shop.config.mjs",
+    "shop:check": "npm run shop:build && npm run shop:lint && npm run shop:test",
+    "shop:zip": "node shop/scripts/zip.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",
