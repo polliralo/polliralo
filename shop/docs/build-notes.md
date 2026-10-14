@@ -2,7 +2,7 @@
 
 Preparation for the shop build in `master-brief.md`. **Nothing is built yet.** The owner is choosing the design and UI direction first and will say when to start.
 
-**Design direction (14 October 2026):** the owner chose five reference designs; the proposed combination, preview images and the points where it differs from the brief are in `design-references.md`. The photos still needed for that design, with prompts, are in `photo-shotlist.md`. In short: the hero becomes a Percival-style product slider using the studio photos (cut out, in `shop/media/cutouts/`), so the two hero photos below move to lower sections unless the owner prefers the brief's photo hero.
+**Design direction (14 October 2026):** the owner chose five reference designs; the proposed combination, preview images and the points where it differs from the brief are in `design-references.md`. The photos still needed for that design, with prompts, are in `photo-shotlist.md`. In short: the hero becomes a Percival-style product slider using the studio photos (cut out, in `shop/media/cutouts/`), The owner approved this, chose US dollars, and does not want the architecture photos used unless a section needs them (decisions in `design-references.md`), so the two hero photos below are no longer planned.
 
 ## How the supplied photos fit the brief
 
@@ -79,8 +79,8 @@ The black card holder appears only in group shots, so it is left out of the firs
 ## Decisions to make at build time
 
 - **Stack.** This repo's convention is plain HTML, CSS and vanilla JavaScript with no build step, checked by html-validate and Playwright. The brief needs about 20 routes, product slugs, a cart, a demo checkout and a demo admin. One option that keeps the convention: a single `products` data file plus a small script that writes a real HTML page per product and collection (good for SEO), with vanilla JS for the cart, filters and admin. Confirm with the owner before choosing.
-- **Currency and demo prices.** The brief allows demo prices if clearly marked as demo data. Which currency (BDT or USD)?
-- **Design and UI direction.** The owner is collecting references. Wait for them.
+- **Currency and demo prices.** Decided: US dollars, always labelled as demo prices.
+- **Design and UI direction.** Decided: see `design-references.md`. Still waiting for the owner's go-ahead and the new photos before building.
 
 ## UX principles from the owner's research notes
 

@@ -18,6 +18,7 @@
 - Brief: `shop/docs/master-brief.md` (the user's master instruction). Photo-to-brief mapping, gaps and open decisions: `shop/docs/build-notes.md`.
 - Design direction (from the user's reference designs): `shop/docs/design-references.md`, with preview images in `shop/docs/preview/` (made from the real photos; not the site). Photos still needed, with prompts for the user: `shop/docs/photo-shotlist.md`. Studio photos cut out onto one canvas: `shop/media/cutouts/` (rembg `birefnet-portrait`; run one image per process or it runs out of memory).
 - Photos live in `shop/media/originals/` (`studio/`, `still-life/`, `lifestyle/`, `wide/`); never edit them. `shop/media/originals/CATALOG.md` lists every product and photo. The user sends photos in batches: add new ones to the same folders and update the catalogue and build notes.
+- Decided: hero is the product slider (no architecture-photo hero), fonts Bodoni Moda + Jost, prices in US dollars.
 - MONO is a fictional demo brand: demo prices are allowed only if clearly labelled as demo data; never invent reviews, ratings, customer counts or product claims.
 - Use every skill available in the session when it helps (repo skills below plus the account's synced skills).
 

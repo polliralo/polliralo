@@ -1,5 +1,7 @@
 # MONO photo shot list
 
+Owner-facing version with every prompt filled in, reference thumbnails, copy buttons and done ticks: https://claude.ai/artifact/2Vh7M2vsNhRzaGX4zL2c4V (shots are numbered #1 to #17 in the order below).
+
 The new photos the chosen design needs (see `design-references.md`), in priority order, each with the reference photo to upload and a prompt to paste. The owner generates them in any image tool that accepts reference photos (in Higgsfield, FLUX 3 and GPT Image 2.5 both do; the Gemini and ChatGPT apps do too).
 
 ## Rules for every photo
