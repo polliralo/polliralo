@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nivara Coast | A Private Island Concept</title>
   <meta name="description" content="Nivara Coast is a fictional private island concept: overwater and beach pool villas, a calm turquoise lagoon and quiet, considered island living.">
-  <meta name="theme-color" content="#f7f5ef">
+  <meta name="theme-color" content="#0c2625">
   <meta name="color-scheme" content="light">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -64,7 +64,7 @@
       <a class="header-cta" href="#villas">Explore the Villas</a>
 
       <button class="menu-button" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menu" data-menu-open>
-        <span>Menu</span>
+        <span class="menu-button__label">Menu</span>
         <svg class="menu-button__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 9h18M3 15h18"/></svg>
       </button>
     </div>
@@ -78,7 +78,7 @@
           <span class="brand__name">Nivara <span>Coast</span></span>
         </a>
         <button class="menu-button" type="button" data-menu-close autofocus>
-          <span>Close</span>
+          <span class="menu-button__label">Close</span>
           <svg class="menu-button__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5l14 14M19 5L5 19"/></svg>
         </button>
       </div>
@@ -103,18 +103,18 @@
 
   <main id="main" tabindex="-1">
 
-    <!-- Hero: a wide aerial on desktops and tablets, a portrait one on phones -->
+    <!-- Hero: the wide aerial on desktops and tablets, the portrait one on phones -->
     <section class="hero" id="top" aria-labelledby="hero-title">
       <div class="hero__media">
         <picture>
           <source media="(max-aspect-ratio: 3/4) and (max-width: 640px)" type="image/avif" srcset="assets/img/hero-phone-528.avif">
           <source media="(max-aspect-ratio: 3/4) and (max-width: 640px)" type="image/webp" srcset="assets/img/hero-phone-528.webp">
           <source media="(max-aspect-ratio: 3/4) and (max-width: 640px)" srcset="assets/img/hero-phone-528.jpg">
-          <source type="image/avif" srcset="assets/img/hero-960.avif 960w, assets/img/hero-1280.avif 1280w, assets/img/hero-1672.avif 1672w" sizes="(max-aspect-ratio: 3/4) 178vh, (max-aspect-ratio: 16/9) calc(178vh - 185px), 100vw">
-          <source type="image/webp" srcset="assets/img/hero-960.webp 960w, assets/img/hero-1280.webp 1280w, assets/img/hero-1672.webp 1672w" sizes="(max-aspect-ratio: 3/4) 178vh, (max-aspect-ratio: 16/9) calc(178vh - 185px), 100vw">
+          <source type="image/avif" srcset="assets/img/hero-960.avif 960w, assets/img/hero-1280.avif 1280w, assets/img/hero-1672.avif 1672w" sizes="(max-aspect-ratio: 3/4) and (max-width: 899px) calc(178vh - 640px), (min-width: 900px) and (max-aspect-ratio: 5/4) 128vw, (max-aspect-ratio: 16/9) calc(178vh - 178px), 100vw">
+          <source type="image/webp" srcset="assets/img/hero-960.webp 960w, assets/img/hero-1280.webp 1280w, assets/img/hero-1672.webp 1672w" sizes="(max-aspect-ratio: 3/4) and (max-width: 899px) calc(178vh - 640px), (min-width: 900px) and (max-aspect-ratio: 5/4) 128vw, (max-aspect-ratio: 16/9) calc(178vh - 178px), 100vw">
           <img class="hero__image" src="assets/img/hero-1280.jpg" width="1672" height="940" fetchpriority="high" decoding="async" alt="Aerial view of overwater villas along a curving timber boardwalk, beside a palm-covered island in a clear turquoise lagoon.">
         </picture>
-        <div class="hero__haze" aria-hidden="true"></div>
+        <div class="hero__scrim" aria-hidden="true"></div>
       </div>
 
       <div class="container hero__content">
@@ -122,7 +122,7 @@
         <h1 class="hero__title" id="hero-title">A quieter kind of <em>paradise.</em></h1>
         <p class="hero__lede">Discover a world of white sands, turquoise waters and considered island living.</p>
         <div class="hero__actions">
-          <a class="button button--primary" href="#villas">
+          <a class="button button--light" href="#villas">
             Explore the Villas
             <span class="button__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
           </a>
@@ -131,59 +131,91 @@
       </div>
     </section>
 
-    <!-- Straight to a villa type, right under the hero -->
-    <nav class="villa-strip" aria-label="Villa types">
-      <div class="container villa-strip__inner">
-        <p class="eyebrow villa-strip__label">Choose your villa</p>
-        <ul class="villa-strip__list" role="list">
-          <li>
-            <a class="villa-strip__link" href="#overwater-villa">
-              <span class="villa-strip__name">Overwater Villa</span>
-              <span class="villa-strip__note">On stilts above the lagoon</span>
-              <span class="villa-strip__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-            </a>
-          </li>
-          <li>
-            <a class="villa-strip__link" href="#overwater-pool-villa">
-              <span class="villa-strip__name">Overwater Pool Villa</span>
-              <span class="villa-strip__note">A private pool above the sea</span>
-              <span class="villa-strip__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-            </a>
-          </li>
-          <li>
-            <a class="villa-strip__link" href="#beach-pool-villa">
-              <span class="villa-strip__name">Beach Pool Villa</span>
-              <span class="villa-strip__note">On the sand, among the palms</span>
-              <span class="villa-strip__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-            </a>
-          </li>
-        </ul>
+    <!-- Straight to a villa type, on a card that overlaps the hero -->
+    <nav class="villa-nav" aria-label="Villa types">
+      <div class="container">
+        <div class="villa-card">
+          <p class="eyebrow villa-card__label">Choose your villa</p>
+          <ul class="villa-card__list" role="list">
+            <li>
+              <a class="villa-card__link" href="#overwater-villa">
+                <span class="villa-card__thumb">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/thumb-overwater-villa-160.avif 160w, assets/img/thumb-overwater-villa-240.avif 240w" sizes="(min-width: 1200px) 72px, 56px">
+                    <source type="image/webp" srcset="assets/img/thumb-overwater-villa-160.webp 160w, assets/img/thumb-overwater-villa-240.webp 240w" sizes="(min-width: 1200px) 72px, 56px">
+                    <img src="assets/img/thumb-overwater-villa-240.jpg" width="240" height="240" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </span>
+                <span class="villa-card__text">
+                  <span class="villa-card__name">Overwater Villa</span>
+                  <span class="villa-card__note">On stilts above the lagoon</span>
+                </span>
+                <span class="villa-card__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+              </a>
+            </li>
+            <li>
+              <a class="villa-card__link" href="#overwater-pool-villa">
+                <span class="villa-card__thumb">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/thumb-overwater-pool-villa-160.avif 160w, assets/img/thumb-overwater-pool-villa-240.avif 240w" sizes="(min-width: 1200px) 72px, 56px">
+                    <source type="image/webp" srcset="assets/img/thumb-overwater-pool-villa-160.webp 160w, assets/img/thumb-overwater-pool-villa-240.webp 240w" sizes="(min-width: 1200px) 72px, 56px">
+                    <img src="assets/img/thumb-overwater-pool-villa-240.jpg" width="240" height="240" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </span>
+                <span class="villa-card__text">
+                  <span class="villa-card__name">Overwater Pool Villa</span>
+                  <span class="villa-card__note">A private pool above the sea</span>
+                </span>
+                <span class="villa-card__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+              </a>
+            </li>
+            <li>
+              <a class="villa-card__link" href="#beach-pool-villa">
+                <span class="villa-card__thumb">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/thumb-beach-pool-villa-160.avif 160w, assets/img/thumb-beach-pool-villa-240.avif 240w" sizes="(min-width: 1200px) 72px, 56px">
+                    <source type="image/webp" srcset="assets/img/thumb-beach-pool-villa-160.webp 160w, assets/img/thumb-beach-pool-villa-240.webp 240w" sizes="(min-width: 1200px) 72px, 56px">
+                    <img src="assets/img/thumb-beach-pool-villa-240.jpg" width="240" height="240" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </span>
+                <span class="villa-card__text">
+                  <span class="villa-card__name">Beach Pool Villa</span>
+                  <span class="villa-card__note">On the sand, among the palms</span>
+                </span>
+                <span class="villa-card__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
 
     <!-- The idea -->
     <section class="intro section" id="intro" aria-labelledby="intro-title">
-      <div class="container intro__grid">
-        <p class="eyebrow intro__eyebrow" data-reveal>The idea</p>
+      <div class="container intro__inner">
+        <p class="eyebrow eyebrow--center" data-reveal>The idea</p>
         <h2 class="intro__title" id="intro-title" data-reveal>An island with <em>room to breathe.</em></h2>
         <div class="intro__body" data-reveal>
           <p>Nivara Coast is a private island concept built around one quiet luxury: space. Villas stand apart along the lagoon and the shore, each facing its own stretch of water.</p>
           <p>Inside, pale timber, white linen and natural stone keep every room calm, so the colour comes from the sea and the sky.</p>
         </div>
-        <ul class="intro__notes" role="list">
+        <ol class="intro__notes" role="list">
           <li class="note" data-reveal>
+            <span class="note__num" aria-hidden="true">01</span>
             <h3 class="note__title">White sand</h3>
             <p>A soft white beach follows the shoreline, shaded by palms.</p>
           </li>
           <li class="note" data-reveal style="--reveal-delay: 120ms">
+            <span class="note__num" aria-hidden="true">02</span>
             <h3 class="note__title">Clear water</h3>
             <p>A sheltered turquoise lagoon, calm and shallow, runs out to the reef.</p>
           </li>
           <li class="note" data-reveal style="--reveal-delay: 240ms">
+            <span class="note__num" aria-hidden="true">03</span>
             <h3 class="note__title">Open rooms</h3>
             <p>Glass doors slide away, so each room opens onto its deck and the view.</p>
           </li>
-        </ul>
+        </ol>
       </div>
     </section>
 
@@ -199,165 +231,165 @@
         </header>
 
         <article class="villa" id="overwater-villa" aria-labelledby="overwater-villa-title">
-          <figure class="villa__main media" data-reveal="media" style="--pos: 50% 50%">
-            <picture>
-              <source type="image/avif" srcset="assets/img/villa-overwater-bath-640.avif 640w, assets/img/villa-overwater-bath-960.avif 960w, assets/img/villa-overwater-bath-1280.avif 1280w, assets/img/villa-overwater-bath-1536.avif 1536w" sizes="(min-width: 1200px) 1240px, (min-width: 900px) calc(94vw - 19px), calc(106vw - 20px)">
-              <source type="image/webp" srcset="assets/img/villa-overwater-bath-640.webp 640w, assets/img/villa-overwater-bath-960.webp 960w, assets/img/villa-overwater-bath-1280.webp 1280w, assets/img/villa-overwater-bath-1536.webp 1536w" sizes="(min-width: 1200px) 1240px, (min-width: 900px) calc(94vw - 19px), calc(106vw - 20px)">
-              <img src="assets/img/villa-overwater-bath-1280.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A freestanding stone bath faces wide-open doors, a timber deck and the turquoise sea, with twin basins to one side.">
-            </picture>
-          </figure>
-          <div class="villa__text" data-reveal>
+          <div class="villa__media">
+            <figure class="villa__main photo" style="--pos: 50% 50%; --lqip: var(--lqip-villa-overwater-bath)">
+              <picture>
+                <source type="image/avif" srcset="assets/img/villa-overwater-bath-640.avif 640w, assets/img/villa-overwater-bath-960.avif 960w, assets/img/villa-overwater-bath-1280.avif 1280w, assets/img/villa-overwater-bath-1536.avif 1536w" sizes="(min-width: 1536px) 928px, (min-width: 1200px) 61vw, (min-width: 900px) calc(94vw - 19px), 113vw">
+                <source type="image/webp" srcset="assets/img/villa-overwater-bath-640.webp 640w, assets/img/villa-overwater-bath-960.webp 960w, assets/img/villa-overwater-bath-1280.webp 1280w, assets/img/villa-overwater-bath-1536.webp 1536w" sizes="(min-width: 1536px) 928px, (min-width: 1200px) 61vw, (min-width: 900px) calc(94vw - 19px), 113vw">
+                <img src="assets/img/villa-overwater-bath-1280.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A freestanding stone bath faces wide-open doors, a timber deck and the turquoise sea, with twin basins to one side.">
+              </picture>
+            </figure>
+            <figure class="villa__inset">
+              <div class="villa__inset-frame photo" style="--lqip: var(--lqip-villa-overwater-boardwalk)">
+                <picture>
+                  <source type="image/avif" srcset="assets/img/villa-overwater-boardwalk-480.avif 480w, assets/img/villa-overwater-boardwalk-690.avif 690w" sizes="(min-width: 1536px) 378px, (min-width: 1200px) 25vw, (min-width: 900px) 30vw, calc(94vw - 19px)">
+                  <source type="image/webp" srcset="assets/img/villa-overwater-boardwalk-480.webp 480w, assets/img/villa-overwater-boardwalk-690.webp 690w" sizes="(min-width: 1536px) 378px, (min-width: 1200px) 25vw, (min-width: 900px) 30vw, calc(94vw - 19px)">
+                  <img src="assets/img/villa-overwater-boardwalk-690.jpg" width="690" height="460" loading="lazy" decoding="async" alt="Overwater villas on stilts at the far end of a curving timber boardwalk, in golden evening light.">
+                </picture>
+              </div>
+              <figcaption>The villas at the end of the boardwalk, at sunset.</figcaption>
+            </figure>
+          </div>
+          <div class="villa__panel" data-reveal>
+            <p class="villa__count" aria-hidden="true"><span>01</span> / 03</p>
             <p class="villa__setting">Over the lagoon</p>
             <h3 class="villa__title" id="overwater-villa-title">Overwater Villa</h3>
             <p class="villa__tagline">At the end of the boardwalk</p>
-            <p>Raised on stilts above the lagoon and reached on foot along the boardwalk. The timber deck looks straight out to sea, with steps down into the water. Inside, a stone bath faces the horizon.</p>
+            <p class="villa__text">Raised on stilts above the lagoon and reached on foot along the boardwalk. The timber deck looks straight out to sea, with steps down into the water. Inside, a stone bath faces the horizon.</p>
             <dl class="facts">
               <div><dt>Outdoors</dt><dd>Sundeck over open water</dd></div>
               <div><dt>Inside</dt><dd>Stone bath with a sea view</dd></div>
               <div><dt>To the water</dt><dd>Steps down from the deck</dd></div>
             </dl>
           </div>
-          <figure class="villa__inset" data-reveal="media" style="--reveal-delay: 120ms">
-            <picture>
-              <source type="image/avif" srcset="assets/img/villa-overwater-boardwalk-480.avif 480w, assets/img/villa-overwater-boardwalk-690.avif 690w" sizes="(min-width: 1536px) 448px, (min-width: 1200px) 30vw, (min-width: 900px) 37vw, calc(94vw - 19px)">
-              <source type="image/webp" srcset="assets/img/villa-overwater-boardwalk-480.webp 480w, assets/img/villa-overwater-boardwalk-690.webp 690w" sizes="(min-width: 1536px) 448px, (min-width: 1200px) 30vw, (min-width: 900px) 37vw, calc(94vw - 19px)">
-              <img src="assets/img/villa-overwater-boardwalk-690.jpg" width="690" height="460" loading="lazy" decoding="async" alt="Overwater villas on stilts at the far end of a curving timber boardwalk, in golden evening light.">
-            </picture>
-            <figcaption>The villas at the end of the boardwalk, at sunset.</figcaption>
-          </figure>
         </article>
 
         <article class="villa villa--reverse" id="overwater-pool-villa" aria-labelledby="overwater-pool-villa-title">
-          <figure class="villa__main media" data-reveal="media" style="--pos: 45% 55%">
-            <picture>
-              <source type="image/avif" srcset="assets/img/villa-overwater-pool-640.avif 640w, assets/img/villa-overwater-pool-960.avif 960w, assets/img/villa-overwater-pool-1280.avif 1280w, assets/img/villa-overwater-pool-1448.avif 1448w" sizes="(min-width: 1200px) 1140px, calc(94vw - 19px)">
-              <source type="image/webp" srcset="assets/img/villa-overwater-pool-640.webp 640w, assets/img/villa-overwater-pool-960.webp 960w, assets/img/villa-overwater-pool-1280.webp 1280w, assets/img/villa-overwater-pool-1448.webp 1448w" sizes="(min-width: 1200px) 1140px, calc(94vw - 19px)">
-              <img src="assets/img/villa-overwater-pool-1280.jpg" width="1448" height="1086" loading="lazy" decoding="async" alt="An overwater villa with a private plunge pool, sun loungers and a ladder down into the clear lagoon.">
-            </picture>
-          </figure>
-          <div class="villa__text" data-reveal>
+          <div class="villa__media">
+            <figure class="villa__main photo" style="--pos: 45% 55%; --lqip: var(--lqip-villa-overwater-pool)">
+              <picture>
+                <source type="image/avif" srcset="assets/img/villa-overwater-pool-640.avif 640w, assets/img/villa-overwater-pool-960.avif 960w, assets/img/villa-overwater-pool-1280.avif 1280w, assets/img/villa-overwater-pool-1448.avif 1448w" sizes="(min-width: 1536px) 928px, (min-width: 1200px) 61vw, (min-width: 900px) calc(94vw - 19px), 100vw">
+                <source type="image/webp" srcset="assets/img/villa-overwater-pool-640.webp 640w, assets/img/villa-overwater-pool-960.webp 960w, assets/img/villa-overwater-pool-1280.webp 1280w, assets/img/villa-overwater-pool-1448.webp 1448w" sizes="(min-width: 1536px) 928px, (min-width: 1200px) 61vw, (min-width: 900px) calc(94vw - 19px), 100vw">
+                <img src="assets/img/villa-overwater-pool-1280.jpg" width="1448" height="1086" loading="lazy" decoding="async" alt="An overwater villa with a private plunge pool, sun loungers and a ladder down into the clear lagoon.">
+              </picture>
+            </figure>
+            <figure class="villa__inset">
+              <div class="villa__inset-frame photo" style="--lqip: var(--lqip-villa-overwater-pool-bedroom)">
+                <picture>
+                  <source type="image/avif" srcset="assets/img/villa-overwater-pool-bedroom-480.avif 480w, assets/img/villa-overwater-pool-bedroom-800.avif 800w, assets/img/villa-overwater-pool-bedroom-1200.avif 1200w" sizes="(min-width: 1536px) 378px, (min-width: 1200px) 25vw, (min-width: 900px) 30vw, calc(94vw - 19px)">
+                  <source type="image/webp" srcset="assets/img/villa-overwater-pool-bedroom-480.webp 480w, assets/img/villa-overwater-pool-bedroom-800.webp 800w, assets/img/villa-overwater-pool-bedroom-1200.webp 1200w" sizes="(min-width: 1536px) 378px, (min-width: 1200px) 25vw, (min-width: 900px) 30vw, calc(94vw - 19px)">
+                  <img src="assets/img/villa-overwater-pool-bedroom-1200.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A bedroom with a timber-beamed ceiling and white linen, opening through glass doors onto the pool deck and the sea.">
+                </picture>
+              </div>
+              <figcaption>The bedroom opens straight onto the pool deck.</figcaption>
+            </figure>
+          </div>
+          <div class="villa__panel" data-reveal>
+            <p class="villa__count" aria-hidden="true"><span>02</span> / 03</p>
             <p class="villa__setting">Over the lagoon, with a private pool</p>
             <h3 class="villa__title" id="overwater-pool-villa-title">Overwater Pool Villa</h3>
             <p class="villa__tagline">A pool above the sea</p>
-            <p>A private plunge pool set into the deck, loungers in the sun and a shaded sofa for the afternoon. A ladder drops straight into the lagoon, and glass walls slide open so the bedroom and the deck become one space.</p>
+            <p class="villa__text">A private plunge pool set into the deck, loungers in the sun and a shaded sofa for the afternoon. A ladder drops straight into the lagoon, and glass walls slide open so the bedroom and the deck become one space.</p>
             <dl class="facts">
               <div><dt>Outdoors</dt><dd>Private pool, sundeck and shaded lounge</dd></div>
               <div><dt>Inside</dt><dd>Bedroom that opens onto the pool deck</dd></div>
               <div><dt>To the water</dt><dd>Ladder into the lagoon</dd></div>
             </dl>
           </div>
-          <figure class="villa__inset" data-reveal="media" style="--reveal-delay: 120ms">
-            <picture>
-              <source type="image/avif" srcset="assets/img/villa-overwater-pool-bedroom-480.avif 480w, assets/img/villa-overwater-pool-bedroom-800.avif 800w, assets/img/villa-overwater-pool-bedroom-1200.avif 1200w" sizes="(min-width: 1536px) 448px, (min-width: 1200px) 30vw, (min-width: 900px) 37vw, calc(94vw - 19px)">
-              <source type="image/webp" srcset="assets/img/villa-overwater-pool-bedroom-480.webp 480w, assets/img/villa-overwater-pool-bedroom-800.webp 800w, assets/img/villa-overwater-pool-bedroom-1200.webp 1200w" sizes="(min-width: 1536px) 448px, (min-width: 1200px) 30vw, (min-width: 900px) 37vw, calc(94vw - 19px)">
-              <img src="assets/img/villa-overwater-pool-bedroom-1200.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A bedroom with a timber-beamed ceiling and white linen, opening through glass doors onto the pool deck and the sea.">
-            </picture>
-            <figcaption>The bedroom opens straight onto the pool deck.</figcaption>
-          </figure>
         </article>
 
         <article class="villa" id="beach-pool-villa" aria-labelledby="beach-pool-villa-title">
-          <figure class="villa__main media" data-reveal="media" style="--pos: 50% 60%">
-            <picture>
-              <source type="image/avif" srcset="assets/img/villa-beach-pool-640.avif 640w, assets/img/villa-beach-pool-960.avif 960w, assets/img/villa-beach-pool-1280.avif 1280w, assets/img/villa-beach-pool-1448.avif 1448w" sizes="(min-width: 1200px) 1140px, calc(94vw - 19px)">
-              <source type="image/webp" srcset="assets/img/villa-beach-pool-640.webp 640w, assets/img/villa-beach-pool-960.webp 960w, assets/img/villa-beach-pool-1280.webp 1280w, assets/img/villa-beach-pool-1448.webp 1448w" sizes="(min-width: 1200px) 1140px, calc(94vw - 19px)">
-              <img src="assets/img/villa-beach-pool-1280.jpg" width="1448" height="1086" loading="lazy" decoding="async" alt="A beachfront villa among tropical greenery, with a private pool, loungers and steps down to the white sand.">
-            </picture>
-          </figure>
-          <div class="villa__text" data-reveal>
+          <div class="villa__media">
+            <figure class="villa__main photo" style="--pos: 50% 60%; --lqip: var(--lqip-villa-beach-pool)">
+              <picture>
+                <source type="image/avif" srcset="assets/img/villa-beach-pool-640.avif 640w, assets/img/villa-beach-pool-960.avif 960w, assets/img/villa-beach-pool-1280.avif 1280w, assets/img/villa-beach-pool-1448.avif 1448w" sizes="(min-width: 1536px) 928px, (min-width: 1200px) 61vw, (min-width: 900px) calc(94vw - 19px), 100vw">
+                <source type="image/webp" srcset="assets/img/villa-beach-pool-640.webp 640w, assets/img/villa-beach-pool-960.webp 960w, assets/img/villa-beach-pool-1280.webp 1280w, assets/img/villa-beach-pool-1448.webp 1448w" sizes="(min-width: 1536px) 928px, (min-width: 1200px) 61vw, (min-width: 900px) calc(94vw - 19px), 100vw">
+                <img src="assets/img/villa-beach-pool-1280.jpg" width="1448" height="1086" loading="lazy" decoding="async" alt="A beachfront villa among tropical greenery, with a private pool, loungers and steps down to the white sand.">
+              </picture>
+            </figure>
+            <figure class="villa__inset">
+              <div class="villa__inset-frame photo" style="--lqip: var(--lqip-villa-beach-pool-bedroom)">
+                <picture>
+                  <source type="image/avif" srcset="assets/img/villa-beach-pool-bedroom-480.avif 480w, assets/img/villa-beach-pool-bedroom-800.avif 800w, assets/img/villa-beach-pool-bedroom-1200.avif 1200w" sizes="(min-width: 1536px) 378px, (min-width: 1200px) 25vw, (min-width: 900px) 30vw, calc(94vw - 19px)">
+                  <source type="image/webp" srcset="assets/img/villa-beach-pool-bedroom-480.webp 480w, assets/img/villa-beach-pool-bedroom-800.webp 800w, assets/img/villa-beach-pool-bedroom-1200.webp 1200w" sizes="(min-width: 1536px) 378px, (min-width: 1200px) 25vw, (min-width: 900px) 30vw, calc(94vw - 19px)">
+                  <img src="assets/img/villa-beach-pool-bedroom-1200.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A bright bedroom whose sliding glass doors open to a private pool, the garden and the beach.">
+                </picture>
+              </div>
+              <figcaption>The bedroom opens to the garden, the pool and the beach.</figcaption>
+            </figure>
+          </div>
+          <div class="villa__panel" data-reveal>
+            <p class="villa__count" aria-hidden="true"><span>03</span> / 03</p>
             <p class="villa__setting">On the beach</p>
             <h3 class="villa__title" id="beach-pool-villa-title">Beach Pool Villa</h3>
             <p class="villa__tagline">Barefoot, on the sand</p>
-            <p>Tucked into the island greenery, a few steps from the water. A private pool and a timber deck lead down onto the beach, and the bedroom opens to the garden, the pool and the sea beyond.</p>
+            <p class="villa__text">Tucked into the island greenery, a few steps from the water. A private pool and a timber deck lead down onto the beach, and the bedroom opens to the garden, the pool and the sea beyond.</p>
             <dl class="facts">
               <div><dt>Outdoors</dt><dd>Private pool and timber deck</dd></div>
               <div><dt>Inside</dt><dd>Bedroom with garden and sea views</dd></div>
               <div><dt>To the water</dt><dd>Steps onto the sand</dd></div>
             </dl>
           </div>
-          <figure class="villa__inset" data-reveal="media" style="--reveal-delay: 120ms">
-            <picture>
-              <source type="image/avif" srcset="assets/img/villa-beach-pool-bedroom-480.avif 480w, assets/img/villa-beach-pool-bedroom-800.avif 800w, assets/img/villa-beach-pool-bedroom-1200.avif 1200w" sizes="(min-width: 1536px) 448px, (min-width: 1200px) 30vw, (min-width: 900px) 37vw, calc(94vw - 19px)">
-              <source type="image/webp" srcset="assets/img/villa-beach-pool-bedroom-480.webp 480w, assets/img/villa-beach-pool-bedroom-800.webp 800w, assets/img/villa-beach-pool-bedroom-1200.webp 1200w" sizes="(min-width: 1536px) 448px, (min-width: 1200px) 30vw, (min-width: 900px) 37vw, calc(94vw - 19px)">
-              <img src="assets/img/villa-beach-pool-bedroom-1200.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A bright bedroom whose sliding glass doors open to a private pool, the garden and the beach.">
-            </picture>
-            <figcaption>The bedroom opens to the garden, the pool and the beach.</figcaption>
-          </figure>
         </article>
       </div>
     </section>
 
-    <!-- The island -->
+    <!-- The island: a guide that moves across the aerial photo as you read -->
     <section class="island section" id="island" aria-labelledby="island-title">
-      <div class="container">
-        <header class="section-head" data-reveal>
-          <div class="section-head__title">
-            <p class="eyebrow">The Island</p>
-            <h2 class="section-title" id="island-title">The island at a glance</h2>
-          </div>
-          <p class="section-lede section-head__aside">A ring of white sand, a calm turquoise lagoon and a reef beyond it. Villas follow the boardwalk out over the water or sit back among the palms.</p>
+      <div class="container island__grid" data-island>
+        <header class="island__head" data-reveal>
+          <p class="eyebrow">The Island</p>
+          <h2 class="section-title" id="island-title">The island at a glance</h2>
+          <p class="section-lede">A ring of white sand, a calm turquoise lagoon and a reef beyond it. Villas follow the boardwalk out over the water or sit back among the palms.</p>
         </header>
 
-        <figure class="island-map" data-island-map>
-          <div class="island-map__frame media" data-reveal="media">
+        <div class="island__stage">
+          <figure class="island__photo photo" style="--lqip: var(--lqip-island-aerial)">
             <picture>
-              <source type="image/avif" srcset="assets/img/island-aerial-640.avif 640w, assets/img/island-aerial-960.avif 960w, assets/img/island-aerial-1280.avif 1280w, assets/img/island-aerial-1672.avif 1672w" sizes="(min-width: 1536px) 1408px, (min-width: 640px) calc(94vw - 19px), 100vw">
-              <source type="image/webp" srcset="assets/img/island-aerial-640.webp 640w, assets/img/island-aerial-960.webp 960w, assets/img/island-aerial-1280.webp 1280w, assets/img/island-aerial-1672.webp 1672w" sizes="(min-width: 1536px) 1408px, (min-width: 640px) calc(94vw - 19px), 100vw">
+              <source type="image/avif" srcset="assets/img/island-aerial-640.avif 640w, assets/img/island-aerial-960.avif 960w, assets/img/island-aerial-1280.avif 1280w, assets/img/island-aerial-1672.avif 1672w" sizes="(min-width: 1536px) 752px, (min-width: 1080px) 49vw, (min-width: 640px) calc(94vw - 19px), 100vw">
+              <source type="image/webp" srcset="assets/img/island-aerial-640.webp 640w, assets/img/island-aerial-960.webp 960w, assets/img/island-aerial-1280.webp 1280w, assets/img/island-aerial-1672.webp 1672w" sizes="(min-width: 1536px) 752px, (min-width: 1080px) 49vw, (min-width: 640px) calc(94vw - 19px), 100vw">
               <img src="assets/img/island-aerial-1280.jpg" width="1672" height="940" loading="lazy" decoding="async" alt="Aerial view of the island. Overwater villas follow a timber boardwalk across the lagoon, beach villas sit among the palms and a white beach runs along the shore.">
             </picture>
-            <ol class="island-map__markers" aria-hidden="true">
-              <li class="marker" data-point="1" style="--x: 71%; --y: 78%">1</li>
-              <li class="marker" data-point="2" style="--x: 37%; --y: 37.5%">2</li>
-              <li class="marker" data-point="3" style="--x: 57%; --y: 47.5%">3</li>
-              <li class="marker" data-point="4" style="--x: 66%; --y: 30%">4</li>
-              <li class="marker" data-point="5" style="--x: 86%; --y: 51%">5</li>
-              <li class="marker" data-point="6" style="--x: 14%; --y: 66%">6</li>
-            </ol>
-          </div>
-          <figcaption class="island-map__legend">
-            <ol class="legend" role="list">
-              <li class="legend__item" data-point="1" data-reveal>
-                <span class="legend__num" aria-hidden="true">1</span>
-                <strong class="legend__name">Overwater villas</strong>
-                <span class="legend__text">Set along the boardwalk, over open water.</span>
-              </li>
-              <li class="legend__item" data-point="2" data-reveal style="--reveal-delay: 80ms">
-                <span class="legend__num" aria-hidden="true">2</span>
-                <strong class="legend__name">The boardwalk</strong>
-                <span class="legend__text">Timber walkways join every villa to the island.</span>
-              </li>
-              <li class="legend__item" data-point="3" data-reveal style="--reveal-delay: 160ms">
-                <span class="legend__num" aria-hidden="true">3</span>
-                <strong class="legend__name">The lagoon</strong>
-                <span class="legend__text">Calm, shallow and clear, between the shore and the villas.</span>
-              </li>
-              <li class="legend__item" data-point="4" data-reveal>
-                <span class="legend__num" aria-hidden="true">4</span>
-                <strong class="legend__name">Beach villas</strong>
-                <span class="legend__text">Set back among the palms, a few steps from the sand.</span>
-              </li>
-              <li class="legend__item" data-point="5" data-reveal style="--reveal-delay: 80ms">
-                <span class="legend__num" aria-hidden="true">5</span>
-                <strong class="legend__name">The beach</strong>
-                <span class="legend__text">Soft white sand along the lagoon side of the island.</span>
-              </li>
-              <li class="legend__item" data-point="6" data-reveal style="--reveal-delay: 160ms">
-                <span class="legend__num" aria-hidden="true">6</span>
-                <strong class="legend__name">The reef</strong>
-                <span class="legend__text">Darker patches of coral where the lagoon meets deeper water.</span>
-              </li>
-            </ol>
-          </figcaption>
-        </figure>
+            <div class="island__spot" aria-hidden="true"></div>
+            <div class="island__ring" aria-hidden="true"><span class="island__label"></span></div>
+          </figure>
+        </div>
+
+        <ol class="places" role="list">
+          <li class="place" data-point="1" style="--x: 71%; --y: 78%">
+            <h3 class="place__name">Overwater villas</h3>
+            <p class="place__text">Set along the boardwalk, over open water.</p>
+          </li>
+          <li class="place" data-point="2" style="--x: 37%; --y: 37.5%">
+            <h3 class="place__name">The boardwalk</h3>
+            <p class="place__text">Timber walkways join every villa to the island.</p>
+          </li>
+          <li class="place" data-point="3" style="--x: 57%; --y: 47.5%">
+            <h3 class="place__name">The lagoon</h3>
+            <p class="place__text">Calm, shallow and clear, between the shore and the villas.</p>
+          </li>
+          <li class="place" data-point="4" style="--x: 66%; --y: 30%">
+            <h3 class="place__name">Beach villas</h3>
+            <p class="place__text">Set back among the palms, a few steps from the sand.</p>
+          </li>
+          <li class="place" data-point="5" style="--x: 86%; --y: 51%">
+            <h3 class="place__name">The beach</h3>
+            <p class="place__text">Soft white sand along the lagoon side of the island.</p>
+          </li>
+          <li class="place" data-point="6" style="--x: 14%; --y: 66%">
+            <h3 class="place__name">The reef</h3>
+            <p class="place__text">Darker patches of coral where the lagoon meets deeper water.</p>
+          </li>
+        </ol>
       </div>
     </section>
 
     <!-- The lagoon -->
     <section class="lagoon" id="lagoon" aria-labelledby="lagoon-title">
-      <figure class="lagoon__media">
+      <figure class="lagoon__media photo" style="--lqip: var(--lqip-lagoon-pool)">
         <picture>
-          <source type="image/avif" srcset="assets/img/lagoon-pool-640.avif 640w, assets/img/lagoon-pool-960.avif 960w, assets/img/lagoon-pool-1280.avif 1280w, assets/img/lagoon-pool-1536.avif 1536w" sizes="(max-width: 899px) 113vw, (max-aspect-ratio: 3/2) 150vh, 100vw">
-          <source type="image/webp" srcset="assets/img/lagoon-pool-640.webp 640w, assets/img/lagoon-pool-960.webp 960w, assets/img/lagoon-pool-1280.webp 1280w, assets/img/lagoon-pool-1536.webp 1536w" sizes="(max-width: 899px) 113vw, (max-aspect-ratio: 3/2) 150vh, 100vw">
+          <source type="image/avif" srcset="assets/img/lagoon-pool-640.avif 640w, assets/img/lagoon-pool-960.avif 960w, assets/img/lagoon-pool-1280.avif 1280w, assets/img/lagoon-pool-1536.avif 1536w" sizes="(max-width: 899px) 113vw, (max-aspect-ratio: 3/2) 126vh, 100vw">
+          <source type="image/webp" srcset="assets/img/lagoon-pool-640.webp 640w, assets/img/lagoon-pool-960.webp 960w, assets/img/lagoon-pool-1280.webp 1280w, assets/img/lagoon-pool-1536.webp 1536w" sizes="(max-width: 899px) 113vw, (max-aspect-ratio: 3/2) 126vh, 100vw">
           <img src="assets/img/lagoon-pool-1280.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="An infinity pool whose edge lines up with the lagoon, with loungers on a timber deck and overwater villas in the distance.">
         </picture>
       </figure>
@@ -375,11 +407,11 @@
       <div class="dining__grid">
         <div class="dining__text" data-reveal>
           <p class="eyebrow eyebrow--on-dark">Dining</p>
-          <h2 class="section-title" id="dining-title">Long lunches above the water</h2>
+          <h2 class="section-title" id="dining-title">Long lunches <em>above the water</em></h2>
           <p>The terrace stands over the lagoon, open to the breeze on every side. Rattan chairs, white linen and ceiling fans turning slowly overhead.</p>
           <p>Come for breakfast in the cool of the morning and stay as long as the light allows.</p>
         </div>
-        <figure class="dining__media media" data-reveal="media" style="--pos: 40% 50%">
+        <figure class="dining__media photo" style="--pos: 40% 50%; --lqip: var(--lqip-dining-terrace)">
           <picture>
             <source type="image/avif" srcset="assets/img/dining-terrace-640.avif 640w, assets/img/dining-terrace-960.avif 960w, assets/img/dining-terrace-1280.avif 1280w, assets/img/dining-terrace-1536.avif 1536w" sizes="(min-width: 1700px) 1152px, (min-width: 900px) calc(94vw - 400px), 100vw">
             <source type="image/webp" srcset="assets/img/dining-terrace-640.webp 640w, assets/img/dining-terrace-960.webp 960w, assets/img/dining-terrace-1280.webp 1280w, assets/img/dining-terrace-1536.webp 1536w" sizes="(min-width: 1700px) 1152px, (min-width: 900px) calc(94vw - 400px), 100vw">
@@ -389,20 +421,20 @@
       </div>
     </section>
 
-    <!-- Arrival: closing moment -->
+    <!-- Arrival: the closing moment -->
     <section class="arrival" id="arrival" aria-labelledby="arrival-title">
-      <figure class="arrival__media">
+      <figure class="arrival__media photo" style="--lqip: var(--lqip-arrival-jetty)">
         <picture>
-          <source type="image/avif" srcset="assets/img/arrival-jetty-640.avif 640w, assets/img/arrival-jetty-960.avif 960w, assets/img/arrival-jetty-1280.avif 1280w, assets/img/arrival-jetty-1536.avif 1536w" sizes="(max-width: 899px) 200vh, (max-aspect-ratio: 5/3) 168vh, 100vw">
-          <source type="image/webp" srcset="assets/img/arrival-jetty-640.webp 640w, assets/img/arrival-jetty-960.webp 960w, assets/img/arrival-jetty-1280.webp 1280w, assets/img/arrival-jetty-1536.webp 1536w" sizes="(max-width: 899px) 200vh, (max-aspect-ratio: 5/3) 168vh, 100vw">
+          <source type="image/avif" srcset="assets/img/arrival-jetty-640.avif 640w, assets/img/arrival-jetty-960.avif 960w, assets/img/arrival-jetty-1280.avif 1280w, assets/img/arrival-jetty-1536.avif 1536w" sizes="(max-width: 899px) 186vh, (max-aspect-ratio: 3/2) 158vh, 100vw">
+          <source type="image/webp" srcset="assets/img/arrival-jetty-640.webp 640w, assets/img/arrival-jetty-960.webp 960w, assets/img/arrival-jetty-1280.webp 1280w, assets/img/arrival-jetty-1536.webp 1536w" sizes="(max-width: 899px) 186vh, (max-aspect-ratio: 3/2) 158vh, 100vw">
           <img src="assets/img/arrival-jetty-1280.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A timber boardwalk curving over clear water toward overwater villas at sunset.">
         </picture>
       </figure>
       <div class="container arrival__content" data-reveal>
-        <p class="eyebrow">Arrival</p>
+        <p class="eyebrow eyebrow--center">Arrival</p>
         <h2 class="arrival__title" id="arrival-title">Arrive <em>slowly.</em></h2>
         <p class="arrival__lede">Walk out along the boardwalk as the light turns gold, with clear water on either side and your villa waiting at the end.</p>
-        <a class="button button--primary" href="#villas">
+        <a class="button button--light" href="#villas">
           Explore the Villas
           <span class="button__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
         </a>

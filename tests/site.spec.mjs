@@ -40,7 +40,7 @@ test.describe('page', () => {
     }
   });
 
-  test('every image has alt text and loads', async ({ page }) => {
+  test('every photo has alt text and loads; decorative thumbnails are marked as such', async ({ page }) => {
     await page.goto('/');
     await scrollThrough(page);
     await page.waitForLoadState('networkidle');
@@ -48,13 +48,19 @@ test.describe('page', () => {
       imgs.map((img) => ({
         src: img.currentSrc,
         alt: img.getAttribute('alt'),
+        thumb: Boolean(img.closest('.villa-card__thumb')),
         loaded: img.complete && img.naturalWidth > 0,
+        visible: getComputedStyle(img).opacity === '1',
       })),
     );
-    expect(images.length).toBe(11);
+    expect(images.filter((i) => !i.thumb)).toHaveLength(11);
+    expect(images.filter((i) => i.thumb)).toHaveLength(3);
     for (const image of images) {
-      expect(image.alt?.trim().length, `alt text for ${image.src}`).toBeGreaterThan(10);
+      // Thumbnails sit inside links that already name the villa.
+      if (image.thumb) expect(image.alt, `empty alt for ${image.src}`).toBe('');
+      else expect(image.alt?.trim().length, `alt text for ${image.src}`).toBeGreaterThan(10);
       expect(image.loaded, `image loaded: ${image.src}`).toBe(true);
+      expect(image.visible, `image faded in: ${image.src}`).toBe(true);
     }
   });
 
@@ -158,6 +164,18 @@ test.describe('content and assets', () => {
     expect(videoRequests).toEqual([]);
   });
 
+  test('a tall window at desktop width keeps the landscape hero', async ({ browser }, testInfo) => {
+    onlyDesktop(testInfo);
+    const page = await browser.newPage({ viewport: { width: 980, height: 1844 } });
+    await page.goto('/');
+    const hero = await page.locator('.hero').evaluate((el) => el.getBoundingClientRect());
+    // Landscape shaped, so the wide photo is not stretched into a portrait crop.
+    expect(hero.width / hero.height).toBeGreaterThan(1.3);
+    const src = await page.locator('.hero__image').evaluate((img) => img.currentSrc);
+    expect(src).not.toContain('hero-phone');
+    await page.close();
+  });
+
   test('portrait phones get the portrait hero photo, other screens the wide one', async ({ browser }, testInfo) => {
     onlyDesktop(testInfo);
     const cases = [
@@ -179,7 +197,7 @@ test.describe('content and assets', () => {
 });
 
 test.describe('layout', () => {
-  for (const width of [360, 390, 768, 1024, 1280, 1440, 1920]) {
+  for (const width of [320, 360, 390, 768, 1024, 1280, 1440, 1920]) {
     test(`no sideways scrolling at ${width}px`, async ({ browser }, testInfo) => {
       onlyDesktop(testInfo);
       const page = await browser.newPage({ viewport: { width, height: 900 } });
@@ -236,7 +254,7 @@ test.describe('navigation', () => {
   test('villa links land each villa just below the header', async ({ page }) => {
     await page.goto('/');
     for (const id of ['overwater-villa', 'overwater-pool-villa', 'beach-pool-villa']) {
-      await page.locator(`.villa-strip__link[href="#${id}"]`).click();
+      await page.locator(`.villa-card__link[href="#${id}"]`).click();
       await expect(page).toHaveURL(new RegExp(`#${id}$`));
       // Wait for the smooth scroll to finish, then check it stopped below the header.
       await expect
@@ -340,6 +358,8 @@ test.describe('robustness', () => {
     await expect(page.locator('.site-nav')).toBeVisible();
     await expect(page.locator('[data-menu-open]')).toBeHidden();
     await expect(page.locator('#villas')).toBeVisible();
+    await expect(page.locator('.hero__image')).toHaveCSS('opacity', '1');
+    await expect(page.locator('.villa__main img').first()).toHaveCSS('opacity', '1');
     await context.close();
   });
 
@@ -419,7 +439,7 @@ async function textColour(page, selector) {
   return value.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
 }
 
-async function backgroundContrast(page, selector, textRgb, mode) {
+async function backgroundContrast(page, selector, textRgb) {
   // The area the words actually cover: the union of their line boxes.
   const box = await page.locator(selector).first().evaluate((el) => {
     const range = document.createRange();
@@ -447,8 +467,10 @@ async function backgroundContrast(page, selector, textRgb, mode) {
   for (let i = 0; i < data.length; i += info.channels) values.push(lum([data[i], data[i + 1], data[i + 2]]));
   values.sort((a, b) => a - b);
   // Ignore the most extreme 1% of pixels (single specks of glare or shadow).
-  const background = mode === 'light-text' ? values[Math.floor(values.length * 0.99)] : values[Math.floor(values.length * 0.01)];
   const text = lum(textRgb);
+  // Light text is judged against the lightest background pixels, dark text
+  // against the darkest.
+  const background = text > 0.4 ? values[Math.floor(values.length * 0.99)] : values[Math.floor(values.length * 0.01)];
   const [hi, lo] = text > background ? [text, background] : [background, text];
   return (hi + 0.05) / (lo + 0.05);
 }
@@ -456,8 +478,9 @@ async function backgroundContrast(page, selector, textRgb, mode) {
 test.describe('legibility over photography', () => {
   // Full screens plus typical browser-window sizes (screen height minus toolbars).
   const HERO_SIZES = {
-    desktop: [[1024, 768], [1280, 650], [1280, 800], [1366, 657], [1440, 790], [1440, 900], [1536, 730], [1920, 970], [1920, 1080], [2560, 1440]],
-    mobile: [[360, 740], [375, 667], [390, 844], [412, 915], [768, 1024]],
+    // 980x1844 is a phone browser asking for the desktop site.
+    desktop: [[980, 1844], [1024, 768], [1280, 650], [1280, 800], [1366, 657], [1440, 790], [1440, 900], [1536, 730], [1920, 970], [1920, 1080], [2560, 1440]],
+    mobile: [[334, 720], [360, 740], [375, 667], [390, 844], [412, 915], [768, 1024]],
   };
   // Whichever of these is on screen at a given width is measured.
   const HEADER_TEXT = ['.site-header .brand__name', '.site-nav li:first-child a', '.site-nav li:last-child a', '.site-header .menu-button span'];
@@ -479,8 +502,12 @@ test.describe('legibility over photography', () => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
       for (const [selector, target] of Object.entries(targets)) {
-        if (!(await page.locator(selector).first().isVisible())) continue;
-        const ratio = await backgroundContrast(page, selector, await textColour(page, selector), 'dark-text');
+        const shown = await page.locator(selector).first().evaluate((el) => {
+          const box = el.getBoundingClientRect();
+          return box.width > 2 && box.height > 2 && getComputedStyle(el).visibility !== 'hidden';
+        }).catch(() => false);
+        if (!shown) continue;
+        const ratio = await backgroundContrast(page, selector, await textColour(page, selector));
         results.push({ at: `${width}x${height}`, selector, ratio: Number(ratio.toFixed(2)), target });
       }
       await context.close();
@@ -489,24 +516,23 @@ test.describe('legibility over photography', () => {
     expect(results.filter((r) => r.ratio < r.target)).toEqual([]);
   });
 
-  test('lagoon and arrival words stay readable over the sky', async ({ browser }, testInfo) => {
+  test('arrival words stay readable over the photo', async ({ browser }, testInfo) => {
     const mobile = testInfo.project.name === 'mobile';
     const sizes = mobile
       ? [[360, 740], [390, 844], [768, 1024]]
       : [[1024, 768], [1280, 650], [1280, 800], [1366, 657], [1440, 790], [1440, 900], [1536, 730], [1920, 970], [1920, 1080]];
-    // The lagoon words sit over the photo only on wide screens.
-    const checks = mobile ? ['.arrival__lede', '.arrival__title'] : ['.lagoon__panel p:not(.eyebrow)', '.lagoon__panel h2', '.arrival__lede', '.arrival__title'];
+    const checks = { '.arrival__title': 3, '.arrival__title em': 3, '.arrival__lede': 4.5, '.arrival .eyebrow': 4.5 };
     const results = [];
     for (const [width, height] of sizes) {
       const context = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce' });
       const page = await context.newPage();
       await page.goto('/');
       await scrollThrough(page);
-      for (const selector of checks) {
-        await page.locator(selector).evaluate((el) => el.closest('section').scrollIntoView({ behavior: 'instant' }));
-        await page.waitForTimeout(150);
-        const ratio = await backgroundContrast(page, selector, await textColour(page, selector), 'dark-text');
-        const target = selector.includes('h2') || selector.includes('title') ? 3 : 4.5;
+      await page.evaluate(() => document.getElementById('arrival').scrollIntoView({ behavior: 'instant' }));
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(150);
+      for (const [selector, target] of Object.entries(checks)) {
+        const ratio = await backgroundContrast(page, selector, await textColour(page, selector));
         results.push({ at: `${width}x${height}`, selector, ratio: Number(ratio.toFixed(2)), target });
       }
       await context.close();
@@ -516,14 +542,44 @@ test.describe('legibility over photography', () => {
   });
 });
 
-test.describe('island map', () => {
-  test('pointing at a legend entry highlights its marker', async ({ page }, testInfo) => {
+test.describe('island guide', () => {
+  test('scrolling through the places moves the light across the photo', async ({ page }) => {
+    await page.goto('/');
+    const guide = page.locator('[data-island]');
+    await expect(guide).toHaveClass(/is-enhanced/);
+    await expect(guide).toHaveAttribute('data-active', '1');
+    // Bring the fifth place up to the reading line.
+    await page.locator('.place[data-point="5"]').evaluate((el) => {
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top - window.innerHeight * 0.45, behavior: 'instant' });
+    });
+    await expect(guide).toHaveAttribute('data-active', '5');
+    await expect(page.locator('.place[data-point="5"]')).toHaveClass(/is-active/);
+    // The photo stays in view while the list scrolls.
+    const photoTop = await page.locator('.island__photo').evaluate((el) => el.getBoundingClientRect().top);
+    expect(photoTop).toBeGreaterThanOrEqual(0);
+    await expect(page.locator('.island__label')).toHaveText('The beach');
+  });
+
+  test('pointing at a place lights it straight away', async ({ page }, testInfo) => {
     onlyDesktop(testInfo);
     await page.goto('/');
     await page.locator('#island').scrollIntoViewIfNeeded();
-    await page.locator('.legend__item[data-point="3"]').hover();
-    await expect(page.locator('.marker[data-point="3"]')).toHaveClass(/is-active/);
-    await page.mouse.move(0, 0);
-    await expect(page.locator('.marker[data-point="3"]')).not.toHaveClass(/is-active/);
+    await page.locator('.place[data-point="3"]').hover();
+    await expect(page.locator('[data-island]')).toHaveAttribute('data-active', '3');
+    const ring = await page.locator('.island__photo').evaluate((el) => ({
+      x: el.style.getPropertyValue('--spot-x'),
+      y: el.style.getPropertyValue('--spot-y'),
+    }));
+    expect(ring).toEqual({ x: '57%', y: '47.5%' });
+  });
+
+  test('without the guide script the places and photo still show', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto('/');
+    await expect(page.locator('.place')).toHaveCount(6);
+    await expect(page.locator('.island__ring')).toBeHidden();
+    await context.close();
   });
 });

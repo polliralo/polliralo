@@ -47,6 +47,8 @@ for (const vp of VIEWPORTS) {
   }
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForLoadState('networkidle');
+  // Give the header a moment to switch back to its over-the-photo style.
+  await page.waitForTimeout(400);
   await page.screenshot({ path: `${outDir}/${vp.name}-full.png`, fullPage: true });
   console.log(`${vp.name}: ${height}px tall`);
   await context.close();

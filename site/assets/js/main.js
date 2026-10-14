@@ -1,6 +1,6 @@
 // NIVARA COAST: small progressive enhancements. Every section, link and image
-// works without this file; it only adds motion, the phone menu and small
-// navigation helpers.
+// works without this file; it only adds motion, the phone menu, the island
+// guide's moving light and small navigation helpers.
 
 (() => {
   'use strict';
@@ -118,17 +118,125 @@
     });
   }
 
-  /* Island map: pointing at a legend entry highlights its marker, and back. */
-  function initIslandMap() {
-    const map = document.querySelector('[data-island-map]');
-    if (!map) return;
-    const points = [...map.querySelectorAll('[data-point]')];
-    const setActive = (id) =>
-      points.forEach((point) => point.classList.toggle('is-active', point.dataset.point === id));
+  /* Photos fade in over their blurred preview once they have loaded. */
+  function initImageFade() {
+    const images = document.querySelectorAll('.photo img');
+    if (!images.length) return;
+    root.classList.add('img-fade');
+    images.forEach((img) => {
+      const show = () => img.classList.add('is-loaded');
+      if (img.complete) show();
+      else {
+        img.addEventListener('load', show, { once: true });
+        // A photo that fails still leaves its preview, never an empty frame.
+        img.addEventListener('error', show, { once: true });
+      }
+    });
+  }
 
-    points.forEach((point) => {
-      point.addEventListener('pointerenter', () => setActive(point.dataset.point));
-      point.addEventListener('pointerleave', () => setActive(null));
+  /* Island guide: the place being read is lit on the aerial photo. The ring
+     follows the reading line while scrolling, and pointing at a place (or
+     tapping it) lights it straight away. */
+  function initIslandGuide() {
+    const guide = document.querySelector('[data-island]');
+    const photo = guide?.querySelector('.island__photo');
+    const stage = guide?.querySelector('.island__stage');
+    const label = guide?.querySelector('.island__label');
+    const places = guide ? [...guide.querySelectorAll('.place')] : [];
+    if (!photo || !stage || !label || !places.length) return;
+
+    const sideBySide = window.matchMedia('(min-width: 1080px)');
+    let active = null;
+    let held = null; // a place the mouse is resting on
+    let labelTimer = 0;
+
+    const setActive = (place) => {
+      if (!place || place === active) return;
+      active?.classList.remove('is-active');
+      active = place;
+      place.classList.add('is-active');
+      guide.dataset.active = place.dataset.point;
+
+      const x = place.style.getPropertyValue('--x').trim();
+      const y = place.style.getPropertyValue('--y').trim();
+      photo.style.setProperty('--spot-x', x);
+      photo.style.setProperty('--spot-y', y);
+      photo.classList.toggle('is-flipped', parseFloat(x) > 60);
+
+      // The label fades out while the ring travels, then shows the new name.
+      const name = place.querySelector('.place__name')?.textContent ?? '';
+      window.clearTimeout(labelTimer);
+      if (reducedMotion.matches) {
+        label.textContent = name;
+        label.classList.remove('is-hidden');
+        return;
+      }
+      label.classList.add('is-hidden');
+      labelTimer = window.setTimeout(() => {
+        label.textContent = name;
+        label.classList.remove('is-hidden');
+      }, 550);
+    };
+
+    const update = () => {
+      if (held) return;
+      const viewport = window.innerHeight;
+      // Side by side, the reading line is the middle of the screen. Stacked
+      // on phones, it sits a little below the photo.
+      let line = viewport * 0.5;
+      if (!sideBySide.matches) {
+        const below = stage.getBoundingClientRect().bottom;
+        line = Math.min(viewport * 0.85, below + (viewport - below) * 0.3);
+      }
+      let current = places[0];
+      for (const place of places) {
+        if (place.getBoundingClientRect().top < line) current = place;
+      }
+      setActive(current);
+    };
+
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(() => {
+        queued = false;
+        update();
+      });
+    };
+
+    guide.classList.add('is-enhanced');
+    // Light the first place without a glide, so the ring starts in place.
+    photo.style.setProperty('--spot-x', places[0].style.getPropertyValue('--x').trim());
+    photo.style.setProperty('--spot-y', places[0].style.getPropertyValue('--y').trim());
+    setActive(places[0]);
+
+    // Follow the scroll only while the guide is near the screen.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          window.addEventListener('scroll', onScroll, { passive: true });
+          update();
+        } else {
+          window.removeEventListener('scroll', onScroll);
+        }
+      }, { rootMargin: '25% 0px' }).observe(guide);
+    } else {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    places.forEach((place) => {
+      place.addEventListener('pointerenter', (event) => {
+        if (event.pointerType !== 'mouse') return;
+        held = place;
+        setActive(place);
+      });
+      place.addEventListener('pointerleave', (event) => {
+        if (event.pointerType !== 'mouse') return;
+        held = null;
+      });
+      place.addEventListener('click', () => setActive(place));
     });
   }
 
@@ -143,6 +251,7 @@
   initMenu();
   initReveal();
   initSectionHighlight();
-  initIslandMap();
+  initImageFade();
+  initIslandGuide();
   initTabVisibility();
 })();

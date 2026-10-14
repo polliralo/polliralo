@@ -2,8 +2,11 @@
 // media/originals. The originals are never modified.
 //
 //   npm run media                          (everything)
-//   npm run media -- images                (only the listed steps: images, meta)
+//   npm run media -- images                (only the listed steps: images, lqip, meta)
 //   npm run media -- images --only hero    (only the named images, comma separated)
+//
+// The lqip step writes a tiny blurred preview of every photo into main.css
+// (between the lqip markers), shown while the real photo loads.
 //
 // Needs: Node 18.17+ and the `sharp` dev dependency.
 //
@@ -12,7 +15,7 @@
 // Crops below are in source pixels, so re-check them if a replacement photo
 // has a different composition.
 
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -21,6 +24,7 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SRC_IMG = join(ROOT, 'media/originals/images');
 const OUT_IMG = join(ROOT, 'site/assets/img');
 const OUT_SITE = join(ROOT, 'site');
+const CSS_FILE = join(OUT_SITE, 'assets/css/main.css');
 
 // Encoder settings, tuned by eye against the originals.
 const AVIF = { quality: 52, effort: 6 };
@@ -48,6 +52,10 @@ const IMAGES = [
   { src: 'overwater-bedroom.png', out: 'villa-overwater-pool-bedroom', widths: [480, 800, 1200], maxWidth: 1200 },
   { src: 'beach-pool-villa.png', out: 'villa-beach-pool', widths: [640, 960, 1280] },
   { src: 'beach-bedroom.png', out: 'villa-beach-pool-bedroom', widths: [480, 800, 1200], maxWidth: 1200 },
+  // Square thumbnails for the villa card under the hero (exteriors).
+  { src: 'jetty-sunset.png', out: 'thumb-overwater-villa', crop: { left: 590, top: 190, width: 520, height: 520 }, widths: [160, 240], maxWidth: 240, thumb: true },
+  { src: 'overwater-pool-villa.png', out: 'thumb-overwater-pool-villa', crop: { left: 330, top: 200, width: 820, height: 820 }, widths: [160, 240], maxWidth: 240, thumb: true },
+  { src: 'beach-pool-villa.png', out: 'thumb-beach-pool-villa', crop: { left: 180, top: 150, width: 840, height: 840 }, widths: [160, 240], maxWidth: 240, thumb: true },
   // Full-bleed and feature sections.
   { src: 'lagoon-pool.png', out: 'lagoon-pool', widths: [640, 960, 1280] },
   { src: 'dining-terrace.png', out: 'dining-terrace', widths: [640, 960, 1280] },
@@ -72,6 +80,24 @@ async function buildImage({ src, out, crop, widths, maxWidth }) {
   const jpg = join(OUT_IMG, `${out}-${fallback}.jpg`);
   await base().resize({ width: fallback }).jpeg(JPEG).toFile(jpg);
   console.log(`image  ${out}: ${sizes.join(', ')}w (${srcWidth}x${srcHeight} source)`);
+}
+
+// A 24px-wide WebP of each photo, inlined into main.css as --lqip-<name>.
+async function buildLqip() {
+  const lines = [];
+  for (const { src, out, crop, thumb } of IMAGES) {
+    if (thumb) continue;
+    const input = join(SRC_IMG, src);
+    const base = crop ? sharp(input).extract(crop) : sharp(input);
+    const data = await base.resize({ width: 24 }).webp({ quality: 40 }).toBuffer();
+    lines.push(`  --lqip-${out}: url("data:image/webp;base64,${data.toString('base64')}");`);
+  }
+  const block = `/* lqip:start (written by scripts/build-media.mjs, do not edit by hand) */\n:root {\n${lines.join('\n')}\n}\n/* lqip:end */`;
+  const css = readFileSync(CSS_FILE, 'utf8');
+  const pattern = /\/\* lqip:start[\s\S]*?\/\* lqip:end \*\//;
+  if (!pattern.test(css)) throw new Error('main.css has no lqip:start / lqip:end markers');
+  writeFileSync(CSS_FILE, css.replace(pattern, block));
+  console.log(`lqip   ${lines.length} previews written to main.css`);
 }
 
 async function buildMeta() {
@@ -103,6 +129,7 @@ async function main() {
   if (want('images')) {
     for (const spec of IMAGES) if (!only || only.includes(spec.out)) await buildImage(spec);
   }
+  if (want('lqip')) await buildLqip();
   if (want('meta')) await buildMeta();
 }
 

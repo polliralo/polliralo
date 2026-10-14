@@ -1,8 +1,28 @@
 {
-  "extends": ["html-validate:recommended"],
+  "extends": [
+    "html-validate:recommended"
+  ],
   "rules": {
     "no-redundant-role": "off",
-    "prefer-native-element": ["error", { "exclude": ["list"] }],
-    "no-inline-style": ["error", { "allowedProperties": ["--x", "--y", "--pos", "--reveal-delay"] }]
+    "prefer-native-element": [
+      "error",
+      {
+        "exclude": [
+          "list"
+        ]
+      }
+    ],
+    "no-inline-style": [
+      "error",
+      {
+        "allowedProperties": [
+          "--x",
+          "--y",
+          "--pos",
+          "--reveal-delay",
+          "--lqip"
+        ]
+      }
+    ]
   }
 }
