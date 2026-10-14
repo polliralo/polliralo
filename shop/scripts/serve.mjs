@@ -6,10 +6,11 @@
 // Serves shop/site like a static host: /cart/ -> cart/index.html, /cart
 // redirects to /cart/, and unknown addresses get 404.html.
 
-import { createReadStream, statSync, existsSync } from 'node:fs';
+import { createReadStream, readFileSync, statSync, existsSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { brotliCompressSync, gzipSync, constants } from 'node:zlib';
 
 const ROOT = fileURLToPath(new URL('../site', import.meta.url));
 const PORT = Number(process.env.PORT) || 4174;
@@ -36,13 +37,25 @@ function inside(file) {
   return file === ROOT || file.startsWith(ROOT + sep);
 }
 
-function send(res, file, status = 200, method = 'GET') {
+// Text files are compressed like a real host does (Cloudflare uses Brotli),
+// so local Lighthouse runs measure realistic transfer sizes.
+const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.xml']);
+
+function send(res, file, status = 200, method = 'GET', acceptEncoding = '') {
   const stats = statSync(file);
-  res.writeHead(status, {
-    'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream',
-    'Content-Length': stats.size,
-    'Cache-Control': 'no-cache',
-  });
+  const type = TYPES[extname(file)] ?? 'application/octet-stream';
+  const headers = { 'Content-Type': type, 'Cache-Control': 'no-cache' };
+  if (COMPRESSIBLE.has(extname(file)) && /\b(br|gzip)\b/.test(acceptEncoding)) {
+    const raw = readFileSync(file);
+    const useBr = /\bbr\b/.test(acceptEncoding);
+    const body = useBr
+      ? brotliCompressSync(raw, { params: { [constants.BROTLI_PARAM_QUALITY]: 5 } })
+      : gzipSync(raw);
+    res.writeHead(status, { ...headers, 'Content-Encoding': useBr ? 'br' : 'gzip', 'Content-Length': body.length, Vary: 'Accept-Encoding' });
+    res.end(method === 'HEAD' ? undefined : body);
+    return;
+  }
+  res.writeHead(status, { ...headers, 'Content-Length': stats.size });
   if (method === 'HEAD') return res.end();
   createReadStream(file).pipe(res);
 }
@@ -74,11 +87,11 @@ const server = createServer((req, res) => {
   }
   const file = pathname.endsWith('/') ? join(target, 'index.html') : target;
   if (existsSync(file) && statSync(file).isFile()) {
-    send(res, file, 200, req.method);
+    send(res, file, 200, req.method, req.headers['accept-encoding']);
     return;
   }
   const notFound = join(ROOT, '404.html');
-  if (existsSync(notFound)) send(res, notFound, 404, req.method);
+  if (existsSync(notFound)) send(res, notFound, 404, req.method, req.headers['accept-encoding']);
   else res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Not found');
 });
 

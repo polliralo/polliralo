@@ -39,6 +39,10 @@ approved previews in `docs/preview/*.jpg`. Research to follow:
 - The footer disclosure stays (it is in `layout.mjs`).
 - Words never sit on top of photos. Labels go under or beside images. The giant
   ghost word may sit *behind* a cut-out on the plain canvas.
+- Decorative giant words are written as
+  `<span class="ghost-word" data-word="Polo" aria-hidden="true"></span>`: the
+  text comes from a CSS pseudo-element, so screen readers and contrast checks
+  skip it (axe and Lighthouse otherwise flag the faint colour).
 
 ## 3. Architecture
 

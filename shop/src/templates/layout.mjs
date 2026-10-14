@@ -77,7 +77,7 @@ ${js.map((j) => `<script type="module" src="/assets/js/pages/${j}.js"></script>`
 </head>
 <body class="${esc(bodyClass)}">
 <a class="skip-link" href="#main">Skip to content</a>
-<p class="announce">Demo store: prices and stock are for illustration only. <a href="/about/#demo">How it works</a></p>
+<aside class="announce" aria-label="Demo store notice"><p>Demo store: prices and stock are for illustration only. <a href="/about/#demo">How it works</a></p></aside>
 ${header(categories, activeCategory, path)}
 <main id="main">
 ${content}
@@ -98,7 +98,7 @@ function header(categories, active, path) {
       <ul>${categories.map((c) => `<li><a href="/collections/${c.slug}/"${c.slug === active ? ' aria-current="page"' : ''}>${esc(c.name)}</a></li>`).join('')}</ul>
     </nav>
     <div class="header-tools">
-      <a class="tool-btn" href="/search/" data-open-search aria-haspopup="dialog">${icon('search', { size: 19 })}<span class="tool-text">Search</span></a>
+      <a class="tool-btn" href="/search/" data-open-search aria-haspopup="dialog" aria-label="Search">${icon('search', { size: 19 })}<span class="tool-text">Search</span></a>
       <a class="tool-btn" href="/cart/" data-open-cart aria-haspopup="dialog" aria-label="Bag">${icon('bag', { size: 19 })}<span class="tool-text">Bag</span><span class="bag-count" data-bag-count data-count="0" aria-hidden="true">0</span></a>
     </div>
   </div>
@@ -134,7 +134,7 @@ function footer(categories) {
       <p>MONO is a fictional brand made as a portfolio demo. The products, prices and stock are not real, no payment is ever taken and no orders are delivered.</p>
       <p>&copy; ${year} MONO demo</p>
     </div>
-    <p class="footer-word" aria-hidden="true">Mono</p>
+    <p class="footer-word" aria-hidden="true" data-word="Mono"></p>
   </div>
 </footer>`;
 }

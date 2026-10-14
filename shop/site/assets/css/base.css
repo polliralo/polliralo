@@ -415,6 +415,10 @@ dialog.is-closing::backdrop { animation: fade-out var(--d-base) var(--ease-out) 
   color: var(--ghost);
 }
 
+/* Decorative words are drawn from data-word with a pseudo-element, so they are
+   not read out or contrast-checked as text: <span class="ghost-word" data-word="Polo" aria-hidden="true"></span> */
+.ghost-word[data-word]::before { content: attr(data-word); }
+
 /* Price with its demo label. */
 .price { display: inline-flex; align-items: center; gap: 10px; font-variant-numeric: tabular-nums; }
 .price .tag { font-weight: 500; }
@@ -496,6 +500,7 @@ dialog.is-closing::backdrop { animation: fade-out var(--d-base) var(--ease-out) 
 @media (hover: hover) { .footer-col a:hover { background-size: 100% 1px; } }
 .footer-note { margin-top: clamp(40px, 5vw, 72px); padding-top: 24px; border-top: 1px solid rgba(237, 232, 223, .14); display: flex; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; font-size: var(--fs-xs); color: var(--night-muted); }
 .footer-note p { max-width: 70ch; }
+.footer-word::before { content: attr(data-word); }
 .footer-word { font-family: var(--serif); font-size: clamp(5rem, 2rem + 18vw, 17rem); line-height: .8; letter-spacing: -0.02em; color: rgba(237, 232, 223, .07); margin-top: 40px; user-select: none; white-space: nowrap; overflow: hidden; }
 @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
 
