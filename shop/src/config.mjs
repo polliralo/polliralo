@@ -1,11 +1,13 @@
 // Site-wide settings for the MONO build.
 //
-// SITE_URL: the live address, with no trailing slash, for example
-// "https://mono.example.com". Leave it empty until the site has its own
-// address. While it is empty, canonical links are written as paths and no
-// sitemap.xml is written (a sitemap needs full addresses). After setting it,
-// run `npm run shop:build` again and upload the site.
-export const SITE_URL = '';
+// SITE_URL: the live address, for example "https://mono.example.com". Leave it
+// empty until the site has its own address. While it is empty, canonical links
+// are written as paths and no sitemap.xml is written (a sitemap needs full
+// addresses). Set it here, or for one build only with an environment variable:
+//   SITE_URL=https://mono.example.com npm run shop:build
+// then upload the site again.
+const LIVE_ADDRESS = '';
+export const SITE_URL = (process.env.SITE_URL ?? LIVE_ADDRESS).trim().replace(/\/+$/, '');
 
 // SEO_MODE: 'demo' (default) keeps commerce markup out of the pages, because the
 // products and prices are fictional. 'live' adds Product/ProductGroup/Offer

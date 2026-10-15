@@ -143,11 +143,13 @@ const robots = [
 ].join('\n');
 if (!only) writeFileSync(join(SITE, 'robots.txt'), robots);
 
-// Cloudflare (and Netlify) read _headers from the upload folder.
+// Cloudflare (and Netlify) read _headers from the upload folder. Image names
+// do not change when a photo is replaced, so images are cached for a week, not
+// forever; the fonts never change.
 const headers = `/admin/*
   X-Robots-Tag: noindex, nofollow
 /assets/img/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=604800
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 /*

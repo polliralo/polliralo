@@ -1,6 +1,6 @@
 # MONO build notes
 
-Preparation for the shop build in `master-brief.md`. **Nothing is built yet.** The owner is choosing the design and UI direction first and will say when to start.
+Preparation notes for the shop build in `master-brief.md`, written before the build. **The shop is now built** (handoff: `../README.md`); the photo mapping and decisions below are kept for reference, and some gaps listed here were later filled with new photos (see `../media/originals/CATALOG.md`).
 
 **Design direction (14 October 2026):** the owner chose five reference designs; the proposed combination, preview images and the points where it differs from the brief are in `design-references.md`. The photos still needed for that design, with prompts, are in `photo-shotlist.md`. In short: the hero becomes a Percival-style product slider using the studio photos (cut out, in `shop/media/cutouts/`), The owner approved this, chose US dollars, and does not want the architecture photos used unless a section needs them (decisions in `design-references.md`), so the two hero photos below are no longer planned.
 

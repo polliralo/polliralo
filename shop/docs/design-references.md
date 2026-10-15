@@ -1,6 +1,6 @@
 # MONO design references and direction
 
-UI and UX references the owner likes, what each one brings, and the proposed combination for MONO. **Nothing is built yet**; the owner decides when to start.
+UI and UX references the owner likes, what each one brings, and the combination MONO is built on. **The shop is now built** (see `../README.md`); the notes below record how the design was chosen.
 
 ## Sources
 
@@ -63,7 +63,7 @@ Preview images (built from the real photos, not the website; prices in dollars):
 
 1. Thin announcement bar: "Demo store · prices are for illustration only".
 2. Header: MONO wordmark left, the six categories centre, Search and Bag right.
-3. **Hero: featured product slider (A).** One slide per clothing product (six). Canvas, giant category word, cut-out model, vertical sizes with a size guide link, details block (eyebrow, name, one line, price with a demo tag, Add to bag, View details), angle thumbnails on the right, the product-coloured bar with "01 — 06" and the next product's name, arrows. No autoplay: arrows, swipe and keyboard only.
+3. **Hero: featured product slider (A).** One slide per clothing product (six). Canvas, giant category word, cut-out model, vertical sizes with a size guide link, details block (eyebrow, name, one line, price with a demo tag, Add to bag, View details), angle thumbnails on the right, the product-coloured bar with "01 / 06" and the next product's name, arrows. As built: it moves on every 7 seconds with a visible Pause button (the owner asked for the most premium motion), stops for good once someone uses it, pauses on hover, focus and a hidden tab, and never moves by itself with reduced motion. Swipe and arrow keys work.
 4. Shop by category: six lifestyle photos, labels under the photos (never on them).
 5. New arrivals: product cards. Clothing is shown as cut-outs on the canvas, so every card matches; accessories use their still lifes.
 6. **Shop the look (D):** a full-length look photo, "LOOK 01 / LOOK 02" switch, and the item panel. Needs new photos.
@@ -87,7 +87,7 @@ Angle thumbnails on the left (A, C), the big cut-out on the canvas with the fain
 - **Type:** Bodoni Moda (display: the giant words and section titles) with Jost (everything else: navigation, product names, prices, labels, buttons). This is the "Luxury Minimalist" pairing from the ui-ux-pro-max typography data, and it matches the references: a Didone serif like Percival's and a geometric sans for Marc Jacobs-style capitals.
 - **Colour:** page ivory `#F5F2EC`, canvas `#E9E4DD`, giant word `#DDD5C9`, ink `#1C1C1A`, muted text `#5F5A52`, border `#DDD7CE`, brand accent muted olive `#5C5F45`. Each product also has its own accent for the slider bar (olive `#5C5F45`, navy `#1F2A3F`, charcoal `#3A3A38`, and so on).
 - **Style:** minimal grid, square corners, no shadows, no decorations.
-- **Motion:** product changes slide and fade in about 0.5 s; small hover changes; nothing moves on its own; reduced motion respected.
+- **Motion:** as built, slides cross-fade over about 0.9 s with the cut-out settling into place; the slider is the only thing that moves on its own (with a Pause button); small hover changes; reduced motion respected. Details in `research/motion.md`.
 
 ## Photo handling
 
