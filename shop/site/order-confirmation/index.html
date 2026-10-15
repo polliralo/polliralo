@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Order confirmed | MONO</title>
-<meta name="description" content="MONO is a demo menswear store: shirts, T-shirts, polos, watches, sunglasses and accessories with quiet, considered design.">
+<title>Order Confirmed | MONO</title>
+<meta name="description" content="Your MONO demo order: order number, items, totals and delivery details. Nothing was charged and nothing ships.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F5F2EC">
 <meta property="og:site_name" content="MONO">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Order confirmed">
-<meta property="og:description" content="MONO is a demo menswear store: shirts, T-shirts, polos, watches, sunglasses and accessories with quiet, considered design.">
+<meta property="og:title" content="Order Confirmed">
+<meta property="og:description" content="Your MONO demo order: order number, items, totals and delivery details. Nothing was charged and nothing ships.">
 <meta property="og:url" content="/order-confirmation/">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="/assets/img/og/default.jpg">
@@ -31,15 +31,15 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 <link rel="preload" href="/assets/fonts/bodoni-moda-400.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="/assets/css/base.css">
-
+<link rel="stylesheet" href="/assets/css/pages/checkout.css">
 <script type="speculationrules">{"prerender":[{"where":{"href_matches":"/products/*"},"eagerness":"moderate"}],"prefetch":[{"where":{"href_matches":"/collections/*"},"eagerness":"moderate"}]}</script>
 
 <script type="module" src="/assets/js/app.js"></script>
-
+<script type="module" src="/assets/js/pages/order.js"></script>
 </head>
 <body class="">
 <a class="skip-link" href="#main">Skip to content</a>
-<p class="announce">Demo store: prices and stock are for illustration only. <a href="/about/#demo">How it works</a></p>
+<aside class="announce" aria-label="Demo store notice"><p>Demo store: prices and stock are for illustration only. <a href="/about/#demo">How it works</a></p></aside>
 <header class="site-header">
   <div class="wrap header-inner">
     <button class="icon-btn menu-btn" type="button" data-open-menu aria-label="Open menu" aria-haspopup="dialog"><svg class="icon icon-menu" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
@@ -48,13 +48,48 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
       <ul><li><a href="/collections/shirts/">Shirts</a></li><li><a href="/collections/t-shirts/">T-Shirts</a></li><li><a href="/collections/polos/">Polos</a></li><li><a href="/collections/watches/">Watches</a></li><li><a href="/collections/sunglasses/">Sunglasses</a></li><li><a href="/collections/accessories/">Accessories</a></li></ul>
     </nav>
     <div class="header-tools">
-      <a class="tool-btn" href="/search/" data-open-search aria-haspopup="dialog"><svg class="icon icon-search" aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span class="tool-text">Search</span></a>
+      <a class="tool-btn" href="/search/" data-open-search aria-haspopup="dialog" aria-label="Search"><svg class="icon icon-search" aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span class="tool-text">Search</span></a>
       <a class="tool-btn" href="/cart/" data-open-cart aria-haspopup="dialog" aria-label="Bag"><svg class="icon icon-bag" aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 13H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="tool-text">Bag</span><span class="bag-count" data-bag-count data-count="0" aria-hidden="true">0</span></a>
     </div>
   </div>
 </header>
 <main id="main">
-<section class="wrap section"><p class="eyebrow">Coming next</p><h1 class="display">Order confirmed</h1><p class="lede">This page is being built.</p></section>
+
+<div class="co-page co-order" data-order-page data-state="loading">
+  <div class="wrap">
+    <noscript>
+      <p class="notice co-noscript">Demo orders are kept in this browser, so this page needs JavaScript to show your order. Turn JavaScript on, or open the demo admin to see your orders.</p>
+    </noscript>
+
+    <header class="co-order-head">
+      <div class="co-check" aria-hidden="true" data-order-check>
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+          <circle class="co-check-ring" cx="32" cy="32" r="30" pathLength="1"/>
+          <path class="co-check-tick" d="m20 33 8 8 16-17" pathLength="1"/>
+        </svg>
+      </div>
+      <p class="eyebrow plain co-order-eyebrow" data-order-eyebrow>Thank you</p>
+      <h1 class="co-title co-order-title" id="co-order-title" tabindex="-1" data-order-title>Order confirmed</h1>
+      <div class="co-order-number" data-order-number-wrap>
+        <p class="label muted">Order number</p>
+        <p class="co-order-id" data-order-id></p>
+        <p class="small muted" data-order-date></p>
+      </div>
+      <p class="co-order-demo" data-order-demo><svg class="icon icon-check" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>This is a demo order: nothing was charged and nothing will be shipped.</span></p>
+    </header>
+
+    <div class="co-order-body" data-order-body></div>
+
+    <div class="co-order-missing" data-order-missing hidden>
+      <p class="co-order-missing-text">We could not find that order in this browser. Demo orders are saved only in the browser that placed them, and clearing site data removes them.</p>
+      <div class="co-order-actions">
+        <a class="btn" href="/collections/">Continue shopping</a>
+        <a class="btn btn-ghost" href="/admin/orders/">Demo admin orders</a>
+        <a class="link" href="/cart/">Your bag</a>
+      </div>
+    </div>
+  </div>
+</div>
 </main>
 <footer class="site-footer on-dark">
   <div class="wrap">
@@ -83,7 +118,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
       <p>MONO is a fictional brand made as a portfolio demo. The products, prices and stock are not real, no payment is ever taken and no orders are delivered.</p>
       <p>&copy; 2026 MONO demo</p>
     </div>
-    <p class="footer-word" aria-hidden="true">Mono</p>
+    <p class="footer-word" aria-hidden="true" data-word="Mono"></p>
   </div>
 </footer>
 <dialog class="drawer from-left menu-drawer" id="menu-drawer" aria-label="Menu">
