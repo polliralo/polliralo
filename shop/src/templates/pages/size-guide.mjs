@@ -50,7 +50,7 @@ ${head({
     <h2 class="ct-h2" id="tops-title">${esc(g.tops.title)}</h2>
     <p class="muted">${esc(g.tops.unitNote)}</p>
   </div>
-  <div class="ct-size-body" data-reveal>
+  <div class="ct-size-body">
     ${table('tops', g.tops, { caption: `${g.tops.title}: body measurements by size` })}
     <p class="ct-size-links">${shopLinks}</p>
   </div>
@@ -62,7 +62,7 @@ ${head({
     <h2 class="ct-h2" id="belts-title">${esc(g.belts.title)}</h2>
     <p class="muted">${esc(g.belts.unitNote)}</p>
   </div>
-  <div class="ct-size-body" data-reveal>
+  <div class="ct-size-body">
     ${table('belts', g.belts, { caption: `${g.belts.title}: belt size by trouser waist` })}
     <p class="ct-size-links">${accessories ? `<a class="link" href="${r.categoryUrl(accessories.slug)}">Shop ${esc(accessories.name.toLowerCase())}</a>` : ''}<a class="link" href="/products/black-dress-belt/">See the belt</a></p>
   </div>
@@ -72,7 +72,6 @@ ${head({
   <div class="wrap ct-measure-grid">
     <figure class="ct-measure-figure" data-reveal>
       <div class="ct-measure-canvas">
-        <span class="ghost-word ct-measure-word" data-word="Fit" aria-hidden="true"></span>
         ${r.picture('cut-ivory-oxford-shirt-front', {
           alt: 'The Ivory Oxford Shirt, worn buttoned, front view',
           sizes: '(min-width: 1040px) 34vw, (min-width: 760px) 44vw, 90vw',
@@ -81,7 +80,7 @@ ${head({
       </div>
       <figcaption class="ct-caption"><span class="label">Pictured</span> The Ivory Oxford Shirt, worn buttoned.</figcaption>
     </figure>
-    <div class="ct-measure-words" data-reveal>
+    <div class="ct-measure-words">
       <p class="eyebrow">Measuring</p>
       <h2 class="ct-h2" id="measure-title">How to measure</h2>
       <p class="muted">Use a soft tape measure and stand relaxed. Keep the tape level, snug but not tight.</p>

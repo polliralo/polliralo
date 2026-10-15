@@ -46,14 +46,14 @@
 .adm-status-dot { flex: none; width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; background: var(--faint); }
 .adm-status-dot.is-edited { background: var(--olive); }
 
-/* Page heading with the faint Bodoni word behind it. */
+/* Page heading. */
 .adm-head {
   position: relative; isolation: isolate; overflow: clip; display: grid; gap: 12px; justify-items: start;
   padding-block: 4px clamp(24px, 3vw, 36px); margin-bottom: clamp(24px, 3vw, 36px); border-bottom: 1px solid var(--line);
 }
 .adm-head .ghost-word { z-index: -1; right: -0.05em; bottom: -0.1em; font-size: clamp(4.5rem, 2rem + 7vw, 9rem); }
-.adm-head h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.5rem, 1.7rem + 2.8vw, 4rem); line-height: 1.02; letter-spacing: -0.015em; }
-.adm-head h1 em { font-style: italic; color: var(--ink-soft); }
+.adm-head h1 { font-family: var(--display); font-weight: var(--w-heading); font-size: clamp(2.5rem, 1.7rem + 2.8vw, 4rem); line-height: 1.02; letter-spacing: var(--tracking-display); }
+.adm-head h1 em { font-style: normal; color: var(--accent-ink); }
 .adm-lede { color: var(--muted); max-width: 44ch; }
 
 /* Loading and no-JS states (server markup). */
@@ -121,13 +121,13 @@ html:not(.js) .adm-loading { display: none; }
 
 .adm-panel { display: grid; gap: 16px; align-content: start; min-width: 0; }
 .adm-panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-.adm-panel-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); line-height: 1.1; }
+.adm-panel-head h2 { font-family: var(--display); font-weight: var(--w-heading); font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); line-height: 1.1; }
 .adm-panel-head h2:focus { outline: none; }
 .adm-panel-head h2:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 .adm-panel-note { margin-top: -4px; }
 
 .adm-empty { display: grid; gap: 12px; justify-items: start; padding: 32px 28px; border: 1px solid var(--line); background: var(--paper); }
-.adm-empty-title { font-family: var(--serif); font-size: 1.625rem; line-height: 1.15; }
+.adm-empty-title { font-family: var(--display); font-weight: var(--w-heading); font-size: 1.625rem; line-height: 1.15; }
 .adm-empty-title:focus { outline: none; }
 .adm-empty-title:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 
@@ -270,7 +270,7 @@ html:not(.js) .adm-loading { display: none; }
 .adm-fs { border: 0; padding: 0; margin: 0 0 36px; min-width: 0; }
 .adm-fs legend {
   float: left; width: 100%; display: flex; align-items: center; gap: 14px; padding: 0 0 12px; margin-bottom: 20px;
-  border-bottom: 1px solid var(--line); font-family: var(--serif); font-size: 1.375rem; line-height: 1.2;
+  border-bottom: 1px solid var(--line); font-family: var(--display); font-weight: var(--w-heading); font-size: 1.375rem; line-height: 1.2;
 }
 .adm-fs-num { font-family: var(--sans); font-size: 0.6875rem; letter-spacing: .16em; color: var(--olive); font-variant-numeric: tabular-nums; }
 .adm-fs-body { clear: both; display: grid; gap: 18px; }
@@ -371,7 +371,7 @@ html:not(.js) .adm-loading { display: none; }
 /* ---------- Confirmation dialog ---------- */
 .adm-confirm { width: min(480px, calc(100vw - 32px)); margin: auto; border: 1px solid var(--line); background: var(--ivory); }
 .adm-confirm-inner { display: grid; gap: 14px; padding: clamp(24px, 4vw, 34px); }
-.adm-confirm h2 { font-family: var(--serif); font-weight: 400; font-size: 1.75rem; line-height: 1.15; }
+.adm-confirm h2 { font-family: var(--display); font-weight: var(--w-heading); font-size: 1.75rem; line-height: 1.15; }
 .adm-confirm p { color: var(--muted); }
 .adm-confirm-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
 .adm-confirm-actions .btn { min-height: 46px; }

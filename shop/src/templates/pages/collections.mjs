@@ -25,7 +25,6 @@ export default function render(ctx) {
   <div class="wrap page-head coll-head">
     ${r.breadcrumbs(crumbs)}
     <div class="coll-head-grid">
-      <span class="ghost-word coll-ghost" data-word="Menswear" aria-hidden="true" style="--w:8"></span>
       <p class="eyebrow coll-eyebrow">All categories</p>
       <h1 class="coll-title">Shop all <em>menswear</em></h1>
       <p class="lede coll-lede">Every piece in the MONO line: shirts, T-shirts and polos, and the watches, sunglasses and accessories that finish them.</p>

@@ -15,7 +15,6 @@ export default function render(ctx) {
 
   const content = `
 <section class="ct-nf" aria-labelledby="ct-nf-title">
-  <span class="ghost-word ct-nf-ghost" data-word="404" aria-hidden="true"></span>
   <div class="wrap ct-nf-inner">
     <p class="eyebrow">Error 404</p>
     <h1 class="ct-nf-title" id="ct-nf-title">Page not found</h1>

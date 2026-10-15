@@ -237,7 +237,7 @@ html.js .pdp-viewer .pic img:not([fetchpriority="high"]) { opacity: 1; transitio
 
 /* ---------- Calm end states ---------- */
 .pdp-gone { display: grid; justify-items: center; gap: 18px; padding-block: clamp(72px, 10vw, 160px); text-align: center; }
-.pdp-gone-title { font-family: var(--serif); font-weight: 400; font-size: var(--fs-display); line-height: 1.04; letter-spacing: -0.015em; }
+.pdp-gone-title { font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-display); line-height: 1.04; letter-spacing: var(--tracking-display); }
 .pdp-gone .lede { margin-inline: auto; }
 .pdp-gone-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
 .pdp-gone-cats { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; margin-top: 28px; padding: 0; list-style: none; }

@@ -28,7 +28,7 @@ ${head({
     </div>
     <figcaption class="ct-caption"><span class="label">Pictured</span> The Charcoal Textured Tee, by a wardrobe of shirts and polos.</figcaption>
   </figure>
-  <div class="ct-about-words" data-reveal>
+  <div class="ct-about-words">
     <p class="eyebrow">The idea</p>
     <h2 class="ct-h2" id="ct-idea">Fewer, better <em>essentials</em></h2>
     <div class="prose">
@@ -36,17 +36,17 @@ ${head({
       <p>The colours are chosen to sit together: ivory, charcoal, olive, navy, black and brown. The intent is that any top in the range works with any watch, belt or pair of sunglasses, so getting dressed takes less thought.</p>
     </div>
     <ol class="ct-principles" role="list" data-stagger>
-      <li data-reveal>
+      <li>
         <span class="ct-principle-n" aria-hidden="true">01</span>
         <h3>Fewer pieces</h3>
         <p>${capitalise(pieces)} pieces in ${cats} categories. A short range is easier to choose from and easier to combine.</p>
       </li>
-      <li data-reveal>
+      <li>
         <span class="ct-principle-n" aria-hidden="true">02</span>
         <h3>Quiet colours</h3>
         <p>Muted, natural shades, so a new piece joins the rest of the wardrobe instead of fighting it.</p>
       </li>
-      <li data-reveal>
+      <li>
         <span class="ct-principle-n" aria-hidden="true">03</span>
         <h3>Plain words</h3>
         <p>Each product page says what the piece is, shows it from more than one side and suggests what to wear it with.</p>
@@ -63,7 +63,7 @@ ${head({
         sizes: '(min-width: 1440px) 1000px, (min-width: 1040px) 70vw, 100vw',
       })}
     </div>
-    <figcaption class="ct-wide-caption" data-reveal>
+    <figcaption class="ct-wide-caption">
       <h2 class="ct-h3" id="ct-detail">The finishing pieces</h2>
       <p>Two-hand watches with quiet dials, a black belt, a brown wallet and two pairs of sunglasses. Small things, meant to go with every top in the range.</p>
       <p class="ct-caption"><span class="label">Pictured</span> The Black Dial Watch on its brown strap.</p>
@@ -74,29 +74,29 @@ ${head({
 
 <section class="ct-demo on-night" id="demo" aria-labelledby="ct-demo-title">
   <div class="wrap ct-demo-grid">
-    <div class="ct-demo-intro" data-reveal>
+    <div class="ct-demo-intro">
       <p class="eyebrow">Demo</p>
       <h2 class="ct-h2" id="ct-demo-title">How this demo works</h2>
       <p class="lede">MONO looks and behaves like a shop, so you can try every step. None of it is real, and nothing you do here is shared.</p>
     </div>
     <dl class="ct-facts" data-stagger>
-      <div class="ct-fact" data-reveal>
+      <div class="ct-fact">
         <dt>Prices and stock</dt>
         <dd>Every price and stock number is demo data, set for illustration only.</dd>
       </div>
-      <div class="ct-fact" data-reveal>
+      <div class="ct-fact">
         <dt>Saved in this browser</dt>
         <dd>Your bag, demo orders and any admin edits are saved only in this browser (localStorage). They never leave your device, and other visitors cannot see them.</dd>
       </div>
-      <div class="ct-fact" data-reveal>
+      <div class="ct-fact">
         <dt>Checkout</dt>
         <dd>The checkout takes no payment and has no card fields, so it collects no card details. Placing an order only saves a demo record in this browser.</dd>
       </div>
-      <div class="ct-fact" data-reveal>
+      <div class="ct-fact">
         <dt>Store admin</dt>
         <dd>The <a href="/admin/">demo admin</a> has no sign-in and is not secure. Anyone can open it, and changes only affect the browser they were made in.</dd>
       </div>
-      <div class="ct-fact" data-reveal>
+      <div class="ct-fact">
         <dt>Forms</dt>
         <dd>The contact and newsletter forms send nothing. See the <a href="/privacy/">privacy policy</a> for the full list of what is kept.</dd>
       </div>

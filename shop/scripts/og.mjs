@@ -45,10 +45,9 @@ function img(key) {
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 const CSS = `
-@font-face { font-family: "Bodoni Moda"; src: url("${font('bodoni-moda-400')}") format("woff2"); font-weight: 400; font-style: normal; }
-@font-face { font-family: "Bodoni Moda"; src: url("${font('bodoni-moda-400-italic')}") format("woff2"); font-weight: 400; font-style: italic; }
 @font-face { font-family: "Jost"; src: url("${font('jost-400')}") format("woff2"); font-weight: 400; }
 @font-face { font-family: "Jost"; src: url("${font('jost-500')}") format("woff2"); font-weight: 500; }
+@font-face { font-family: "Jost"; src: url("${font('jost-700')}") format("woff2"); font-weight: 700; }
 * { box-sizing: border-box; margin: 0; }
 html, body { width: ${W}px; height: ${H}px; overflow: hidden; }
 body { font-family: "Jost", sans-serif; color: #1C1C1A; -webkit-font-smoothing: antialiased; }
@@ -58,12 +57,12 @@ body { font-family: "Jost", sans-serif; color: #1C1C1A; -webkit-font-smoothing: 
 .mark { font-weight: 500; font-size: 22px; letter-spacing: .46em; text-transform: uppercase; line-height: 1; }
 .eyebrow { display: flex; align-items: center; gap: 16px; font-weight: 500; font-size: 15px; letter-spacing: .24em; text-transform: uppercase; color: #5F5A52; }
 .eyebrow::before { content: ""; width: 32px; height: 1px; background: currentColor; }
-.name { font-family: "Bodoni Moda", serif; font-weight: 400; font-size: 70px; line-height: 1.04; letter-spacing: -0.015em; margin-top: 22px; }
-.name em { font-style: italic; }
+.name { font-family: "Jost", sans-serif; font-weight: 700; font-size: 66px; line-height: 1.02; letter-spacing: -0.03em; margin-top: 22px; }
+.name em { font-style: normal; color: #5C5F45; }
 .line { margin-top: 22px; font-size: 22px; line-height: 1.5; color: #5F5A52; max-width: 30ch; }
 .foot { display: flex; align-items: center; gap: 16px; font-weight: 500; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: #5F5A52; }
 .foot i { display: block; width: 44px; height: 6px; background: var(--accent, #5C5F45); }
-.ghost { position: absolute; z-index: 0; font-family: "Bodoni Moda", serif; font-size: 330px; line-height: .8; letter-spacing: -0.03em; color: #DDD5C9; white-space: nowrap; }
+.ghost { position: absolute; z-index: 0; font-family: "Jost", sans-serif; font-weight: 500; font-size: 230px; line-height: .8; letter-spacing: .3em; text-transform: uppercase; color: #DDD5C9; white-space: nowrap; }
 .cut { position: absolute; z-index: 1; bottom: 0; height: 600px; width: auto; }
 .panel { position: absolute; top: 0; right: 0; bottom: 0; width: 504px; overflow: hidden; background: var(--tone, #E9E4DD); }
 .panel img { width: 100%; height: 100%; object-fit: cover; display: block; }

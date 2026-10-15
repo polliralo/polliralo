@@ -109,7 +109,6 @@ function mount(root) {
     const viewName = $('[data-pdp-view]', root);
     if (viewName) viewName.textContent = thumbs[next]?.getAttribute('aria-label')?.split(': ').slice(1).join(': ') ?? '';
     $('.pdp-progress i', root)?.style.setProperty('--x', String(next));
-    frame?.style.setProperty('--ghost-shift', String(next));
     if (from !== 'scroll' && isPhone() && track) {
       track.scrollTo({ left: next * track.clientWidth, behavior: changed ? behavior() : 'auto' });
     }

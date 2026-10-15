@@ -42,7 +42,9 @@ function init(root) {
   }
 
   function setGhost(q) {
-    // The giant faint word echoes the search (decorative, aria-hidden).
+    // The giant faint word that echoed the search was retired (ghost words
+    // are kept for the home hero only); nothing to do without it.
+    if (!ghost) return;
     const raw = q ? q.slice(0, 14) : 'Search';
     const word = raw.charAt(0).toUpperCase() + raw.slice(1);
     if (ghost.dataset.word === word) return;

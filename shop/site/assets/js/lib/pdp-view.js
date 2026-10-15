@@ -17,12 +17,6 @@ const stockOf = (v) => Math.max(0, Number(v?.stock) || 0);
 const optionName = (p) => p.option?.label ?? 'Size';
 export const isSized = (p) => needsChoice(p);
 
-/** The giant faint word behind the cut-out: the last word of the name ("Polo", "Shirt", "Tee"). */
-export function ghostWord(p) {
-  const words = String(p.name ?? '').trim().split(/\s+/);
-  return words.at(-1) || 'Mono';
-}
-
 /** Breadcrumb items: Home / Shop / Category / Product (also used for BreadcrumbList). */
 export function trail(p, category) {
   return [
@@ -155,7 +149,6 @@ export function galleryHTML(p) {
     + (multi ? `<div class="pdp-thumbs" role="group" aria-label="Product images" data-pdp-thumbs>${images.map((img, i) => thumbHTML(img, i, n)).join('')}</div>` : '')
     + `<div class="pdp-stage">`
     + `<div class="pdp-frame${first?.kind === 'cutout' ? ' starts-cut' : ''}" data-pdp-frame>`
-    + `<span class="ghost-word pdp-ghost" data-word="${esc(ghostWord(p))}" aria-hidden="true"></span>`
     + `<div id="pdp-media" class="pdp-track" data-pdp-track role="region" aria-label="Images of ${esc(p.name)}">`
     + (n ? images.map(slideHTML).join('') : `<div class="pdp-slide is-photo is-active" data-slide="0">${picture('', { alt: p.name })}</div>`)
     + `</div>`

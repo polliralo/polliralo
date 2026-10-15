@@ -28,7 +28,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 <script>(function(d){d.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('motion');setTimeout(function(){if(!d.classList.contains('store-ready'))d.classList.remove('motion')},4000)})(document.documentElement)</script>
 <link rel="preload" href="/assets/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jost-500.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/bodoni-moda-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jost-600.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="/assets/css/base.css">
 <link rel="stylesheet" href="/assets/css/pages/content.css">
@@ -39,7 +39,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 </head>
 <body class="ct-page ct-size-page">
 <a class="skip-link" href="#main">Skip to content</a>
-<aside class="announce" aria-label="Demo store notice"><p><span class="announce-long">Demo store: prices and stock are for illustration only.</span><span class="announce-short">Demo store: illustrative prices.</span> <a href="/about/#demo">How it works</a></p></aside>
+<aside class="announce" aria-label="Demo store notice"><p><span class="announce-long">Portfolio demo: prices and stock are illustrative, and no real orders are placed.</span><span class="announce-short">Portfolio demo &middot; No real orders</span> <a href="/about/#demo">How it works</a></p></aside>
 <header class="site-header">
   <div class="wrap header-inner">
     <button class="icon-btn menu-btn" type="button" data-open-menu aria-label="Open menu" aria-haspopup="dialog"><svg class="icon icon-menu" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
@@ -56,7 +56,6 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 <main id="main">
 
 <section class="ct-hero" aria-labelledby="ct-title">
-  <span class="ghost-word ct-ghost" data-word="Fit" aria-hidden="true"></span>
   <div class="wrap page-head ct-head">
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Size guide</span></li></ol></nav>
     <div class="ct-head-body">
@@ -82,7 +81,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
     <h2 class="ct-h2" id="tops-title">Shirts, T-shirts and polos</h2>
     <p class="muted">Body measurements. Measure over a T-shirt, keeping the tape level and snug, not tight.</p>
   </div>
-  <div class="ct-size-body" data-reveal>
+  <div class="ct-size-body">
     <div class="table-wrap ct-table-wrap" role="region" aria-label="Shirts, T-shirts and polos: body measurements by size" tabindex="0">
     <table class="table ct-table" id="tops-table">
       <caption class="visually-hidden">Shirts, T-shirts and polos: body measurements by size</caption>
@@ -106,7 +105,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
     <h2 class="ct-h2" id="belts-title">Belts</h2>
     <p class="muted">Choose your trouser waist size. The belt size is the length to the middle hole.</p>
   </div>
-  <div class="ct-size-body" data-reveal>
+  <div class="ct-size-body">
     <div class="table-wrap ct-table-wrap" role="region" aria-label="Belts: belt size by trouser waist" tabindex="0">
     <table class="table ct-table" id="belts-table">
       <caption class="visually-hidden">Belts: belt size by trouser waist</caption>
@@ -127,12 +126,11 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
   <div class="wrap ct-measure-grid">
     <figure class="ct-measure-figure" data-reveal>
       <div class="ct-measure-canvas">
-        <span class="ghost-word ct-measure-word" data-word="Fit" aria-hidden="true"></span>
         <picture class="pic pic-cut ct-measure-pic"><source type="image/avif" srcset="/assets/img/cut-ivory-oxford-shirt-front-360.avif 360w, /assets/img/cut-ivory-oxford-shirt-front-560.avif 560w, /assets/img/cut-ivory-oxford-shirt-front-800.avif 800w, /assets/img/cut-ivory-oxford-shirt-front-1120.avif 1120w" sizes="(min-width: 1040px) 34vw, (min-width: 760px) 44vw, 90vw"><source type="image/webp" srcset="/assets/img/cut-ivory-oxford-shirt-front-360.webp 360w, /assets/img/cut-ivory-oxford-shirt-front-560.webp 560w, /assets/img/cut-ivory-oxford-shirt-front-800.webp 800w, /assets/img/cut-ivory-oxford-shirt-front-1120.webp 1120w" sizes="(min-width: 1040px) 34vw, (min-width: 760px) 44vw, 90vw"><img src="/assets/img/cut-ivory-oxford-shirt-front-800.webp" width="1122" height="1402" alt="The Ivory Oxford Shirt, worn buttoned, front view" loading="lazy" decoding="async"></picture>
       </div>
       <figcaption class="ct-caption"><span class="label">Pictured</span> The Ivory Oxford Shirt, worn buttoned.</figcaption>
     </figure>
-    <div class="ct-measure-words" data-reveal>
+    <div class="ct-measure-words">
       <p class="eyebrow">Measuring</p>
       <h2 class="ct-h2" id="measure-title">How to measure</h2>
       <p class="muted">Use a soft tape measure and stand relaxed. Keep the tape level, snug but not tight.</p>
@@ -145,10 +143,10 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
   </div>
 </section>
 
-<section class="wrap ct-onward" aria-labelledby="ct-onward" data-reveal>
+<section class="wrap ct-onward" aria-labelledby="ct-onward">
   <h2 class="label ct-onward-title" id="ct-onward">Shop by category</h2>
   <ul class="ct-onward-list" role="list">
-    <li><a class="ct-onward-link" href="/collections/shirts/"><span class="ct-onward-name">Shirts</span><span class="ct-onward-note">An ivory Oxford and a fine blue stripe, cut clean for open collars and rolled sleeves.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/collections/t-shirts/"><span class="ct-onward-name">T-Shirts</span><span class="ct-onward-note">Crew necks that keep their shape: one textured in charcoal, one heavy and plain in ivory.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/collections/polos/"><span class="ct-onward-name">Polos</span><span class="ct-onward-note">Piqué-knit polos with a flat-knit collar and a neat two-button placket, in olive and navy.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/collections/accessories/"><span class="ct-onward-name">Accessories</span><span class="ct-onward-note">A brown bifold wallet and a black dress belt to finish the outfit.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li>
+    <li><a class="ct-onward-link" href="/collections/shirts/"><span class="ct-onward-name">Shirts</span><span class="ct-onward-note">Oxford shirts in ivory and light blue and a fine blue stripe, cut clean for open collars and rolled sleeves.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/collections/t-shirts/"><span class="ct-onward-name">T-Shirts</span><span class="ct-onward-note">Crew necks that keep their shape: one textured in charcoal, one heavy and plain in ivory.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/collections/polos/"><span class="ct-onward-name">Polos</span><span class="ct-onward-note">Piqué-knit polos with a flat-knit collar and a neat two-button placket, in olive and navy.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/collections/accessories/"><span class="ct-onward-name">Accessories</span><span class="ct-onward-note">A brown bifold wallet and a black dress belt to finish the outfit.</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li>
   </ul>
 </section>
 </main>

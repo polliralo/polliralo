@@ -17,7 +17,6 @@ export default function render(ctx) {
   const content = `
 <div class="srch" data-search-page>
   <div class="wrap srch-head">
-    <span class="ghost-word srch-ghost" data-word="Search" aria-hidden="true" style="--w:6" data-search-ghost></span>
     <p class="eyebrow tabular" data-search-eyebrow>${products.length} pieces in ${categories.length} categories</p>
     <h1 class="srch-title">Search</h1>
     <form class="srch-form" action="/search/" method="get" role="search" data-search-form>

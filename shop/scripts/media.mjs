@@ -48,6 +48,9 @@ const IMAGES = [
   cut('cut-olive-pique-polo-back', 'olive-pique-polo-back.png'),
   cut('cut-navy-pique-polo-front', 'navy-pique-polo.png'),
   cut('cut-navy-pique-polo-back', 'navy-pique-polo-back.png'),
+  // Cut from the library photo (lifestyle/blue-oxford-shirt-library.png): the
+  // only studio-style view of this shirt, so it has no back view.
+  cut('cut-blue-oxford-shirt-front', 'blue-oxford-shirt.png'),
   cut('cut-look-01', 'look-01.png'),
   cut('cut-look-02', 'look-02.png'),
   // Close-ups.
@@ -76,6 +79,7 @@ const IMAGES = [
   // Wide.
   photo('wide-watch-desk', 'wide/black-dial-watch-desk.png', WIDE),
   photo('wide-accessories-table', 'wide/leather-wallet-belt-cardholder-table.png', WIDE),
+  photo('wide-sunglasses-rooftop', 'wide/black-sunglasses-rooftop.png', WIDE),
 ];
 
 const toHex = ({ r, g, b }) => '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('').toUpperCase();
@@ -111,7 +115,7 @@ mkdirSync(OUT, { recursive: true });
 
 const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : {};
 for (const img of IMAGES) {
-  if (only && !img.key.includes(only)) continue;
+  if (only && !only.split(',').some((name) => img.key.includes(name.trim()))) continue;
   const entry = await build(img);
   manifest[entry.key] = { w: entry.width, h: entry.height, widths: entry.widths, alpha: entry.alpha, fallback: entry.fallback, color: entry.color };
   console.log(`${entry.key.padEnd(34)} ${entry.widths.join(', ')}`);

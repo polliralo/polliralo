@@ -98,7 +98,7 @@ export function productCard(product, { eager = false, sizes = CARD_SIZES, headin
     ? `<button class="card-add" type="button" data-quick-add="${esc(product.slug)}" aria-label="Quick add ${esc(product.name)}" aria-expanded="false">`
       + `${icon('plus', { size: 16 })}</button>`
     : '';
-  return `<article class="card${first?.kind === 'cutout' ? ' card-cut' : ''}" data-slug="${esc(product.slug)}" data-reveal>`
+  return `<article class="card${first?.kind === 'cutout' ? ' card-cut' : ''}" data-slug="${esc(product.slug)}">`
     + `<div class="card-frame">`
     + `<a class="card-link" href="${url}" tabindex="-1" aria-hidden="true" data-vt-media="${esc(product.slug)}">`
     + (first ? picture(first.key, { alt: '', sizes, priority: eager, className: 'card-img' }) : '')

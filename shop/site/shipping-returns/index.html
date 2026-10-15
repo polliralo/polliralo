@@ -28,7 +28,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 <script>(function(d){d.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('motion');setTimeout(function(){if(!d.classList.contains('store-ready'))d.classList.remove('motion')},4000)})(document.documentElement)</script>
 <link rel="preload" href="/assets/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jost-500.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/bodoni-moda-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jost-600.woff2" as="font" type="font/woff2" crossorigin>
 
 <link rel="stylesheet" href="/assets/css/base.css">
 <link rel="stylesheet" href="/assets/css/pages/content.css">
@@ -39,7 +39,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 </head>
 <body class="ct-page ct-ship-page">
 <a class="skip-link" href="#main">Skip to content</a>
-<aside class="announce" aria-label="Demo store notice"><p><span class="announce-long">Demo store: prices and stock are for illustration only.</span><span class="announce-short">Demo store: illustrative prices.</span> <a href="/about/#demo">How it works</a></p></aside>
+<aside class="announce" aria-label="Demo store notice"><p><span class="announce-long">Portfolio demo: prices and stock are illustrative, and no real orders are placed.</span><span class="announce-short">Portfolio demo &middot; No real orders</span> <a href="/about/#demo">How it works</a></p></aside>
 <header class="site-header">
   <div class="wrap header-inner">
     <button class="icon-btn menu-btn" type="button" data-open-menu aria-label="Open menu" aria-haspopup="dialog"><svg class="icon icon-menu" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
@@ -56,7 +56,6 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
 <main id="main">
 
 <section class="ct-hero" aria-labelledby="ct-title">
-  <span class="ghost-word ct-ghost" data-word="Delivery" aria-hidden="true"></span>
   <div class="wrap page-head ct-head">
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Shipping and returns</span></li></ol></nav>
     <div class="ct-head-body">
@@ -77,13 +76,13 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
     <p class="muted ct-split-note"><span class="tag">Demo prices</span> Chosen at checkout. Standard delivery is free on bags of $150 or more.</p>
   </div>
   <ul class="ct-options" role="list" data-stagger>
-    <li class="ct-option" data-reveal>
+    <li class="ct-option">
       <h3 class="label ct-option-name">Standard delivery</h3>
       <p class="ct-option-price tabular">$6</p>
       <p class="ct-option-eta">3 to 5 working days</p>
       <p class="ct-option-note muted">Free when your bag reaches $150.</p>
     </li>
-    <li class="ct-option" data-reveal>
+    <li class="ct-option">
       <h3 class="label ct-option-name">Express delivery</h3>
       <p class="ct-option-price tabular">$14</p>
       <p class="ct-option-eta">1 to 2 working days</p>
@@ -100,7 +99,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
     </div>
     <p class="muted ct-split-note"><span class="tag">Demo policy</span> Written so the shop reads like a real one. It does not apply to anything, because nothing is sold.</p>
   </div>
-  <dl class="ct-terms" data-reveal>
+  <dl class="ct-terms">
     <div class="ct-term"><dt class="label">Return window</dt><dd>30 days from the day your order arrives.</dd></div>
     <div class="ct-term"><dt class="label">Condition</dt><dd>Unworn and unwashed, in the original packaging.</dd></div>
     <div class="ct-term"><dt class="label">Refund</dt><dd>To the original payment method, once the return has been checked.</dd></div>
@@ -126,7 +125,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
   </div>
 </section>
 
-<section class="wrap ct-onward" aria-labelledby="ct-onward" data-reveal>
+<section class="wrap ct-onward" aria-labelledby="ct-onward">
   <h2 class="label ct-onward-title" id="ct-onward">Keep going</h2>
   <ul class="ct-onward-list" role="list">
     <li><a class="ct-onward-link" href="/cart/"><span class="ct-onward-name">Your bag</span><span class="ct-onward-note">Delivery is worked out here and at checkout</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/size-guide/"><span class="ct-onward-name">Size guide</span><span class="ct-onward-note">Measurements for every size</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li><li><a class="ct-onward-link" href="/contact/"><span class="ct-onward-name">Contact</span><span class="ct-onward-note">A demo form you can try</span><svg class="icon icon-arrow" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a></li>

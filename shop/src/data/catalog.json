@@ -11,7 +11,7 @@
       "slug": "shirts",
       "name": "Shirts",
       "title": "Men's Shirts",
-      "description": "An ivory Oxford and a fine blue stripe, cut clean for open collars and rolled sleeves.",
+      "description": "Oxford shirts in ivory and light blue and a fine blue stripe, cut clean for open collars and rolled sleeves.",
       "image": { "key": "life-blue-oxford-library", "alt": "Man in a light blue button-down shirt by a window in a wood-panelled library" }
     },
     {
@@ -109,6 +109,34 @@
       "completeTheLook": ["white-dial-watch", "black-dress-belt", "brown-bifold-wallet"],
       "featured": true,
       "newArrival": false
+    },
+    {
+      "slug": "light-blue-oxford-shirt",
+      "sku": "MONO-SH-03",
+      "name": "Light Blue Oxford Shirt",
+      "category": "shirts",
+      "price": 68,
+      "colour": { "name": "Light blue", "hex": "#AEC2DA" },
+      "accent": "#56708F",
+      "group": null,
+      "summary": "A button-down Oxford shirt in light blue.",
+      "description": "A light blue Oxford shirt with a button-down collar and buttoned cuffs. Easy with dark trousers and a black belt, or open over a white tee.",
+      "details": ["Button-down collar", "Oxford weave in light blue", "Single-button cuffs"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 5 },
+        { "id": "M", "label": "M", "stock": 8 },
+        { "id": "L", "label": "L", "stock": 7 },
+        { "id": "XL", "label": "XL", "stock": 4 },
+        { "id": "XXL", "label": "XXL", "stock": 3 }
+      ],
+      "images": [
+        { "key": "cut-blue-oxford-shirt-front", "alt": "Light blue Oxford shirt worn with navy trousers, front view", "kind": "cutout", "view": "Front" },
+        { "key": "life-blue-oxford-library", "alt": "The light blue Oxford shirt worn by a window in a wood-panelled library", "kind": "photo", "view": "Worn" }
+      ],
+      "completeTheLook": ["black-dress-belt", "black-dial-watch", "black-rectangular-sunglasses"],
+      "featured": false,
+      "newArrival": true
     },
     {
       "slug": "charcoal-textured-tee",

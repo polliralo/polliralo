@@ -18,12 +18,12 @@ export function trail(name, url) {
 }
 
 /**
- * The page head: breadcrumbs, eyebrow, h1, lede and the faint word behind.
+ * The page head: breadcrumbs, eyebrow, h1 and lede. (Giant faint words are kept
+ * for the home hero only; `ghost` is accepted and ignored.)
  * `title` is trusted HTML (it may hold an <em>); everything else is escaped.
  */
 export function head({ crumbs = '', eyebrow, title, lede, ghost, meta = '', id = 'ct-title' }) {
   return `<section class="ct-hero" aria-labelledby="${id}">
-  ${ghost ? `<span class="ghost-word ct-ghost" data-word="${esc(ghost)}" aria-hidden="true"></span>` : ''}
   <div class="wrap page-head ct-head">
     ${crumbs}
     <div class="ct-head-body">
@@ -46,7 +46,7 @@ export function pageIndex(items, { label = 'On this page' } = {}) {
 
 /** A row of onward links: [{ href, label, note }]. */
 export function onward(links, { title = 'Keep going', id = 'ct-onward' } = {}) {
-  return `<section class="wrap ct-onward" aria-labelledby="${id}" data-reveal>
+  return `<section class="wrap ct-onward" aria-labelledby="${id}">
   <h2 class="label ct-onward-title" id="${id}">${esc(title)}</h2>
   <ul class="ct-onward-list" role="list">
     ${links.map((l) => `<li><a class="ct-onward-link" href="${esc(l.href)}"><span class="ct-onward-name">${esc(l.label)}</span>${l.note ? `<span class="ct-onward-note">${esc(l.note)}</span>` : ''}${icon('arrow', { size: 20 })}</a></li>`).join('')}

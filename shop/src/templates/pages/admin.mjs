@@ -49,7 +49,6 @@ export default function render(ctx, route) {
       ${navHTML(view)}
       <div class="adm-main">
         <header class="adm-head">
-          <span class="ghost-word" data-word="${page.ghost}" aria-hidden="true"></span>
           <p class="eyebrow">${page.eyebrow}</p>
           <h1>${page.h1}</h1>
           <p class="adm-lede">${page.lede}</p>

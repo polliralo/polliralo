@@ -7,7 +7,7 @@ import { SITE_URL, SITE_NAME, TAGLINE, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE, TH
 
 export const absolute = (path) => (SITE_URL ? SITE_URL + path : path);
 
-const FONT_PRELOADS = ['jost-400', 'jost-500', 'bodoni-moda-400'];
+const FONT_PRELOADS = ['jost-400', 'jost-500', 'jost-600'];
 
 // Chrome prerenders product pages on hover so the image morph starts instantly.
 const SPECULATION = JSON.stringify({
@@ -77,7 +77,7 @@ ${js.map((j) => `<script type="module" src="/assets/js/pages/${j}.js"></script>`
 </head>
 <body class="${esc(bodyClass)}">
 <a class="skip-link" href="#main">Skip to content</a>
-<aside class="announce" aria-label="Demo store notice"><p><span class="announce-long">Demo store: prices and stock are for illustration only.</span><span class="announce-short">Demo store: illustrative prices.</span> <a href="/about/#demo">How it works</a></p></aside>
+<aside class="announce" aria-label="Demo store notice"><p><span class="announce-long">Portfolio demo: prices and stock are illustrative, and no real orders are placed.</span><span class="announce-short">Portfolio demo &middot; No real orders</span> <a href="/about/#demo">How it works</a></p></aside>
 ${header(categories, activeCategory, path)}
 <main id="main">
 ${content}

@@ -49,7 +49,7 @@ ${head({
     <p class="muted ct-split-note"><span class="tag">Demo prices</span> Chosen at checkout. Standard delivery is free on bags of ${free} or more.</p>
   </div>
   <ul class="ct-options" role="list" data-stagger>
-    ${SHIPPING_OPTIONS.map((o) => `<li class="ct-option" data-reveal>
+    ${SHIPPING_OPTIONS.map((o) => `<li class="ct-option">
       <h3 class="label ct-option-name">${esc(o.name)}</h3>
       <p class="ct-option-price tabular">${money(o.price)}</p>
       <p class="ct-option-eta">${esc(o.eta.charAt(0).toUpperCase() + o.eta.slice(1))}</p>
@@ -66,7 +66,7 @@ ${head({
     </div>
     <p class="muted ct-split-note"><span class="tag">Demo policy</span> Written so the shop reads like a real one. It does not apply to anything, because nothing is sold.</p>
   </div>
-  <dl class="ct-terms" data-reveal>
+  <dl class="ct-terms">
     ${RETURNS.map(([term, text]) => `<div class="ct-term"><dt class="label">${esc(term)}</dt><dd>${esc(text)}</dd></div>`).join('\n    ')}
   </dl>
 </section>

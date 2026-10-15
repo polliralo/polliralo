@@ -38,6 +38,19 @@
     "fallback": "charcoal-textured-tee-closeup-800.jpg",
     "color": "#282828"
   },
+  "cut-blue-oxford-shirt-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-blue-oxford-shirt-front-800.webp",
+    "color": null
+  },
   "cut-blue-stripe-shirt-back": {
     "w": 1122,
     "h": 1402,
@@ -453,6 +466,19 @@
     "alpha": false,
     "fallback": "wide-accessories-table-1024.jpg",
     "color": "#382818"
+  },
+  "wide-sunglasses-rooftop": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      640,
+      1024,
+      1440,
+      1672
+    ],
+    "alpha": false,
+    "fallback": "wide-sunglasses-rooftop-1024.jpg",
+    "color": "#282828"
   },
   "wide-watch-desk": {
     "w": 1672,

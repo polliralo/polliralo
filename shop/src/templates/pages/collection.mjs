@@ -36,7 +36,6 @@ export default function render(ctx, route) {
   <div class="wrap page-head coll-head">
     ${r.breadcrumbs(crumbs)}
     <div class="coll-head-grid">
-      <span class="ghost-word coll-ghost" data-word="${r.esc(category.name)}" aria-hidden="true" style="--w:${category.name.length}"></span>
       <p class="eyebrow coll-eyebrow">Collection <span class="tabular">${cv.pad2(index)} / ${cv.pad2(categories.length)}</span></p>
       <h1 class="coll-title">${r.esc(category.title)}</h1>
       <p class="lede coll-lede">${r.esc(category.description)}</p>
