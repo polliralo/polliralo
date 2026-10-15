@@ -1,0 +1,11 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "no-redundant-role": "off",
+    "no-trailing-whitespace": "off",
+    "prefer-native-element": ["error", { "exclude": ["list", "listitem", "group", "img", "status", "region"] }],
+    "no-inline-style": ["error", { "allowedProperties": ["--img-color", "--dot", "--sw", "--p", "--i", "--l", "--accent", "--ghost-shift", "--x", "--y", "--w", "--h", "--progress", "--delay"] }],
+    "long-title": ["error", { "maxlength": 70 }],
+    "script-type": "off"
+  }
+}
