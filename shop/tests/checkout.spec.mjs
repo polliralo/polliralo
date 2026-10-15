@@ -173,7 +173,9 @@ test.describe('checkout', () => {
   test('delivery and payment work from the keyboard', async ({ page }) => {
     await seedBag(page, [{ ...POLO, qty: 1 }]);
     await page.goto('/checkout/');
+    await expect(page.locator('[data-checkout]')).toHaveAttribute('data-state', 'ready');
     await page.locator('#co-ship-standard').focus();
+    await expect(page.locator('#co-ship-standard')).toBeFocused();
     await page.keyboard.press('ArrowDown');
     await expect(page.locator('#co-ship-express')).toBeChecked();
     await expect(page.locator('#co-ship-express')).toBeFocused();
