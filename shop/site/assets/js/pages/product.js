@@ -52,6 +52,14 @@ function mount(root) {
   const n = slides.length;
   const images = slides.map((s) => s.querySelector('img'));
 
+  // On phones the track scrolls sideways, so keyboard users must be able to
+  // focus it (arrow keys scroll it); on desktop it does not scroll.
+  if (track && n > 1) {
+    const focusable = () => { track.tabIndex = isPhone() ? 0 : -1; };
+    focusable();
+    window.matchMedia(PHONE).addEventListener('change', focusable);
+  }
+
   let swapTimer = 0;
   function warm(i) {
     const img = images[i];

@@ -156,7 +156,7 @@ export function galleryHTML(p) {
     + `<div class="pdp-stage">`
     + `<div class="pdp-frame${first?.kind === 'cutout' ? ' starts-cut' : ''}" data-pdp-frame>`
     + `<span class="ghost-word pdp-ghost" data-word="${esc(ghostWord(p))}" aria-hidden="true"></span>`
-    + `<div id="pdp-media" class="pdp-track" data-pdp-track>`
+    + `<div id="pdp-media" class="pdp-track" data-pdp-track role="region" aria-label="Images of ${esc(p.name)}">`
     + (n ? images.map(slideHTML).join('') : `<div class="pdp-slide is-photo is-active" data-slide="0">${picture('', { alt: p.name })}</div>`)
     + `</div>`
     + (n ? `<button type="button" class="pdp-zoom" data-pdp-zoom aria-haspopup="dialog" aria-label="View images full screen">${EXPAND}</button>` : '')

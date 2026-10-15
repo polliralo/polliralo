@@ -239,7 +239,9 @@ html.js .pic img.is-loaded { opacity: 1; }
   background: var(--ink); color: #E9E4DA; font-size: 0.6875rem; letter-spacing: .18em; text-transform: uppercase; text-align: center; padding-inline: 16px;
 }
 .announce a { text-decoration: underline; text-underline-offset: 3px; }
-@media (max-width: 760px) { .announce { font-size: 0.625rem; letter-spacing: .14em; } .announce .announce-long { display: none; } }
+.announce p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.announce .announce-short { display: none; }
+@media (max-width: 760px) { .announce { font-size: 0.625rem; letter-spacing: .12em; } .announce .announce-long { display: none; } .announce .announce-short { display: inline; } }
 
 .site-header {
   position: sticky; top: 0; z-index: 60; height: var(--header-h);
