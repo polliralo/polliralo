@@ -42,7 +42,7 @@ export default function render(ctx, route) {
       <p class="lede coll-lede">${r.esc(category.description)}</p>
       <p class="coll-total label tabular" data-total>${cv.stylesLabel(total)}</p>
       <div class="coll-photo">
-        ${r.picture(category.image.key, { alt: category.image.alt, sizes: '(min-width: 1180px) 320px, (min-width: 760px) 25vw, 32vw', priority: true, className: 'coll-photo-pic' })}
+        ${r.picture(category.image.key, { alt: category.image.alt, sizes: '(min-width: 1180px) 320px, (min-width: 760px) 25vw, 32vw', loading: 'eager', className: 'coll-photo-pic' })}
       </div>
     </div>
   </div>

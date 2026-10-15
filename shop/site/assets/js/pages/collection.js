@@ -4,7 +4,7 @@
 // in the address (history.replaceState) and is restored on load.
 
 import { onStore, getProducts, getCategories, isEdited, seedProduct } from '../lib/store.js';
-import { $, $$, openDialog, closeDialog, enhance, reducedMotion } from '../lib/ui.js';
+import { $, $$, openDialog, closeDialog, enhance, reducedMotion, withTransition } from '../lib/ui.js';
 import * as cv from '../lib/catalog-view.js';
 
 const root = $('[data-coll]');
@@ -148,7 +148,7 @@ function init(root) {
     products = getProducts(category ? { category } : {});
     facets = cv.buildFacets(products, { categories: getCategories(), withCategory });
     state = cv.normalizeState(state, facets);
-    if (first) grid = cv.createGrid(gridEl, { seed: seedProduct, glue: [tools] });
+    if (first) grid = cv.createGrid(gridEl, { seed: seedProduct, glue: [tools], transition: withTransition });
     ready = true;
     if (!first || isEdited()) {
       refreshOptions();
@@ -208,11 +208,7 @@ function init(root) {
     }
     const opener = e.target.closest('[data-open-filters]');
     if (opener && drawer) {
-      // closeDialog() leaves a 500 ms safety timer running after the closing
-      // animation; reopening inside that window would be shut by it, so wait
-      // it out (see the shared change request for lib/ui.js).
-      const wait = reducedMotion() ? 0 : Math.max(0, closedAt + 260 - performance.now());
-      setTimeout(() => openDialog(drawer, { opener }), wait);
+      openDialog(drawer, { opener });
       return;
     }
     if (e.target.closest('[data-show-results]') && drawer) {
@@ -225,9 +221,6 @@ function init(root) {
       closeDialog(drawer);
     }
   });
-
-  let closedAt = -Infinity;
-  drawer?.addEventListener('close', () => { closedAt = performance.now(); });
 
   /* ----- Dropdown panels (disclosure pattern) ----- */
 

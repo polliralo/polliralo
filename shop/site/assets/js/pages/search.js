@@ -4,7 +4,7 @@
 
 import { onStore, getProducts } from '../lib/store.js';
 import { searchProducts } from '../lib/search.js';
-import { $, enhance, reducedMotion } from '../lib/ui.js';
+import { $, enhance, reducedMotion, withTransition } from '../lib/ui.js';
 import * as cv from '../lib/catalog-view.js';
 
 const root = $('[data-search-page]');
@@ -22,7 +22,7 @@ function init(root) {
   const emptyText = $('[data-empty-text]', root);
   const ghost = $('[data-search-ghost]', root);
   const eyebrow = $('[data-search-eyebrow]', root);
-  const grid = cv.createGrid(gridEl);
+  const grid = cv.createGrid(gridEl, { transition: withTransition });
   const defaults = { title: emptyTitle.textContent, text: emptyText.textContent };
 
   let ready = false;

@@ -78,7 +78,7 @@ ${head({
     </form>
   </div>
 
-  <aside class="ct-contact-aside" aria-labelledby="ct-help-title">
+  <div class="ct-contact-aside">
     <h2 class="label ct-aside-title" id="ct-help-title">Before you write</h2>
     <ul class="ct-help" role="list">
       ${HELP.map((h) => `<li><a class="ct-help-link" href="${h.href}"><span class="ct-help-name">${esc(h.label)}${icon('arrow', { size: 18 })}</span><span class="ct-help-note">${esc(h.note)}</span></a></li>`).join('')}
@@ -87,7 +87,7 @@ ${head({
       <p class="label">About this page</p>
       <p>MONO is a fictional label, so there is no email address, phone number or shop to visit. The form is here to show how a real one would behave.</p>
     </div>
-  </aside>
+  </div>
 </section>`;
 
   return {

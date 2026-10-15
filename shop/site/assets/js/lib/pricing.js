@@ -3,6 +3,9 @@
 
 export const FREE_SHIPPING_OVER = 150;
 
+/** Most of one item (one size) a bag may hold. Lives here, not in cart.js, so the Node build can import it. */
+export const MAX_QTY = 10;
+
 export const SHIPPING_OPTIONS = [
   { id: 'standard', name: 'Standard delivery', eta: '3 to 5 working days', price: 6, freeOver: FREE_SHIPPING_OVER },
   { id: 'express', name: 'Express delivery', eta: '1 to 2 working days', price: 14, freeOver: null },

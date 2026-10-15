@@ -349,7 +349,7 @@ function dropdownHTML(facet, label, inner, { hidden = false, end = false, value 
  * "Filter and sort" button on phones), active filter chips, the grid and the
  * empty state. The drawer is built by drawerHTML().
  */
-export function listingHTML({ products, facets, state, counts, total, withCategory, eagerCount = 4, title = 'Products' }) {
+export function listingHTML({ products, facets, state, counts, total, withCategory, eagerCount = 1, title = 'Products' }) {
   const shown = products.length;
   const filterFacets = (withCategory ? ['category'] : []).concat(['size', 'colour', 'price']);
   const sortLabel = SORTS.find((s) => s.id === state.sort)?.label ?? 'Featured';
@@ -436,13 +436,14 @@ const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)
 /**
  * Keeps one element per product so re-sorting and filtering move the existing
  * cards (no image reload, no flash) and only rebuilds a card whose data changed.
- * createGrid(grid, { seed: slug => seedProduct, cardOptions, glue: [elements kept on top] })
+ * createGrid(grid, { seed: slug => seedProduct, cardOptions, glue: [elements kept on top],
+ *                    transition: withTransition from lib/ui.js })
  *   .render(list, { animate, update }) -> Promise that resolves once the DOM
  *   is updated (update() runs inside the transition, after the old snapshot).
  * Cards that are on screen get a temporary view-transition-name so they glide
  * to their new places; the names are removed when the transition ends.
  */
-export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = {}) {
+export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], transition = null } = {}) {
   const cache = new Map();
   const named = new Set();
   let running = 0;
@@ -472,8 +473,8 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = 
       if (!same) grid.replaceChildren(...els);
       update();
     };
-    const canAnimate = animate && !same && typeof document.startViewTransition === 'function' && !prefersReduced()
-      && !document.querySelector('dialog[open]');
+    const canAnimate = animate && !same && typeof transition === 'function' && typeof document.startViewTransition === 'function'
+      && !prefersReduced() && !document.querySelector('dialog[open]');
     if (!canAnimate) {
       commit();
       reveal();
@@ -484,7 +485,8 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = 
     kids.forEach((el) => { if (inView(el)) name(el, vtName(el.dataset.slug)); });
     glue.forEach((el, i) => { if (el) name(el, `coll-glue-${i}`); });
     html.classList.add('coll-vt');
-    const vt = document.startViewTransition(() => {
+    const token = ++running;
+    const vt = transition(() => {
       commit();
       els.forEach((el) => {
         if (inView(el)) {
@@ -493,7 +495,6 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = 
         }
       });
     });
-    const token = ++running;
     const done = () => {
       // A newer transition (a quick second click) may already have named
       // the same cards: leave its names alone.
@@ -502,6 +503,7 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = 
       named.clear();
       html.classList.remove('coll-vt');
     };
+    if (!vt) { done(); reveal(); return Promise.resolve(); } // ran without a transition
     vt.finished.then(done, done);
     return vt.updateCallbackDone.catch(() => {});
   }

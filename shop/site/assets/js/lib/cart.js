@@ -3,9 +3,11 @@
 // bag straight away.
 
 import { storage, getProduct, getVariant } from './store.js';
+import { MAX_QTY } from './pricing.js';
+
+export { MAX_QTY };
 
 const KEY = 'mono.cart.v1';
-export const MAX_QTY = 10;
 
 const read = () => storage.get(KEY, []).filter((i) => i && i.slug && i.variant && i.qty > 0);
 const write = (items) => {

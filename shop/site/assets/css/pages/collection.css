@@ -371,12 +371,10 @@ html.js.motion .coll .coll-grid > .card[data-reveal]:nth-child(-n+4):not(.is-in)
 @keyframes coll-lift { from { transform: translate3d(0, 14px, 0); } }
 @keyframes coll-settle { from { transform: scale(1.06); } }
 
-/* Same-page view transition for filtering and sorting (lib/catalog-view.js
-   names the on-screen cards; html.coll-vt is set only while it runs). The
-   page itself stays still; only the cards move. */
+/* Same-page view transition for filtering and sorting: withTransition()
+   (lib/ui.js) keeps the page still with html.vt-same; lib/catalog-view.js
+   names the on-screen cards and sets html.coll-vt only while it runs. */
 html.coll-vt::view-transition { pointer-events: none; } /* clicks reach the page while cards glide */
-html.coll-vt::view-transition-old(root),
-html.coll-vt::view-transition-new(root) { animation: none; }
 html.coll-vt::view-transition-group(*) { animation-duration: 560ms; animation-timing-function: var(--ease-in-out); }
 html.coll-vt::view-transition-new(*):only-child { animation: coll-card-in 520ms var(--ease-out) 60ms both; }
 html.coll-vt::view-transition-old(*):only-child { animation: coll-card-out 220ms var(--ease-in) both; }

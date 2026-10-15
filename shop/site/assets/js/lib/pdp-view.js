@@ -4,10 +4,9 @@
 // re-render after an admin edit produces exactly the pre-rendered markup.
 
 import { esc, money, picture, productUrl, categoryUrl, productCard, icon, mediaInfo, stockInfo, needsChoice } from './render.js';
-import { SHIPPING_OPTIONS, FREE_SHIPPING_OVER } from './pricing.js';
+import { SHIPPING_OPTIONS, FREE_SHIPPING_OVER, MAX_QTY } from './pricing.js';
 
-/** Same cap as lib/cart.js MAX_QTY (cart.js reads localStorage, so Node cannot import it). */
-export const MAX_QTY = 10;
+export { MAX_QTY };
 /** At or below this many, the stock line names the number ("Only 2 left in XL"). Real data only. */
 export const LOW_STOCK = 3;
 
