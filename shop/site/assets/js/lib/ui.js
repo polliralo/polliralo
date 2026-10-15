@@ -17,6 +17,7 @@ export function openDialog(dialog, { opener } = {}) {
     if (dialog.classList.contains('is-closing')) stopClosing(dialog);
     return;
   }
+  stopClosing(dialog); // a close cut short by dialog.close() may have left its timer
   dialog._opener = opener ?? document.activeElement;
   dialog.classList.remove('is-closing');
   dialog.showModal();

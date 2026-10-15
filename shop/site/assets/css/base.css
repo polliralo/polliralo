@@ -467,7 +467,7 @@ dialog.is-closing::backdrop { animation: fade-out var(--d-base) var(--ease-out) 
 .prose a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Tables (size guide, admin, order summaries). */
-.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-wrap { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; } /* relative: clips absolutely placed labels inside the table */
 .table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
 .table th, .table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .table thead th { font-size: 0.6875rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; color: var(--muted); }
