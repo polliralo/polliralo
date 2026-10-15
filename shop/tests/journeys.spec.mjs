@@ -223,9 +223,13 @@ test.describe('2. admin edits reach the store', () => {
 
     // Reset demo data restores both.
     await adminReady(page, '/admin/');
+    const catalogueTile = page.locator('.adm-metric').filter({ has: page.locator('dt', { hasText: 'Catalogue' }) });
+    await expect(catalogueTile.locator('.adm-metric-value')).toHaveText('Edited');
     await page.getByRole('button', { name: 'Reset demo data' }).click();
     await confirmBox(page).getByRole('button', { name: 'Reset demo data' }).click();
     await expect(confirmBox(page)).toBeHidden();
+    // The reset runs on the dialog's close event (a task after it hides): wait for the dashboard to show it.
+    await expect(catalogueTile.locator('.adm-metric-value')).toHaveText('Demo data');
     expect(await stored(page, 'mono.catalog.v1')).toBeNull();
 
     await ready(page, `/products/${OLIVE.slug}/`);
@@ -418,7 +422,7 @@ test.describe('6. persistence and stock', () => {
   test('buying the last units of a size shows that size as sold out afterwards', async ({ page }) => {
     await ready(page, `/products/${OLIVE.slug}/`);
     await sizeRadio(page, 'XXL').check();
-    await expect(page.locator('[data-pdp-stock]')).toHaveText('Only 2 left in XXL');
+    await expect(page.locator('[data-pdp-stock]')).toHaveText('In stock');
     const plus = page.locator('[data-pdp-qty] [data-step="1"]');
     await plus.click();
     await expect(page.locator('[data-pdp-qty] output')).toHaveText('2');

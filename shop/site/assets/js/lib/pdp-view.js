@@ -7,8 +7,6 @@ import { esc, money, picture, productUrl, categoryUrl, productCard, icon, mediaI
 import { SHIPPING_OPTIONS, FREE_SHIPPING_OVER, MAX_QTY } from './pricing.js';
 
 export { MAX_QTY };
-/** At or below this many, the stock line names the number ("Only 2 left in XL"). Real data only. */
-export const LOW_STOCK = 3;
 
 const CLOTHING = new Set(['shirts', 't-shirts', 'polos']);
 
@@ -53,7 +51,7 @@ export function matchVariant(p, value) {
 
 /**
  * Stock line for the chosen option, from the data only.
- * Returns { state: 'in' | 'low' | 'out' | 'none', text }.
+ * Returns { state: 'in' | 'out' | 'none', text }.
  */
 export function stockLine(p, variantId) {
   const sized = isSized(p);
@@ -69,7 +67,9 @@ export function stockLine(p, variantId) {
   const n = stockOf(variant);
   const where = sized ? ` in ${variant.label}` : '';
   if (n === 0) return { state: 'out', text: `Sold out${where}` };
-  if (n <= LOW_STOCK) return { state: 'low', text: `Only ${n} left${where}` };
+  // No "only N left" line: the stock is demo data, and naming small numbers
+  // reads as pressure (the owner's research rules it out). The quantity
+  // stepper still stops at what is in stock.
   return { state: 'in', text: 'In stock' };
 }
 

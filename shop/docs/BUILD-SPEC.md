@@ -35,7 +35,9 @@ approved previews in `docs/preview/*.jpg`. Research to follow:
   `<span class="tag">Demo price</span>` label or a nearby "Demo prices" note.
   Cards may show the bare price (the announcement bar and footer cover them).
 - No fake scarcity, countdowns, "X people are viewing", sale banners or promo
-  codes. Real stock from the data may be shown ("2 left in XL", "Sold out").
+  codes. Stock is shown as "In stock" or "Sold out" only, never "only N left"
+  (the stock is demo data and the owner's research rules such lines out); the
+  quantity stepper still stops at what is in stock.
 - The footer disclosure stays (it is in `layout.mjs`).
 - Words never sit on top of photos. Labels go under or beside images. The giant
   ghost word may sit *behind* a cut-out on the plain canvas.

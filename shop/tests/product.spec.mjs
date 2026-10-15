@@ -146,7 +146,7 @@ test.describe('product page', () => {
     await plus.click();
     await expect(value).toHaveText('3');
     await expect(plus).toBeDisabled();
-    await expect(page.locator('[data-pdp-stock]')).toHaveText('Only 3 left');
+    await expect(page.locator('[data-pdp-stock]')).toHaveText('In stock');
     await minus.click();
     await expect(value).toHaveText('2');
     await addButton(page).click();
@@ -159,7 +159,7 @@ test.describe('product page', () => {
     await expect(value).toHaveText('10');
     await sizeRadio(page, 'XXL').check();
     await expect(value).toHaveText('3');
-    await expect(page.locator('[data-pdp-stock]')).toHaveText('Only 3 left in XXL');
+    await expect(page.locator('[data-pdp-stock]')).toHaveText('In stock');
     await expect(plus).toBeDisabled();
   });
 

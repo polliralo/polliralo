@@ -416,7 +416,12 @@ function mount(root) {
 
   /* ----- Re-render from the store (admin edits, stock changes) ----- */
   function sync() {
-    if (state.gone) return;
+    if (state.gone) {
+      // Shown again (or the demo was reset) in another tab: load it afresh.
+      const back = getProduct(slug);
+      if (back && !back.hidden) window.location.reload();
+      return;
+    }
     const p = getProduct(slug);
     const category = getCategory((p ?? seedProduct(slug))?.category);
     if (!p || p.hidden) {
@@ -428,6 +433,17 @@ function mount(root) {
     }
     const data = view.collect(p, storeAccess());
     const set = (sel, text) => { const el = $(sel, root); if (el && el.textContent !== text) el.textContent = text; };
+    // A renamed product or a new category: the trail and the category link follow.
+    const crumbsHost = $('.pdp-crumbs', root);
+    if (crumbsHost) {
+      const fresh = breadcrumbs(view.trail(p, data.category));
+      if (crumbsHost.innerHTML !== fresh) crumbsHost.innerHTML = fresh;
+    }
+    const eyebrow = $('.pdp-eyebrow', root);
+    if (eyebrow && data.category) {
+      eyebrow.textContent = data.category.name;
+      eyebrow.setAttribute('href', `/collections/${data.category.slug}/`);
+    }
     set('[data-pdp-name]', p.name);
     set('[data-pdp-price]', money(p.price));
     set('[data-pdp-summary]', p.summary ?? '');

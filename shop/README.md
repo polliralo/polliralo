@@ -91,7 +91,7 @@ Never edit the files in `media/originals/`; they are the untouched originals. Th
 
 `npm run shop:check` builds the site, validates every page's HTML and runs the browser tests at desktop size (1440 x 900) and on a phone (Pixel 7). The tests cover every page and the journeys between them, from first visit to placed order and the admin.
 
-Lighthouse on a phone profile (October 2026, local build): performance 98 to 100, accessibility 97 to 100, best practices 100. SEO scores 92 until the live address is set (the canonical links are paths until then) and reaches the full score once it is.
+Lighthouse on a phone profile (October 2026, local build of the home, a category, a product and the About page): performance 98 to 100, accessibility 97 to 100, best practices 100. SEO scores 92 only because the canonical links are written as paths until the live address is set; with `SITE_URL` set they become full addresses, which is what that check asks for.
 
 ## What's in this folder
 
