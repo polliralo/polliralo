@@ -77,7 +77,7 @@ ${js.map((j) => `<script type="module" src="/assets/js/pages/${j}.js"></script>`
 </head>
 <body class="${esc(bodyClass)}">
 <a class="skip-link" href="#main">Skip to content</a>
-<aside class="announce" aria-label="Demo store notice"><p>Demo store: prices and stock are for illustration only. <a href="/about/#demo">How it works</a></p></aside>
+<aside class="announce" aria-label="Demo store notice"><p>Demo store: prices<span class="announce-long"> and stock</span> are for illustration only. <a href="/about/#demo">How it works</a></p></aside>
 ${header(categories, activeCategory, path)}
 <main id="main">
 ${content}

@@ -98,31 +98,30 @@ function flash(el) {
 
 /* ----- Confirmation dialog (delete, reset, clear, discard) ----- */
 
-let confirmEl = null;
+// A fresh <dialog> per question: ui.js closeDialog leaves a fallback timer
+// running, which would otherwise shut a confirmation reopened within 500ms.
 function ask({ title, text, confirmLabel = 'Confirm', cancelLabel = 'Cancel', opener }) {
-  if (!confirmEl) {
-    confirmEl = document.createElement('dialog');
-    confirmEl.className = 'adm-confirm';
-    confirmEl.setAttribute('aria-labelledby', 'adm-confirm-title');
-    confirmEl.setAttribute('aria-describedby', 'adm-confirm-text');
-    confirmEl.innerHTML = `<div class="adm-confirm-inner"><h2 id="adm-confirm-title"></h2><p id="adm-confirm-text"></p>`
-      + `<div class="adm-confirm-actions"><button class="btn btn-ghost btn-sm" type="button" data-confirm-cancel></button>`
-      + `<button class="btn btn-sm adm-btn-solid-danger" type="button" data-confirm-ok></button></div></div>`;
-    document.body.append(confirmEl);
-  }
-  $('#adm-confirm-title', confirmEl).textContent = title;
-  $('#adm-confirm-text', confirmEl).textContent = text;
-  const ok = $('[data-confirm-ok]', confirmEl);
-  const cancel = $('[data-confirm-cancel]', confirmEl);
-  ok.textContent = confirmLabel;
-  cancel.textContent = cancelLabel;
+  $$('dialog.adm-confirm:not([open])').forEach((d) => d.remove());
+  const d = document.createElement('dialog');
+  d.className = 'adm-confirm';
+  d.setAttribute('aria-labelledby', 'adm-confirm-title');
+  d.setAttribute('aria-describedby', 'adm-confirm-text');
+  d.innerHTML = `<div class="adm-confirm-inner"><h2 id="adm-confirm-title">${esc(title)}</h2><p id="adm-confirm-text">${esc(text)}</p>`
+    + `<div class="adm-confirm-actions"><button class="btn btn-ghost btn-sm" type="button" data-confirm-cancel>${esc(cancelLabel)}</button>`
+    + `<button class="btn btn-sm adm-btn-solid-danger" type="button" data-confirm-ok>${esc(confirmLabel)}</button></div></div>`;
+  document.body.append(d);
+  const ok = $('[data-confirm-ok]', d);
+  const cancel = $('[data-confirm-cancel]', d);
   return new Promise((resolve) => {
     let result = false;
-    ok.onclick = () => { result = true; closeDialog(confirmEl); };
-    cancel.onclick = () => closeDialog(confirmEl);
-    openDialog(confirmEl, { opener });
+    ok.addEventListener('click', () => { result = true; closeDialog(d); });
+    cancel.addEventListener('click', () => closeDialog(d));
+    openDialog(d, { opener });
     // Registered after openDialog's own close handler, so focus is restored first.
-    confirmEl.addEventListener('close', () => resolve(result), { once: true });
+    d.addEventListener('close', () => {
+      resolve(result);
+      setTimeout(() => d.remove(), 0);
+    }, { once: true });
     cancel.focus();
   });
 }

@@ -4,7 +4,7 @@
 // Browser only (uses document inside functions; nothing runs at import time).
 
 import { esc, picture, icon } from './render.js';
-import { $, $$, closeDialog, enhance, announce } from './ui.js';
+import { $, $$, enhance, announce, reducedMotion } from './ui.js';
 import { slugify, SLUG_RE, stable } from './admin-view.js';
 
 const OPTION_TYPES = [
@@ -24,6 +24,29 @@ const pad = (n) => String(n).padStart(2, '0');
 const initialValue = (el) => (el.tagName === 'SELECT'
   ? ([...el.options].find((o) => o.defaultSelected)?.value ?? el.options[0]?.value ?? '')
   : el.defaultValue);
+
+/**
+ * Close with the drawer's exit motion. Unlike ui.js closeDialog, the fallback
+ * timer is tied to this close only, so it can never shut a drawer that was
+ * opened again in the meantime, and child animations do not end it early.
+ */
+function animateClose(dialog) {
+  if (!dialog.open || dialog.classList.contains('is-closing')) return;
+  if (reducedMotion()) { dialog.close(); return; }
+  const token = (dialog._closeToken ?? 0) + 1;
+  dialog._closeToken = token;
+  dialog.classList.add('is-closing');
+  const onEnd = (e) => { if (e.target === dialog) done(); };
+  function done() {
+    dialog.removeEventListener('animationend', onEnd);
+    if (dialog._closeToken !== token) return;
+    dialog._closeToken = token + 1;
+    dialog.classList.remove('is-closing');
+    if (dialog.open) dialog.close();
+  }
+  dialog.addEventListener('animationend', onEnd);
+  setTimeout(done, 600);
+}
 
 /* ---------- Draft <-> product ---------- */
 
@@ -576,6 +599,7 @@ export function createEditor({ categories, media, getProducts, seedSlugs, ask, o
 
   function open(product, { opener, returnFocus } = {}) {
     if (dialog.open) return;
+    dialog._closeToken = (dialog._closeToken ?? 0) + 1; // cancel any close still in flight
     const isNew = !product;
     state = {
       product: product ? clone(product) : null,
@@ -598,7 +622,7 @@ export function createEditor({ categories, media, getProducts, seedSlugs, ask, o
 
   function finishClose() {
     if (!dialog.open) return;
-    closeDialog(dialog);
+    animateClose(dialog);
   }
 
   async function requestClose() {

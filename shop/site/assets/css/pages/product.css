@@ -193,6 +193,10 @@
 .pdp-guide-body { display: grid; gap: 18px; align-content: start; padding-block: 24px 36px; }
 .pdp-guide h2:focus { outline: none; }
 .pdp-guide-note { color: var(--muted); font-size: var(--fs-sm); }
+/* Fit all five columns inside the 460px drawer (base table cells are roomier). */
+.pdp-guide-table th, .pdp-guide-table td { padding: 12px 8px; }
+.pdp-guide-table th:first-child, .pdp-guide-table td:first-child { padding-left: 0; }
+.pdp-guide-table thead th { font-size: 0.625rem; letter-spacing: .08em; }
 .pdp-guide-table tbody th { font-weight: 500; }
 .pdp-guide-table tr.is-on th, .pdp-guide-table tr.is-on td { background: var(--stone); }
 .pdp-guide-sub { color: var(--muted); margin-top: 8px; }
@@ -217,6 +221,9 @@
 .pdp-viewer-track::-webkit-scrollbar { display: none; }
 .pdp-viewer-slide { flex: 0 0 100%; display: grid; place-items: center; min-height: 0; padding: 16px; scroll-snap-align: center; scroll-snap-stop: always; }
 .pdp-viewer-slide .pic { width: min(100%, calc(var(--pdp-vh) * 0.8)); height: auto; aspect-ratio: 4 / 5; }
+/* No fade in the viewer: its images load while the dialog is closed, and a
+   fade replaying on open would show a flat colour block for a moment. */
+html.js .pdp-viewer .pic img:not([fetchpriority="high"]) { opacity: 1; transition: none; }
 .pdp-viewer-slide.is-cut .pic { background: var(--canvas); }
 .pdp-viewer-slide.is-cut .pic img { padding-top: 5%; }
 .pdp-viewer-slide.is-wide .pic { width: min(100%, calc(var(--pdp-vh) * 16 / 9)); aspect-ratio: 16 / 9; }

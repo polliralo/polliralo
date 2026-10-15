@@ -76,6 +76,7 @@ function renderDrawer(highlight = null) {
   const list = $('[data-drawer-lines]', drawer);
   const foot = $('[data-drawer-foot]', drawer);
   const empty = $('[data-drawer-empty]', drawer);
+  const focus = focusedLineControl(list);
   const ls = renderLines(list, { compact: true });
   bindLineControls(list);
   if (highlight) {
@@ -92,6 +93,29 @@ function renderDrawer(highlight = null) {
   const blocked = cart.hasIssues();
   checkout.setAttribute('aria-disabled', blocked ? 'true' : 'false');
   $('[data-drawer-blocked]', drawer).hidden = !blocked;
+  if (focus) restoreLineFocus(list, focus);
+}
+
+// Redrawing the lines replaces their buttons, so remember which control had
+// keyboard focus (same row, same button) and put focus back afterwards.
+function focusedLineControl(list) {
+  const el = document.activeElement;
+  const row = el?.closest?.('[data-line]');
+  if (!row || !list.contains(row)) return null;
+  const control = el.matches('[data-qty]') ? `[data-qty="${el.dataset.qty}"]` : el.matches('[data-remove]') ? '[data-remove]' : 'a:not([tabindex="-1"])';
+  return { slug: row.dataset.slug, variant: row.dataset.variant, control, index: [...list.children].indexOf(row) };
+}
+
+function restoreLineFocus(list, { slug, variant, control, index }) {
+  const row = list.querySelector(`[data-line][data-slug="${CSS.escape(slug)}"][data-variant="${CSS.escape(variant)}"]`);
+  let target = row?.querySelector(control);
+  if (target?.disabled) target = row.querySelector('[data-qty]:not([disabled])');
+  if (!row) {
+    // The line was removed: move to the next line, or out of the empty list.
+    const next = list.children[Math.min(index, list.children.length - 1)];
+    target = next?.querySelector('[data-remove]') ?? $('[data-drawer-empty] a', drawer) ?? $('[data-close-dialog]', drawer);
+  }
+  target?.focus({ preventScroll: true });
 }
 drawer?.addEventListener('click', (e) => {
   const c = e.target.closest('[data-drawer-checkout]');

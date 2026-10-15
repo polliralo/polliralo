@@ -11,7 +11,12 @@ export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: r
 /* ----- Dialogs ----- */
 
 export function openDialog(dialog, { opener } = {}) {
-  if (!dialog || dialog.open) return;
+  if (!dialog) return;
+  if (dialog.open) {
+    // Asked to open again while its closing motion runs: keep it open.
+    if (dialog.classList.contains('is-closing')) stopClosing(dialog);
+    return;
+  }
   dialog._opener = opener ?? document.activeElement;
   dialog.classList.remove('is-closing');
   dialog.showModal();
@@ -33,9 +38,23 @@ export function closeDialog(dialog) {
   if (!dialog?.open || dialog.classList.contains('is-closing')) return;
   if (reducedMotion()) { dialog.close(); return; }
   dialog.classList.add('is-closing');
-  const done = () => { dialog.classList.remove('is-closing'); dialog.close(); };
-  dialog.addEventListener('animationend', done, { once: true });
-  setTimeout(() => { if (dialog.open) done(); }, 500);
+  // Finish on the dialog's own animation (not a child's), with a safety timer.
+  // Both are cleared when done, so a dialog reopened soon after is not shut.
+  const done = (e) => {
+    if (e?.type === 'animationend' && e.target !== dialog) return;
+    stopClosing(dialog);
+    dialog.close();
+  };
+  dialog._closeDone = done;
+  dialog.addEventListener('animationend', done);
+  dialog._closeTimer = setTimeout(done, 500);
+}
+
+function stopClosing(dialog) {
+  clearTimeout(dialog._closeTimer);
+  if (dialog._closeDone) dialog.removeEventListener('animationend', dialog._closeDone);
+  dialog._closeDone = null;
+  dialog.classList.remove('is-closing');
 }
 
 /* ----- Live region and toasts ----- */
@@ -147,5 +166,10 @@ export function withTransition(update) {
     update();
     return null;
   }
-  return document.startViewTransition(update);
+  // vt-same keeps the page-wide fade (meant for page loads) out of this change.
+  const root = document.documentElement;
+  root.classList.add('vt-same');
+  const transition = document.startViewTransition(update);
+  transition.finished.finally(() => root.classList.remove('vt-same'));
+  return transition;
 }

@@ -58,7 +58,7 @@ test.describe('frame', () => {
       await expect(page.locator('h1')).toHaveCount(1);
       await expect(page.locator('h1')).toHaveText(h1);
       await expect(page.locator('.adm-banner')).toHaveText(BANNER);
-      await expect(page.locator('.adm-nav a[aria-current="page"]')).toHaveText(current);
+      await expect(page.locator('.adm-nav a[aria-current="page"] .adm-nav-text')).toHaveText(current);
       await expect(page.locator('.adm-nav').getByRole('link', { name: 'View store' })).toHaveAttribute('href', '/');
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(0);
@@ -69,7 +69,7 @@ test.describe('frame', () => {
     const html = await (await request.get('/admin/products/')).text();
     expect(html).toContain('data-admin-loading');
     expect(html).toContain('<noscript>');
-    expect(html).not.toMatch(/[–—]/);
+    expect(html).not.toMatch(/[\u2013\u2014]/);
   });
 });
 
@@ -113,7 +113,7 @@ test.describe('dashboard', () => {
     await expect(page.getByRole('button', { name: 'Reset demo data' })).toBeFocused();
 
     await open(page, '/admin/products/');
-    await expect(page.locator('[data-count]')).toHaveText('12 products');
+    await expect(page.locator('.adm-count')).toHaveText('12 products');
     await expect(page.locator('tr[data-row]')).toHaveCount(12);
   });
 });
@@ -233,7 +233,7 @@ test.describe('products', () => {
     await r.getByRole('button', { name: 'Delete Black Dress Belt' }).click();
     await confirmBox(page).getByRole('button', { name: 'Delete product' }).click();
     await expect(r).toHaveCount(0);
-    await expect(page.locator('[data-count]')).toHaveText('11 products');
+    await expect(page.locator('.adm-count')).toHaveText('11 products');
     const catalog = await stored(page, 'mono.catalog.v1');
     expect(catalog.products).toHaveLength(11);
     expect(catalog.products.some((p) => p.slug === 'black-dress-belt')).toBe(false);
@@ -241,11 +241,11 @@ test.describe('products', () => {
 
   test('search and category filter the table', async ({ page }) => {
     await open(page, '/admin/products/');
-    await page.getByLabel('Search').fill('MONO-WT');
+    await page.locator('#adm-q').fill('MONO-WT');
     await expect(page.locator('tr[data-row]')).toHaveCount(2);
-    await expect(page.locator('[data-count]')).toHaveText('Showing 2 of 12 products');
-    await page.getByLabel('Search').fill('');
-    await page.getByLabel('Category').selectOption('polos');
+    await expect(page.locator('.adm-count')).toHaveText('Showing 2 of 12 products');
+    await page.locator('#adm-q').fill('');
+    await page.locator('#adm-cat').selectOption('polos');
     await expect(page.locator('tr[data-row]')).toHaveCount(2);
     await expect(page).toHaveURL(/category=polos/);
   });
@@ -289,8 +289,9 @@ test.describe('products', () => {
     await page.getByRole('button', { name: 'Add product' }).click();
     await expect(editor(page)).toBeVisible();
     expect(await page.evaluate(() => window.innerWidth)).toBe(width);
-    const box = await editor(page).getByRole('button', { name: 'Add product' }).boundingBox();
-    expect(box.x + box.width).toBeLessThanOrEqual(width);
+    // Once the drawer has slid in, its save button sits fully on screen.
+    await expect(editor(page).getByRole('button', { name: 'Add product' })).toBeInViewport({ ratio: 1 });
+    expect(await page.evaluate(() => window.innerWidth)).toBe(width);
   });
 });
 
