@@ -92,7 +92,7 @@ function toProduct(d, base) {
  * Returns [{ key, message, summary }]. key matches the data-key of the field
  * (or "variants" / "images" for the lists themselves).
  */
-export function validateDraft(d, { products, originalSlug, isSeed, seedSlugs = [] }) {
+export function validateDraft(d, { products, originalSlug, isSeed, seedSlugs = [], autoSlug = false }) {
   const errors = [];
   const add = (key, message, summary = message) => errors.push({ key, message, summary });
   const others = products.filter((p) => p.slug !== originalSlug);
@@ -102,7 +102,8 @@ export function validateDraft(d, { products, originalSlug, isSeed, seedSlugs = [
   else if (name.length > 80) add('name', 'Keep the name to 80 characters or fewer.');
 
   if (!isSeed) {
-    if (!d.slug) add('slug', 'Enter a slug for the product address.');
+    // A slug that is still made from the name needs no message of its own while the name is empty.
+    if (!d.slug) { if (!(autoSlug && !name)) add('slug', 'Enter a slug for the product address.'); }
     else if (!SLUG_RE.test(d.slug)) add('slug', 'Use lowercase letters, numbers and single hyphens, for example olive-linen-shirt.');
     else if (others.some((p) => p.slug === d.slug)) add('slug', 'Another product already uses this slug.');
     else if (seedSlugs.includes(d.slug) && d.slug !== originalSlug) add('slug', 'This slug belongs to a demo product. Choose another.');
@@ -355,6 +356,7 @@ export function createEditor({ categories, media, getProducts, seedSlugs, ask, o
       originalSlug: state.isNew ? null : state.originalSlug,
       isSeed: state.isSeed,
       seedSlugs,
+      autoSlug: state.isNew && !state.slugTouched,
     });
   }
 
@@ -435,7 +437,7 @@ export function createEditor({ categories, media, getProducts, seedSlugs, ask, o
     rows.forEach((row, i) => {
       const n = i + 1;
       $('.adm-irow-num', row).textContent = `Image ${pad(n)}`;
-      $('.adm-irow-role', row).textContent = i === 0 ? 'Card and main image' : '';
+      $('.adm-irow-role', row).textContent = i === 0 ? 'Main image' : '';
       const up = $('[data-imove="-1"]', row);
       const down = $('[data-imove="1"]', row);
       up.disabled = i === 0;

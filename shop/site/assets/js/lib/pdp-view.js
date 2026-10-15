@@ -231,7 +231,8 @@ export function optionsHTML(p, { selected = null } = {}) {
       const out = stockOf(v) === 0;
       return `<label class="chip${out ? ' is-out' : ''}${chosen?.id === v.id ? ' is-on' : ''}">`
         + `<input class="pdp-radio" type="radio" name="size" value="${esc(v.id)}" data-stock="${stockOf(v)}" data-label="${esc(v.label)}"${out ? ' disabled' : ''}${chosen?.id === v.id ? ' checked' : ''}>`
-        + `<span>${esc(v.label)}</span>${out ? '<span class="visually-hidden">, sold out</span>' : ''}`
+        // Sold out: the name reads "S, sold out" (the visible letter is hidden from the name).
+        + (out ? `<span aria-hidden="true">${esc(v.label)}</span><span class="visually-hidden">${esc(v.label)}, sold out</span>` : `<span>${esc(v.label)}</span>`)
         + `</label>`;
     }).join('')
     + `</div>`
@@ -270,7 +271,10 @@ function formHTML(p, opts) {
   const one = sized ? null : p.variants?.[0];
   return `<form class="pdp-form" method="get" novalidate data-pdp-form data-slug="${esc(p.slug)}" data-sized="${sized}"`
     + ` data-option="${esc(optionName(p))}"${one ? ` data-variant="${esc(one.id)}" data-stock="${stockOf(one)}"` : ''}>`
-    + formInnerHTML(p, opts)
+    // Spans from far above the form to its bottom edge: when it leaves the
+    // viewport the shopper has scrolled past Add to bag (sticky phone bar).
+    + `<span class="pdp-sentinel" data-pdp-sentinel aria-hidden="true"></span>`
+    + `<div class="pdp-form-body" data-pdp-form-body>${formInnerHTML(p, opts)}</div>`
     + `</form>`;
 }
 

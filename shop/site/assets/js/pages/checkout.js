@@ -52,6 +52,14 @@ if (root) {
   let placing = false;
   const touched = new Set();
 
+  /** Scroll so el sits below the sticky header (scroll-padding is not used by every engine). */
+  function scrollToEl(el) {
+    const header = $('.site-header');
+    const offset = (header?.offsetHeight ?? 0) + 24;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: reducedMotion() ? 'auto' : 'smooth' });
+  }
+
   /* ----- Values ----- */
 
   const input = (name) => form.elements.namedItem(name);
@@ -131,7 +139,8 @@ if (root) {
   }
 
   function markValid(name, all = values()) {
-    const wrap = input(name)?.closest('.co-has-tick');
+    const el = input(name);
+    const wrap = el instanceof HTMLElement ? el.closest('.co-has-tick') : null;
     if (!wrap) return;
     wrap.classList.toggle('is-valid', Boolean(all[name]) && !errorFor(name, all));
   }
@@ -174,7 +183,7 @@ if (root) {
     if (!el) return;
     const anchor = name === 'shipping' || name === 'payment' ? el.closest('fieldset') : el.closest('.field');
     el.focus({ preventScroll: true });
-    (anchor ?? el).scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+    scrollToEl(anchor ?? el);
   });
 
   /* ----- Country changes the address labels ----- */
@@ -335,7 +344,7 @@ if (root) {
     if (cart.hasIssues()) {
       blocked.hidden = false;
       blocked.focus();
-      blocked.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+      scrollToEl(blocked);
       return;
     }
     attempted = true;
@@ -344,7 +353,7 @@ if (root) {
     const errors = refreshSummary(all);
     if (errors.length) {
       summaryBox.focus({ preventScroll: true });
-      summaryBox.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+      scrollToEl(summaryBox);
       return;
     }
     placeOrder(all);

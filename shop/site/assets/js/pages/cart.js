@@ -9,7 +9,7 @@ import * as cart from '../lib/cart.js';
 import { renderLines, bindLineControls, summaryHTML } from '../lib/cart-view.js';
 import { totals, SHIPPING_OPTIONS } from '../lib/pricing.js';
 import { esc, money, productCard } from '../lib/render.js';
-import { $, $$, openDialog, closeDialog, announce, enhance } from '../lib/ui.js';
+import { $, $$, announce, enhance, reducedMotion } from '../lib/ui.js';
 import { arrivalText } from '../lib/checkout-view.js';
 
 const page = $('[data-cart-page]');
@@ -36,6 +36,8 @@ if (page) {
   const undoEmpty = $('[data-cart-undo-empty]', page);
   const newSection = $('[data-cart-new]', page);
   const newGrid = $('[data-cart-new-grid]', page);
+  const bar = $('[data-cart-bar]', page);
+  const barTotal = $('[data-cart-bar-total]', page);
 
   const keyOf = (slug, variant) => `${slug}|${variant}`;
   const order = [];          // first-seen order of lines, so an undone line returns to its place
@@ -70,6 +72,8 @@ if (page) {
     countEl.textContent = n ? `${n} ${n === 1 ? 'item' : 'items'}` : '';
 
     if (!items.length) {
+      barAllowed = false;
+      updateBar();
       renderEmpty();
       restoreFocus(restore);
       return;
@@ -84,6 +88,7 @@ if (page) {
     const t = totals(sub, 'standard');
     summary.innerHTML = summaryHTML({ shippingId: 'standard', showShippingNote: true });
     totalEl.textContent = money(t.total, { cents: true });
+    barTotal.textContent = money(t.total, { cents: true });
     const standard = SHIPPING_OPTIONS[0];
     const express = SHIPPING_OPTIONS[1];
     etaEl.innerHTML = `<span class="co-eta-row"><span>${esc(standard.name)}</span><span>${esc(arrivalText(standard))}</span></span>`
@@ -113,6 +118,8 @@ if (page) {
       checkoutBtn.removeAttribute('aria-disabled');
       checkoutBtn.removeAttribute('aria-describedby');
     }
+    barAllowed = !hasIssues;
+    updateBar({ measure: true });
     clearDesc.textContent = `This removes ${n === 1 ? 'the 1 item' : `all ${n} items`} from your bag. You cannot undo it.`;
     restoreFocus(restore);
   }
@@ -149,6 +156,31 @@ if (page) {
     newSection.hidden = fill.length === 0;
     newRendered = true;
     enhance(newGrid);
+  }
+
+  /* ----- Phone: a checkout bar while the summary's button is still below the screen ----- */
+
+  let barAllowed = false;
+  let summaryBelow = false;
+  let barObserver = null;
+  const phone = window.matchMedia('(max-width: 760px)');
+  function updateBar({ measure = false } = {}) {
+    // After a redraw, measure directly: the observer only reports changes.
+    if (measure && !filled.hidden) summaryBelow = checkoutBtn.getBoundingClientRect().top > window.innerHeight;
+    const show = barAllowed && summaryBelow && phone.matches;
+    bar.classList.toggle('is-visible', show);
+    bar.inert = !show;
+    // Keep focused controls clear of the bar (WCAG 2.4.11).
+    document.documentElement.style.scrollPaddingBottom = show ? `${bar.offsetHeight + 16}px` : '';
+  }
+  function watchBar() {
+    if (barObserver || !('IntersectionObserver' in window)) return;
+    barObserver = new IntersectionObserver(([entry]) => {
+      summaryBelow = !entry.isIntersecting && entry.boundingClientRect.top > 0;
+      updateBar();
+    });
+    barObserver.observe(checkoutBtn);
+    phone.addEventListener('change', () => updateBar({ measure: true }));
   }
 
   /* ----- Focus memory across re-renders ----- */
@@ -237,12 +269,43 @@ if (page) {
 
   /* ----- Clear bag with a confirmation dialog ----- */
 
-  $('[data-clear-bag]', page).addEventListener('click', (e) => openDialog(dialog, { opener: e.currentTarget }));
+  // Own open/close (same motion as lib/ui.js dialogs): the shared closeDialog
+  // keeps a fallback timer that can shut a dialog reopened within 500ms.
+  let closeTimer = 0;
+  let opener = null;
+  function openClear(from) {
+    if (dialog.open) return;
+    clearTimeout(closeTimer);
+    dialog.classList.remove('is-closing');
+    opener = from;
+    dialog.showModal();
+    document.documentElement.classList.add('is-locked');
+  }
+  function closeClear({ focus } = {}) {
+    if (!dialog.open || dialog.classList.contains('is-closing')) return;
+    const onEnd = (e) => { if (e.target === dialog) finish(); };
+    function finish() {
+      clearTimeout(closeTimer);
+      dialog.removeEventListener('animationend', onEnd);
+      dialog.classList.remove('is-closing');
+      if (dialog.open) dialog.close();
+      document.documentElement.classList.remove('is-locked');
+      const target = focus ?? opener;
+      if (target && target.offsetParent !== null) target.focus({ preventScroll: true });
+    }
+    if (reducedMotion()) { finish(); return; }
+    dialog.classList.add('is-closing');
+    dialog.addEventListener('animationend', onEnd);
+    closeTimer = setTimeout(finish, 400);
+  }
+  dialog.addEventListener('cancel', (e) => { e.preventDefault(); closeClear(); });
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) closeClear(); });
+  $('[data-keep-items]', dialog).addEventListener('click', () => closeClear());
+  $('[data-clear-bag]', page).addEventListener('click', (e) => openClear(e.currentTarget));
   $('[data-confirm-clear]', dialog).addEventListener('click', () => {
     removed.clear();
     cart.clear();
-    dialog.addEventListener('close', () => $('#co-empty-title')?.focus({ preventScroll: true }), { once: true });
-    closeDialog(dialog);
+    closeClear({ focus: $('#co-empty-title') });
     announce('Your bag is now empty.');
   });
 
@@ -252,6 +315,7 @@ if (page) {
     ready = true;
     bindLineControls(list);
     render({ focus: null });
+    watchBar();
     window.addEventListener('mono:cart', () => { if (ready) render(); });
     window.addEventListener('mono:catalog', () => {
       if (!ready) return;

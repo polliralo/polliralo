@@ -52,22 +52,41 @@ function mount(root) {
   const n = slides.length;
   const images = slides.map((s) => s.querySelector('img'));
 
+  let swapTimer = 0;
   function warm(i) {
     const img = images[i];
     if (img && img.loading === 'lazy') img.loading = 'eager';
   }
+  // Desktop: once the page has loaded, fetch the other angles quietly so a
+  // thumbnail swap never waits on the network. Phones lazy-load as they swipe.
+  const warmAll = () => { if (!isPhone()) images.forEach((_, k) => warm(k)); };
+  if (document.readyState === 'complete') setTimeout(warmAll, 600);
+  else window.addEventListener('load', () => setTimeout(warmAll, 600), { once: true });
 
   function setActive(i, { from = 'ui', focus = false } = {}) {
     if (!n) return;
     const next = Math.max(0, Math.min(n - 1, i));
-    const changed = next !== state.index;
+    const prevIndex = state.index;
+    const changed = next !== prevIndex;
     state.index = next;
     warm(next);
+    clearTimeout(swapTimer);
     slides.forEach((s, k) => {
+      s.classList.remove('is-entering', 'is-leaving');
       s.classList.toggle('is-active', k === next);
       if (k === next) s.removeAttribute('aria-hidden');
       else s.setAttribute('aria-hidden', 'true');
     });
+    // Desktop crossfade: the leaving slide fades out while the new one fades in.
+    if (changed && !isPhone() && !reducedMotion() && document.documentElement.classList.contains('motion')) {
+      const leaving = slides[prevIndex];
+      leaving?.classList.add('is-leaving');
+      slides[next].classList.add('is-entering');
+      swapTimer = setTimeout(() => {
+        leaving?.classList.remove('is-leaving');
+        slides[next].classList.remove('is-entering');
+      }, 760);
+    }
     thumbs.forEach((t, k) => {
       if (k === next) t.setAttribute('aria-current', 'true');
       else t.removeAttribute('aria-current');
@@ -349,7 +368,10 @@ function mount(root) {
   root.addEventListener('focusin', preview);
   root.addEventListener('focusout', restore);
 
-  /* ----- Sticky bar (phones): shows once the buy form has scrolled away ----- */
+  /* ----- Sticky bar (phones): shows once the buy form has scrolled away -----
+     The sentinel reaches from far above the form to its bottom edge, so it
+     stops intersecting exactly when Add to bag is above the viewport, even
+     after a jump (Home key, tap on the status bar) that skips past the form. */
   let pastForm = false;
   let footerSeen = false;
   const sticky = () => $('[data-pdp-sticky]', root);
@@ -361,12 +383,13 @@ function mount(root) {
     bar.inert = !show;
   };
   if ('IntersectionObserver' in window) {
-    const formIO = new IntersectionObserver(([e]) => {
-      pastForm = !e.isIntersecting && e.boundingClientRect.top < 0;
-      updateSticky();
-    });
-    const actions = form();
-    if (actions) formIO.observe(actions);
+    const sentinel = $('[data-pdp-sentinel]', root);
+    if (sentinel) {
+      new IntersectionObserver(([e]) => {
+        pastForm = !e.isIntersecting;
+        updateSticky();
+      }).observe(sentinel);
+    }
     const footer = $('.site-footer');
     if (footer) {
       new IntersectionObserver(([e]) => { footerSeen = e.isIntersecting; updateSticky(); }).observe(footer);
@@ -413,7 +436,8 @@ function mount(root) {
         f.dataset.variant = p.variants?.[0]?.id ?? '';
         f.dataset.stock = String(Math.max(0, Number(p.variants?.[0]?.stock) || 0));
       }
-      f.innerHTML = view.formInnerHTML(p, { selected: keep });
+      const body = $('[data-pdp-form-body]', f);
+      if (body) body.innerHTML = view.formInnerHTML(p, { selected: keep });
       state.size = keep;
     }
     const bar = sticky();

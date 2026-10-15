@@ -35,10 +35,12 @@ const PAGES = {
 export default function render(ctx, route) {
   const view = PAGES[route.params?.view] ? route.params.view : 'dashboard';
   const page = PAGES[view];
-  // The product editor offers every image in the manifest (key and whether it is a cut-out).
-  const media = view === 'products'
-    ? `\n<script type="application/json" id="adm-media">${JSON.stringify(Object.entries(ctx.media).map(([key, m]) => ({ key, alpha: Boolean(m.alpha) }))).replace(/</g, '\\u003c')}</script>`
-    : '';
+  // Data for the page script: the shipped product slugs (to tell demo products
+  // from ones added in this browser) and, for the product editor, every image
+  // in the manifest with whether it is a cut-out.
+  const data = { seedSlugs: ctx.products.map((p) => p.slug) };
+  if (view === 'products') data.media = Object.entries(ctx.media).map(([key, m]) => ({ key, alpha: Boolean(m.alpha) }));
+  const media = `\n<script type="application/json" id="adm-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 
   const content = `<div class="adm" data-admin data-view="${view}">
   <div class="wrap">

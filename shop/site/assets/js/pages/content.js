@@ -4,9 +4,50 @@
 
 import { loadStore, onStore, storage, isEdited, getProduct, getProducts, resetCatalog } from '../lib/store.js';
 import { productCard, esc } from '../lib/render.js';
-import { $, $$, openDialog, closeDialog, announce, enhance, reducedMotion } from '../lib/ui.js';
+import { $, $$, announce, enhance, reducedMotion } from '../lib/ui.js';
 
 const KEYS = { cart: 'mono.cart.v1', catalog: 'mono.catalog.v1', orders: 'mono.orders.v1' };
+
+/* ----- A small modal with open/close motion. ui.js openDialog/closeDialog
+   leave a 500 ms fallback timer running after close, which shuts the dialog
+   again if it is reopened quickly (shared fix requested), so the reset
+   confirmation runs its own. ----- */
+
+function modal(dialog) {
+  const html = document.documentElement;
+  let timer = 0;
+  let opener = null;
+  const finish = () => {
+    clearTimeout(timer);
+    dialog.classList.remove('is-closing');
+    if (dialog.open) dialog.close();
+  };
+  const close = () => {
+    if (!dialog.open || dialog.classList.contains('is-closing')) return;
+    if (reducedMotion()) { finish(); return; }
+    dialog.classList.add('is-closing');
+    timer = setTimeout(finish, 400);
+  };
+  dialog.addEventListener('animationend', (e) => {
+    if (e.target === dialog && dialog.classList.contains('is-closing')) finish();
+  });
+  dialog.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) close(); });
+  dialog.addEventListener('close', () => {
+    html.classList.remove('is-locked');
+    opener?.focus({ preventScroll: true });
+  });
+  return {
+    open(from) {
+      clearTimeout(timer);
+      dialog.classList.remove('is-closing');
+      opener = from ?? document.activeElement;
+      if (!dialog.open) dialog.showModal();
+      html.classList.add('is-locked');
+    },
+    close,
+  };
+}
 
 /* ----- About: "In this browser now" and the reset ----- */
 
@@ -17,6 +58,7 @@ function setupReset() {
   const opener = $('[data-reset-open]', panel);
   const confirm = $('[data-reset-confirm]', dialog);
   const done = $('[data-reset-done]', panel);
+  const confirmBox = modal(dialog);
   panel.hidden = false;
 
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
@@ -35,8 +77,10 @@ function setupReset() {
 
   opener.addEventListener('click', () => {
     done.hidden = true;
-    openDialog(dialog, { opener });
+    confirmBox.open(opener);
   });
+
+  $('[data-reset-cancel]', dialog).addEventListener('click', () => confirmBox.close());
 
   confirm.addEventListener('click', async () => {
     Object.values(KEYS).forEach((key) => storage.remove(key));
@@ -48,7 +92,7 @@ function setupReset() {
       await loadStore();
       resetCatalog();
     } catch { /* the store could not load; the keys are gone either way */ }
-    closeDialog(dialog);
+    confirmBox.close();
     renderState();
     const message = 'Done. The bag, demo orders and admin edits in this browser have been cleared.';
     done.textContent = message;
@@ -69,7 +113,7 @@ function setupContact() {
   const title = $('[data-error-title]', summary);
   const message = $('[data-form-message]', form);
   const textarea = $('#ct-message', form);
-  const counter = $('[data-count]', form);
+  const counter = $('[data-char-count]', form);
   const fields = $$('[data-field]', form).map((wrap) => ({
     wrap,
     input: $('input, select, textarea', wrap),
@@ -191,6 +235,54 @@ function setupPicks() {
   }).catch(() => { /* keep the pre-rendered cards */ });
 }
 
+/* ----- Long pages: mark the section in view in the "On this page" index ----- */
+
+function setupIndex() {
+  const links = $$('.ct-index a[href^="#"]');
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  const byId = new Map(links.map((a) => [a.getAttribute('href').slice(1), a]));
+  const sections = [...byId.keys()].map((id) => document.getElementById(id)).filter(Boolean);
+  const visible = new Set();
+  const mark = () => {
+    const current = sections.find((s) => visible.has(s)) ?? null;
+    links.forEach((a) => a.removeAttribute('aria-current'));
+    if (current) byId.get(current.id)?.setAttribute('aria-current', 'location');
+  };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+    mark();
+  }, { rootMargin: '-20% 0px -55% 0px' });
+  sections.forEach((s) => io.observe(s));
+}
+
+/* ----- Curtain reveals: Chromium's IntersectionObserver counts the target's
+   own clip-path, so an element hidden by clip-path: inset(100% 0 0 0) never
+   reports as visible. Watch its parent instead (shared fix requested). ----- */
+
+function setupClipReveals() {
+  const items = $$('[data-reveal="clip"]:not(.is-in)');
+  if (!items.length) return;
+  if (!('IntersectionObserver' in window) || !document.documentElement.classList.contains('motion')) {
+    items.forEach((el) => el.classList.add('is-in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target._clipChild?.classList.add('is-in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  items.forEach((el) => {
+    const parent = el.parentElement;
+    if (!parent) { el.classList.add('is-in'); return; }
+    parent._clipChild = el;
+    io.observe(parent);
+  });
+}
+
+setupClipReveals();
 setupReset();
 setupContact();
 setupPicks();
+setupIndex();

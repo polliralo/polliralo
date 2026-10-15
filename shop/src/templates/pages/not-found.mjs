@@ -23,8 +23,10 @@ export default function render(ctx) {
     <form class="ct-nf-search" action="/search/" method="get" role="search" aria-label="Search the shop">
       <label class="label" for="ct-nf-q">Search the shop</label>
       <div class="ct-nf-bar">
-        ${icon('search', { size: 22 })}
-        <input class="ct-nf-input" id="ct-nf-q" name="q" type="search" placeholder="Shirts, watches, olive..." autocomplete="off" enterkeyhint="search">
+        <div class="ct-nf-field">
+          ${icon('search', { size: 22 })}
+          <input class="ct-nf-input" id="ct-nf-q" name="q" type="search" placeholder="Shirts, watches, olive..." autocomplete="off" enterkeyhint="search">
+        </div>
         <button class="btn btn-sm" type="submit">Search</button>
       </div>
     </form>

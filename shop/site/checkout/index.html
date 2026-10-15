@@ -175,9 +175,9 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
         </div>
             <div class="field co-field" data-field="region">
           <label for="co-region" data-label-for="region">State (optional)</label>
-          
+          <p class="hint" id="co-region-hint">Only if your address uses one</p>
           <p class="field-error" id="co-region-error" data-error-for="region" hidden></p>
-          <input class="input" id="co-region" name="region" type="text" autocomplete="shipping address-level1" autocapitalize="words" maxlength="80">
+          <input class="input" id="co-region" name="region" type="text" autocomplete="shipping address-level1" aria-describedby="co-region-hint" autocapitalize="words" maxlength="80">
         </div>
             <div class="field co-field" data-field="postcode">
           <label for="co-postcode" data-label-for="postcode">ZIP code</label>
@@ -192,7 +192,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
           <legend class="co-legend"><h2 class="co-legend-text"><span class="co-num" aria-hidden="true">03</span> Delivery method</h2></legend>
           <p class="field-error" id="co-shipping-error" data-error-for="shipping" hidden></p>
           <div class="co-options" data-field="shipping">
-          <label class="co-option" for="co-ship-standard">
+          <label class="co-option">
             <input class="co-radio" type="radio" id="co-ship-standard" name="shipping" value="standard" checked required aria-describedby="co-ship-standard-meta">
             <span class="co-option-main">
               <span class="co-option-name">Standard delivery</span>
@@ -204,7 +204,7 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
             </span>
             <span class="co-option-price" data-ship-price="standard">$6.00</span>
           </label>
-          <label class="co-option" for="co-ship-express">
+          <label class="co-option">
             <input class="co-radio" type="radio" id="co-ship-express" name="shipping" value="express" required aria-describedby="co-ship-express-meta">
             <span class="co-option-main">
               <span class="co-option-name">Express delivery</span>
@@ -224,14 +224,14 @@ addEventListener('pagereveal',function(e){var vt=e.viewTransition;if(!vt)return;
           <p class="field-error" id="co-payment-error" data-error-for="payment" hidden></p>
           <div class="co-pay-box">
             <div class="co-options" data-field="payment">
-          <label class="co-option" for="co-pay-test-card">
+          <label class="co-option">
             <input class="co-radio" type="radio" id="co-pay-test-card" name="payment" value="test-card" checked required aria-describedby="co-pay-test-card-note">
             <span class="co-option-main">
               <span class="co-option-name">Test card</span>
               <span class="co-option-meta" id="co-pay-test-card-note">Nothing is charged and no card details are collected.</span>
             </span>
           </label>
-          <label class="co-option" for="co-pay-cod">
+          <label class="co-option">
             <input class="co-radio" type="radio" id="co-pay-cod" name="payment" value="cod" required aria-describedby="co-pay-cod-note">
             <span class="co-option-main">
               <span class="co-option-name">Cash on delivery</span>

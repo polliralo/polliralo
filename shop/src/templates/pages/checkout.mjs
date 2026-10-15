@@ -24,7 +24,7 @@ export default function render(ctx) {
   };
 
   const shippingCards = SHIPPING_OPTIONS.map((o, i) => `
-          <label class="co-option" for="co-ship-${o.id}">
+          <label class="co-option">
             <input class="co-radio" type="radio" id="co-ship-${o.id}" name="shipping" value="${o.id}"${i === 0 ? ' checked' : ''} required aria-describedby="co-ship-${o.id}-meta">
             <span class="co-option-main">
               <span class="co-option-name">${esc(o.name)}</span>
@@ -38,7 +38,7 @@ export default function render(ctx) {
           </label>`).join('');
 
   const paymentCards = PAYMENT_OPTIONS.map((o, i) => `
-          <label class="co-option" for="co-pay-${o.id}">
+          <label class="co-option">
             <input class="co-radio" type="radio" id="co-pay-${o.id}" name="payment" value="${o.id}"${i === 0 ? ' checked' : ''} required aria-describedby="co-pay-${o.id}-note">
             <span class="co-option-main">
               <span class="co-option-name">${esc(o.name)}</span>
@@ -135,7 +135,7 @@ export default function render(ctx) {
               ${field({ id: 'co-address2', name: 'address2', label: 'Apartment, suite or floor (optional)', autocomplete: 'shipping address-line2', required: false, attrs: 'maxlength="120"' })}
             </div>
             ${field({ id: 'co-city', name: 'city', label: 'Town or city', autocomplete: 'shipping address-level2', attrs: 'autocapitalize="words" maxlength="80"', className: 'co-span-2' })}
-            ${field({ id: 'co-region', name: 'region', label: `${esc(c.region)} (optional)`, autocomplete: 'shipping address-level1', required: false, attrs: 'autocapitalize="words" maxlength="80"' })}
+            ${field({ id: 'co-region', name: 'region', label: `${esc(c.region)} (optional)`, autocomplete: 'shipping address-level1', required: false, hint: 'Only if your address uses one', attrs: 'autocapitalize="words" maxlength="80"' })}
             ${field({ id: 'co-postcode', name: 'postcode', label: esc(c.postcode.label), autocomplete: 'shipping postal-code', hint: `For example ${esc(c.postcode.example)}`, attrs: `autocapitalize="characters" spellcheck="false" maxlength="12"${c.postcode.numeric ? ' inputmode="numeric"' : ''}` })}
           </div>
         </fieldset>

@@ -142,7 +142,13 @@ export default function render(ctx, route) {
     jsonld: [breadcrumbList(items), ...(isLive() ? [productJsonLd(ctx, product)] : [])],
     ogImage: `/assets/img/og/product-${product.slug}.jpg`,
     ogImageAlt: first?.alt ? `${product.name}: ${first.alt}` : product.name,
-    preload: ['<link rel="expect" href="#pdp-media" blocking="render">'],
+    // rel="expect" + blocking="render" holds the first render until #pdp-media is
+    // parsed, so the card-to-page morph has its target. html-validate 9 only
+    // knows blocking on stylesheet/preload links, hence the one-line directive.
+    preload: [
+      '<!-- [html-validate-disable-next attribute-misuse -- render-blocking expect link is valid HTML] -->',
+      '<link rel="expect" href="#pdp-media" blocking="render">',
+    ],
     activeCategory: product.category,
     bodyClass: 'page-product',
   };

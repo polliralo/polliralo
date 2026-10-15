@@ -24,9 +24,9 @@ const STORED = [
     why: 'So your edits show across the shop in this browser.',
   },
   {
-    key: 'Checkout draft', where: 'Session storage',
+    key: 'mono.checkout.draft.v1', where: 'Session storage',
     holds: 'What you have typed into the checkout form so far.',
-    why: 'So a reload does not empty the form. It is removed when you close the tab.',
+    why: 'So Back or a reload does not empty the form. It is removed when you place the order or close the tab.',
   },
   {
     key: 'mono:vt-from', where: 'Session storage',
@@ -59,7 +59,7 @@ ${head({
 })}
 
 <div class="wrap section-tight ct-doc">
-  <aside class="ct-doc-aside">${pageIndex(SECTIONS)}</aside>
+  <div class="ct-doc-aside">${pageIndex(SECTIONS)}</div>
   <article class="prose ct-prose" aria-labelledby="ct-title">
     <section id="short" aria-labelledby="short-title">
       <h2 id="short-title">The short version</h2>
@@ -77,7 +77,7 @@ ${head({
       <p>The demo uses your browser's own storage so the bag, checkout and admin keep working as you move around. This data stays on your device. It is not sent to MONO or to anyone else, and other visitors cannot see it. The site's own code sets no cookies.</p>
       <dl class="ct-store">
         ${STORED.map((s) => `<div class="ct-store-row">
-          <dt>${/[.:]/.test(s.key) ? `<code>${esc(s.key)}</code>` : `<span class="ct-store-name">${esc(s.key)}</span>`}<span class="ct-store-where">${esc(s.where)}</span></dt>
+          <dt><code>${esc(s.key)}</code><span class="ct-store-where">${esc(s.where)}</span></dt>
           <dd><span class="ct-store-label">Holds</span>${esc(s.holds)}</dd>
           <dd><span class="ct-store-label">Why</span>${esc(s.why)}</dd>
         </div>`).join('\n        ')}

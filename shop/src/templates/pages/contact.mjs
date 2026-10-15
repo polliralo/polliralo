@@ -62,7 +62,7 @@ ${head({
       <div class="field" data-field="message">
         <div class="ct-field-top">
           <label for="ct-message">Message</label>
-          <span class="hint tabular" data-count aria-hidden="true">0 / 1000</span>
+          <span class="hint tabular" data-char-count aria-hidden="true">0 / 1000</span>
         </div>
         <textarea class="textarea" id="ct-message" name="message" rows="7" required minlength="10" maxlength="1000" aria-describedby="ct-message-hint" data-label="a message"></textarea>
         <p class="hint" id="ct-message-hint">At least 10 characters.</p>

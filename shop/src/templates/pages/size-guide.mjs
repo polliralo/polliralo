@@ -6,7 +6,7 @@ import { head, trail, onward, OG_DEFAULT } from '../partials/content.mjs';
 
 function table(id, data, { caption }) {
   const [first, ...rest] = data.columns;
-  return `<div class="table-wrap ct-table-wrap" role="region" aria-labelledby="${id}-title" tabindex="0">
+  return `<div class="table-wrap ct-table-wrap" role="region" aria-label="${esc(caption)}" tabindex="0">
     <table class="table ct-table" id="${id}-table">
       <caption class="visually-hidden">${esc(caption)}</caption>
       <thead><tr><th scope="col">${esc(first)}</th>${rest.map((c) => `<th scope="col">${esc(c)}</th>`).join('')}</tr></thead>
@@ -38,8 +38,8 @@ ${head({
 
 <nav class="wrap ct-jump" aria-label="Size tables">
   <ul class="ct-jump-list" role="list">
-    <li><a class="chip ct-jump-chip" href="#tops">${esc(g.tops.title)}</a></li>
-    <li><a class="chip ct-jump-chip" href="#belts">${esc(g.belts.title)}</a></li>
+    <li><a class="chip ct-jump-chip" href="#tops">Tops</a></li>
+    <li><a class="chip ct-jump-chip" href="#belts">Belts</a></li>
     <li><a class="chip ct-jump-chip" href="#measure">How to measure</a></li>
   </ul>
 </nav>

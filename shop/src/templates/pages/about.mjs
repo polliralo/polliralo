@@ -107,7 +107,7 @@ ${head({
         <h3 class="ct-h3">Start again</h3>
         <p>Clear the bag, demo orders and admin edits from this browser. The shop goes back to its original demo data.</p>
       </div>
-      <dl class="ct-state" data-demo-state aria-label="Demo data in this browser">
+      <dl class="ct-state" data-demo-state>
         <div><dt>Bag</dt><dd data-state="cart">No items</dd></div>
         <div><dt>Demo orders</dt><dd data-state="orders">None</dd></div>
         <div><dt>Catalogue</dt><dd data-state="catalog">As shipped</dd></div>
@@ -127,7 +127,7 @@ ${head({
     <h2 class="ct-confirm-title" id="ct-reset-title">Reset this demo?</h2>
     <p id="ct-reset-desc">This removes your bag, demo orders and admin edits from this browser. It cannot be undone.</p>
     <div class="ct-confirm-actions">
-      <button class="btn btn-ghost" type="button" data-close-dialog>Cancel</button>
+      <button class="btn btn-ghost" type="button" data-reset-cancel>Cancel</button>
       <button class="btn ct-btn-danger" type="button" data-reset-confirm>Reset demo</button>
     </div>
   </div>

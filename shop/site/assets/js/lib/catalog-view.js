@@ -305,12 +305,12 @@ export function optionsHTML(facet, facets, state, counts, prefix) {
   const options = facets[facet]?.options ?? [];
   if (facet === 'size') {
     return sizeGroups(options).map((g, _, all) => `<div class="coll-size-group">`
-      + (all.length > 1 ? `<p class="coll-sub">${esc(g.label)}</p>` : '')
+      + (all.length > 1 && g.label !== LABELS.size ? `<p class="coll-sub">${esc(g.label)}</p>` : '')
       + `<div class="coll-sizes">` + g.options.map((o) => {
         const on = isSelected(state, 'size', o.id);
         const c = n(counts, 'size', o.id);
         return `<label class="chip coll-size" data-opt="size:${esc(o.id)}">`
-          + `<input class="visually-hidden" type="checkbox" name="${name}" value="${esc(o.id)}" data-facet="size"${checkedAttr(on)}${c === 0 && !on ? ' disabled' : ''}>`
+          + `<input class="visually-hidden" type="checkbox" name="${name}-${esc(o.id)}" value="${esc(o.id)}" data-facet="size"${checkedAttr(on)}${c === 0 && !on ? ' disabled' : ''}>`
           + `<span aria-hidden="true">${esc(o.label)}</span><span class="visually-hidden">${esc(g.label)} ${esc(o.label)}</span></label>`;
       }).join('') + `</div></div>`).join('');
   }
@@ -321,7 +321,7 @@ export function optionsHTML(facet, facets, state, counts, prefix) {
       ? `<span class="swatch coll-swatch" style="--sw:${esc(o.hex)}" aria-hidden="true"></span>`
       : '';
     return `<label class="coll-opt ${facet === 'colour' ? 'coll-colour' : 'coll-check'}" data-opt="${facet}:${esc(o.id)}">`
-      + `<input${facet === 'colour' ? ' class="visually-hidden"' : ''} type="checkbox" name="${name}" value="${esc(o.id)}" data-facet="${facet}"${checkedAttr(on)}${c === 0 && !on ? ' disabled' : ''}>`
+      + `<input${facet === 'colour' ? ' class="visually-hidden"' : ''} type="checkbox" name="${name}-${esc(o.id)}" value="${esc(o.id)}" data-facet="${facet}"${checkedAttr(on)}${c === 0 && !on ? ' disabled' : ''}>`
       + `${mark}<span class="coll-opt-label">${esc(o.label)}</span><span class="coll-n tabular" data-n>${c}</span></label>`;
   }).join('') + `</div>`;
 }
@@ -436,11 +436,16 @@ const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)
 /**
  * Keeps one element per product so re-sorting and filtering move the existing
  * cards (no image reload, no flash) and only rebuilds a card whose data changed.
- * createGrid(grid, { seed: slug => seedProduct, cardOptions, onRender })
- *   .render(list, { animate }) -> Promise (resolves when the transition ends)
+ * createGrid(grid, { seed: slug => seedProduct, cardOptions, glue: [elements kept on top] })
+ *   .render(list, { animate, update }) -> Promise that resolves once the DOM
+ *   is updated (update() runs inside the transition, after the old snapshot).
+ * Cards that are on screen get a temporary view-transition-name so they glide
+ * to their new places; the names are removed when the transition ends.
  */
 export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = {}) {
   const cache = new Map();
+  const named = new Set();
+  let running = 0;
   grid.querySelectorAll(':scope > .card').forEach((el) => {
     const p = seed ? seed(el.dataset.slug) : null;
     cache.set(el.dataset.slug, { el, sig: p ? cardSignature(p) : null });
@@ -475,7 +480,6 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = 
       return Promise.resolve();
     }
     const html = document.documentElement;
-    const named = new Set();
     const name = (el, n) => { el.style.viewTransitionName = n; named.add(el); };
     kids.forEach((el) => { if (inView(el)) name(el, vtName(el.dataset.slug)); });
     glue.forEach((el, i) => { if (el) name(el, `coll-glue-${i}`); });
@@ -489,11 +493,17 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [] } = 
         }
       });
     });
+    const token = ++running;
     const done = () => {
+      // A newer transition (a quick second click) may already have named
+      // the same cards: leave its names alone.
+      if (token !== running) return;
       named.forEach((el) => { el.style.viewTransitionName = ''; });
+      named.clear();
       html.classList.remove('coll-vt');
     };
-    return vt.finished.then(done, done);
+    vt.finished.then(done, done);
+    return vt.updateCallbackDone.catch(() => {});
   }
 
   return { render };

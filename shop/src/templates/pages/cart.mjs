@@ -65,6 +65,11 @@ export default function render(ctx) {
       </aside>
     </div>
 
+    <div class="co-cart-bar" data-cart-bar inert>
+      <p class="co-cart-bar-total"><span class="label muted">Estimated total</span><span data-cart-bar-total></span></p>
+      <a class="btn co-cart-bar-btn" href="/checkout/" data-cart-bar-checkout>Checkout</a>
+    </div>
+
     <div class="co-empty-state" data-cart-empty hidden>
       <div class="co-undo-empty" data-cart-undo-empty hidden></div>
       <h2 class="co-empty-title" id="co-empty-title" tabindex="-1">Your bag is empty</h2>
@@ -86,7 +91,7 @@ export default function render(ctx) {
       <p class="muted" id="co-clear-desc" data-clear-desc>This removes every item from your bag. You cannot undo it.</p>
       <div class="co-dialog-actions">
         <button class="btn" type="button" data-confirm-clear>Clear bag</button>
-        <button class="btn btn-ghost" type="button" data-close-dialog autofocus>Keep items</button>
+        <button class="btn btn-ghost" type="button" data-keep-items autofocus>Keep items</button>
       </div>
     </div>
   </dialog>
