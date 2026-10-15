@@ -159,6 +159,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .home-slide.is-entering { animation: home-slide-in 900ms var(--ease-in-out) both; }
   .home-slide.is-leaving { animation: home-slide-out 600ms var(--ease-in) both; }
+  /* The outgoing words leave first, so old and new text never overlap. */
+  .home-slide.is-leaving :is(.home-details, .home-sizes, .home-thumbs) { animation: home-slide-out 220ms var(--ease-in) both; }
   .home-slide.is-entering .home-frame { animation: home-settle 1600ms var(--ease-out) both; }
   .home-slide.is-entering .home-ghost { animation: home-drift 1600ms var(--ease-out) both; }
   .home-slide.is-entering .home-rise { animation: home-rise 700ms var(--ease-out) both; animation-delay: calc(200ms + var(--l, 0) * 80ms); }

@@ -196,7 +196,9 @@ test.describe('checkout', () => {
     await expect(blocked).toBeVisible();
     await expect(blocked.getByRole('link', { name: 'Review your bag' })).toHaveAttribute('href', '/cart/');
     await fillValidForm(page);
-    await page.getByRole('button', { name: 'Place demo order' }).click();
+    // The button is aria-disabled while blocked; Enter in a field still submits the form.
+    await expect(page.getByRole('button', { name: 'Place demo order' })).toHaveAttribute('aria-disabled', 'true');
+    await page.locator('#co-postcode').press('Enter');
     await expect(blocked).toBeFocused();
     await expect(page).toHaveURL(/\/checkout\/$/);
     expect(await readStorage(page, 'mono.orders.v1')).toBeNull();
