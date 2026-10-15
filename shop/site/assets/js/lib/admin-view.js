@@ -245,10 +245,17 @@ function addressLines(d = {}) {
     .filter((x) => x && String(x).trim()).map((x) => `<span>${esc(x)}</span>`).join('');
 }
 
+/** "Size M"; one-size items (checkout records optionLabel "One size") show the value once. */
+function itemOption(it) {
+  const value = it.variantLabel || '';
+  const label = it.optionLabel || '';
+  return !label || !value || label === value || /one size/i.test(label) ? value : `${label} ${value}`;
+}
+
 export function orderDetailHTML(o) {
   const items = (o.items ?? []).map((it) => `<li class="adm-item">${thumb(it.imageKey, '40px')}`
     + `<span class="adm-item-text"><span class="adm-item-name">${esc(it.name)}</span>`
-    + `<span class="muted small">${esc([it.optionLabel && it.variantLabel ? `${it.optionLabel} ${it.variantLabel}` : (it.variantLabel || ''), `Qty ${Number(it.qty) || 0}`, money(it.unitPrice, { cents: true })].filter(Boolean).join(' / '))}</span></span>`
+    + `<span class="muted small">${esc([itemOption(it), `Qty ${Number(it.qty) || 0}`, money(it.unitPrice, { cents: true })].filter(Boolean).join(' / '))}</span></span>`
     + `<span class="adm-item-total">${money(it.lineTotal ?? (Number(it.unitPrice) || 0) * (Number(it.qty) || 0), { cents: true })}</span></li>`).join('');
   const contact = o.contact ?? {};
   return `<div class="adm-detail">`

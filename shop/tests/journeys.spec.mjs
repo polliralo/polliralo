@@ -26,6 +26,7 @@ const drawer = (page) => page.locator('#cart-drawer');
 const drawerLine = (page, slug, variant) => drawer(page).locator(`[data-line][data-slug="${slug}"][data-variant="${variant}"]`);
 const bagLine = (page, slug, variant) => page.locator(`[data-cart-lines] [data-line][data-slug="${slug}"][data-variant="${variant}"]`);
 const card = (page, slug) => page.locator(`[data-grid] .card[data-slug="${slug}"]`);
+const linksTo = (page, slug) => page.locator(`main a[href="/products/${slug}/"]`);
 const addButton = (page) => page.locator('[data-pdp-form] [data-pdp-add]');
 const sizeRadio = (page, name) => page.getByRole('radio', { name, exact: true });
 const adminRow = (page, slug) => page.locator(`tr[data-row="${slug}"]`);
@@ -130,6 +131,12 @@ test.describe('1. shopper, start to finish', () => {
     const row = page.locator(`tr[data-order="${id}"]`);
     await expect(row).toContainText('Alex Morgan');
     await expect(row).toContainText('$54.00');
+    await row.getByRole('button', { name: new RegExp(id) }).click();
+    const detail = page.locator(`#adm-od-${id}`);
+    await expect(detail).toBeVisible();
+    await expect(detail.locator('.adm-item-text .muted')).toHaveText('Size M / Qty 1 / $48.00');
+    await expect(detail).toContainText('12 Market Street');
+    await expect(detail).toContainText('alex@example.com');
     const status = page.getByLabel(`Status of order ${id}`);
     await expect(status).toHaveValue('received');
     await status.selectOption('packed');
@@ -158,11 +165,16 @@ test.describe('2. admin edits reach the store', () => {
     await adminRow(page, NAVY.slug).getByRole('button', { name: `Hide ${NAVY.name}` }).click();
     await expect(adminRow(page, NAVY.slug)).toContainText('Hidden');
 
-    // Product page: the new price, and no colour swatch leading to the hidden polo.
+    // Product page: the new price, and no link (colour swatch, rails) to the hidden polo.
     await ready(page, `/products/${OLIVE.slug}/`);
     await expect(page.locator('[data-pdp-price]')).toHaveText('$52');
     await expect(page.locator('[data-sticky-price]')).toHaveText('$52');
-    await expect(page.locator(`[data-pdp] a[href="/products/${NAVY.slug}/"]`)).toHaveCount(0);
+    await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
+    await expect(page.locator('.pdp-swatches')).toHaveCount(0);
+    // A page whose "Complete the look" lists the navy polo drops it.
+    await ready(page, '/products/silver-aviator-sunglasses/');
+    await expect(page.locator('[data-pdp-look] [data-look-slug]')).toHaveCount(2);
+    await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
 
     // Category grid.
     await ready(page, '/collections/polos/');
@@ -170,6 +182,7 @@ test.describe('2. admin edits reach the store', () => {
     await expect(card(page, NAVY.slug)).toHaveCount(0);
     await expect(page.locator('[data-grid] .card')).toHaveCount(1);
     await expect(page.locator('[data-total]')).toHaveText('1 style');
+    await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
 
     // Search page and the header search dialog.
     await ready(page, '/search/?q=polo');
@@ -184,13 +197,16 @@ test.describe('2. admin edits reach the store', () => {
     await expect(dialog.locator('.mini-card')).toContainText(OLIVE.name);
     await expect(dialog.locator('.mini-card')).toContainText('$52');
 
-    // Home hero: five slides, no navy polo, the olive polo at the new price.
+    // Home: five hero slides, no navy polo anywhere, the olive polo at the new price.
     await ready(page, '/');
     const carousel = page.locator('[data-carousel]');
     await expect(carousel.locator('[data-slide]')).toHaveCount(5);
     await expect(carousel.locator(`[data-slide][data-slug="${NAVY.slug}"]`)).toHaveCount(0);
     await expect(carousel.locator('[data-hero-total]')).toHaveText('05');
     await expect(carousel.locator(`[data-slide][data-slug="${OLIVE.slug}"] .home-price`)).toContainText('$52');
+    await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
+    await expect(page.locator(`[data-new-list] .card[data-slug="${OLIVE.slug}"] .card-price`)).toHaveText('$52');
+    await expect(page.locator(`.home-look-list[data-look="look-01"] .home-item[data-slug="${OLIVE.slug}"] .home-item-price`)).toHaveText('$52');
 
     // The hidden product's own page.
     await ready(page, `/products/${NAVY.slug}/`);
@@ -297,7 +313,7 @@ test.describe('3. a product made in the admin', () => {
 });
 
 test.describe('4. quick add from a card', () => {
-  test('one size goes straight in; a sized item asks for the size first; sold-out sizes cannot be chosen', async ({ page }) => {
+  test('one size goes straight in; a sized item asks for the size first; sold-out sizes cannot be chosen; the order reads right in the admin', async ({ page }) => {
     await ready(page, '/collections/watches/');
     await card(page, WATCH.slug).getByRole('button', { name: `Quick add ${WATCH.name}` }).click();
     await expect(drawer(page)).toBeVisible();
@@ -338,6 +354,21 @@ test.describe('4. quick add from a card', () => {
       { slug: WATCH.slug, variant: 'OS', qty: 1 },
       { slug: STRIPE.slug, variant: 'M', qty: 1 },
     ]);
+
+    // Buy both. The confirmation and the admin name each line's option once.
+    await drawer(page).getByRole('link', { name: 'Checkout' }).click();
+    await expect(page).toHaveURL(/\/checkout\/$/);
+    const id = await placeOrder(page);
+    const body = page.locator('[data-order-body]');
+    await expect(body).toContainText('One size · Qty 1');
+    await expect(body).toContainText('Size: M · Qty 1');
+    await expect(body.locator('.co-total')).toContainText('$244.00');
+    await adminReady(page, `/admin/orders/?order=${id}`);
+    const detail = page.locator(`#adm-od-${id}`);
+    await expect(detail).toBeVisible();
+    const itemText = (name) => detail.locator('.adm-item', { hasText: name }).locator('.adm-item-text .muted');
+    await expect(itemText(WATCH.name)).toHaveText('One size / Qty 1 / $180.00');
+    await expect(itemText(STRIPE.name)).toHaveText('Size M / Qty 1 / $64.00');
   });
 });
 
@@ -556,12 +587,15 @@ async function loadCleanly(page, path) {
 
 test.describe('7. every page loads cleanly', () => {
   for (const path of ROUTES) {
-    test(`${path}: no console errors or failed requests, fresh and with demo data`, async ({ page, request }) => {
+    test(`${path}: no console errors or failed requests, fresh and with demo data`, async ({ page, context, request }) => {
       expect(await loadCleanly(page, path), `${path}, fresh browser`).toEqual([]);
       const data = await demoData(request);
       await page.evaluate((entries) => entries.forEach(([key, value]) => localStorage.setItem(key, JSON.stringify(value))), Object.entries(data));
+      // A second tab in the same browser: leaving the first page could cut off
+      // its late image requests (gallery warm-up), which are not failures.
+      const second = await context.newPage();
       const withData = WITH_DATA[path] ?? path;
-      expect(await loadCleanly(page, withData), `${withData}, with demo data`).toEqual([]);
+      expect(await loadCleanly(second, withData), `${withData}, with demo data`).toEqual([]);
     });
   }
 });

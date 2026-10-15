@@ -198,7 +198,8 @@ export function viewerHTML(p) {
 
 /* ----- Buy panel ----- */
 
-function colourHTML(p, siblings) {
+/** Colour name, with swatches linking to the visible products of the same group. */
+export function colourHTML(p, siblings) {
   const name = p.colour?.name ?? '';
   if (siblings.length > 1) {
     return `<div class="pdp-colour">`
@@ -438,7 +439,7 @@ export function pdpHTML(p, data, { crumbs = '', selected = null } = {}) {
     + `<h1 class="pdp-name" id="pdp-title" data-pdp-name>${esc(p.name)}</h1>`
     + `<p class="price pdp-price"><span data-pdp-price>${money(p.price)}</span><span class="tag">Demo price</span></p>`
     + `<p class="pdp-summary" data-pdp-summary>${esc(p.summary ?? '')}</p>`
-    + colourHTML(p, siblings)
+    + `<div data-pdp-colour-slot>${colourHTML(p, siblings)}</div>`
     + formHTML(p, { selected })
     + `<ul class="pdp-notes" role="list">`
     + `<li>Demo checkout. No payment is taken.</li>`

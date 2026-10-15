@@ -433,6 +433,9 @@ function mount(root) {
     set('[data-pdp-summary]', p.summary ?? '');
     const details = $('[data-pdp-details]', root);
     if (details) details.innerHTML = view.detailsBodyHTML(p);
+    // Swatches follow the store: a hidden or deleted colour drops out.
+    const colourSlot = $('[data-pdp-colour-slot]', root);
+    if (colourSlot) colourSlot.innerHTML = view.colourHTML(p, data.siblings);
 
     const f = form();
     if (f) {
