@@ -1,0 +1,493 @@
+/* MONO home page. Every selector is scoped with a home- prefix.
+   Sections: hero (five messages), categories, new arrivals, shop the look,
+   the watch feature, brand note, newsletter.
+   Breakpoints: 760px (phone), 1040px (header menu), 1180px (wide). */
+
+/* ======================================================================
+   1. Hero: one message per slide, the words always in the same column.
+   The owner's direction (19 October 2026, after the "Stay Foolish"
+   reference): a light cream hero with no box, a large soft circle behind
+   each picture and a two-word brush phrase behind it, five slides with
+   the best first, and a black pill call to action. Nothing is drawn over
+   a picture.
+   ====================================================================== */
+
+.home-hero {
+  --hero-h: clamp(540px, calc(100svh - var(--header-h) - var(--announce-h) - 40px), 760px);
+  --text-w: clamp(360px, 34vw, 500px);      /* message column: same on every slide */
+  --copy-gap: clamp(28px, 3.2vw, 56px);     /* column to picture */
+  --bar-h: 48px;
+  --bar-gap: clamp(14px, 2.4vh, 26px);      /* control bar to the hero's bottom edge */
+  --cta-gap: clamp(24px, 3.6vh, 40px);      /* call to action to the control bar */
+  --hero-cream: #F7F1E8;                    /* the ground */
+  --hero-disc: #ECDDC7;                     /* the circle */
+  --hero-disc-light: #F4E9DA;               /* its lit side */
+  --hero-disc-deep: #E3CEB2;                /* the small circles' shaded side */
+  --hero-script: #B98C5B;                   /* the brush phrase */
+  position: relative;
+  background: var(--hero-cream);
+  overflow: clip;
+}
+.home-carousel { position: relative; max-width: var(--max); height: var(--hero-h); margin-inline: auto; }
+.home-slides { position: absolute; inset: 0; touch-action: pan-y; }
+
+/* Slides are stacked; only the active one (and the one leaving) are drawn. */
+.home-slide {
+  position: absolute; inset: 0; display: none;
+  grid-template-columns: calc(var(--gutter) + var(--text-w) + var(--copy-gap)) minmax(0, 1fr);
+}
+.home-slide.is-active, .home-slide.is-leaving { display: grid; }
+.home-slide.is-active { z-index: 2; }
+.home-slide.is-leaving { z-index: 1; }
+.home-slide:focus { outline: none; }
+.home-slide:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+
+/* The message column. The call to action sits on its own row at the bottom,
+   so its box is identical on every slide; the words above it grow upwards. */
+.home-copy-col {
+  position: relative; z-index: 1; display: grid; grid-template-rows: minmax(0, 1fr) auto; min-width: 0;
+  padding: clamp(28px, 5vh, 56px) var(--copy-gap) calc(var(--bar-gap) + var(--bar-h) + var(--cta-gap)) var(--gutter);
+}
+.home-copy { align-self: end; min-width: 0; padding-bottom: clamp(26px, 3.6vh, 38px); }
+.home-eyebrow { margin-bottom: 20px; }
+.home-title {
+  font-family: var(--display); font-weight: var(--w-hero); font-size: min(var(--fs-hero), 4.75rem);
+  line-height: .98; letter-spacing: var(--tracking-display);
+}
+.home-line { max-width: 34ch; margin-top: 22px; font-size: var(--fs-md); line-height: 1.6; color: var(--muted); }
+
+/* The call to action: the shared black pill, a little larger here. The box
+   is the same on every slide. */
+.home-cta { width: 272px; max-width: 100%; min-height: 56px; justify-content: space-between; padding-inline: 28px 24px; }
+.home-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.home-cta-short { display: none; }
+
+/* The stage: no box. The picture stands on the hero's cream in front of a
+   large circle, with the brush phrase behind it at head height (the head in
+   the gap between its two words, so both stay readable); the hero's
+   bottom edge cuts the full-length figures at the knee. Everything is sized
+   in container units, so every slide is composed the same way at any size.
+   --crop is the share of the cut-out's height on show: 1 for the studio
+   views (framed head to mid-thigh), .78 for the full-length ones. */
+.home-panel {
+  --top: 7cqh;                    /* air above the head */
+  --crop: 1;
+  --disc: min(78cqh, 92cqw);      /* the circle */
+  --disc-y: 46cqh;                /* its centre */
+  --word: min(14cqh, 12.6cqw);    /* the brush phrase's size */
+  --word-y: 21cqh;                /* its centre line: level with the head */
+  --gap: 17cqh;                   /* between its words: about a head's width */
+  position: relative; min-width: 0; overflow: hidden; isolation: isolate;
+  margin-right: var(--gutter);
+  background: var(--hero-cream);  /* opaque: an incoming stage covers the old one */
+  container-type: size;
+}
+.home-panel.is-full { --crop: .78; --gap: 13cqh; }
+.home-disc {
+  position: absolute; z-index: 0;
+  left: calc(50% - var(--disc) / 2); top: calc(var(--disc-y) - var(--disc) / 2);
+  width: var(--disc); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 34% 26%, var(--hero-disc-light), var(--hero-disc) 66%);
+}
+/* Two small circles keep the big one company (the reference's side
+   circles): a small one out to the left, a larger one low on the right. */
+.home-panel::before, .home-panel::after {
+  content: ""; position: absolute; z-index: 0; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, var(--hero-disc-light), var(--hero-disc-deep) 72%);
+}
+.home-panel::before { width: calc(var(--disc) * .11); left: max(3cqw, calc(50% - var(--disc) * .64)); top: calc(var(--disc-y) - var(--disc) * .02); }
+.home-panel::after { width: calc(var(--disc) * .21); left: calc(50% + var(--disc) * .31); top: calc(var(--disc-y) + var(--disc) * .2); }
+.home-script {
+  position: absolute; z-index: 1; left: 0; right: 0;
+  top: calc(var(--word-y) - var(--word) * .62);
+  display: grid; grid-template-columns: minmax(0, 1fr) var(--gap) minmax(0, 1fr);
+  font-family: var(--script); font-weight: 400; font-size: var(--word); line-height: 1.24;
+  white-space: nowrap; color: var(--hero-script);
+  rotate: -6deg; pointer-events: none; user-select: none;
+}
+.home-script::before { content: attr(data-a); grid-column: 1; justify-self: end; }
+.home-script::after { content: attr(data-b); grid-column: 3; justify-self: start; }
+.home-art { position: absolute; inset: 0; z-index: 2; }
+/* The canvas may be wider than a narrow stage (its sides are empty), so it
+   is centred on the stage rather than squeezed into it. */
+.home-character .pic {
+  position: absolute; left: 50%; top: var(--top); translate: -50% 0;
+  width: auto; max-width: none; height: calc((100cqh - var(--top)) / var(--crop)); aspect-ratio: 1122 / 1402;
+}
+/* The still life rests on the circle, below its word. */
+.home-panel.is-still { --disc-y: 50cqh; --word-y: 15cqh; --gap: .3em; }
+.home-panel.is-still .home-character .pic {
+  top: calc(var(--disc-y) + 4cqh); translate: -50% -50%;
+  width: min(84cqw, calc(var(--disc) * 1.08)); height: auto; aspect-ratio: 1340 / 1018;
+}
+
+/* Control bar: counter, a thin segmented progress line, previous, pause, next. */
+.home-bar {
+  position: absolute; z-index: 3; left: var(--gutter); bottom: var(--bar-gap);
+  width: var(--text-w); height: var(--bar-h);
+  display: flex; align-items: center; gap: 18px;
+}
+.home-bar-count { flex: none; font-size: 0.8125rem; font-weight: var(--w-medium); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+.home-bar-progress { flex: 1; min-width: 40px; display: flex; gap: 4px; }
+.home-seg { flex: 1; height: 2px; overflow: hidden; border-radius: 2px; background: rgba(28, 28, 26, .12); }
+.home-seg i { display: block; height: 100%; background: var(--ink); transform: scaleX(0); transform-origin: 0 50%; }
+.home-seg.is-done i { transform: scaleX(1); }
+.home-carousel:not([data-playing="true"]) .home-seg.is-current i { transform: scaleX(1); }
+.home-bar-nav { flex: none; display: flex; align-items: center; gap: 8px; }
+.home-bar-btn {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--ink);
+  border: 1px solid rgba(28, 28, 26, .14);
+  transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard);
+}
+@media (hover: hover) { .home-bar-btn:hover { background: rgba(255, 255, 255, .7); border-color: rgba(28, 28, 26, .32); } }
+.home-toggle-icon { display: inline-grid; place-items: center; width: 16px; height: 16px; }
+/* No autoplay (phones, tablets, reduced motion): no pause button either. */
+.home-carousel[data-autoplay="off"] .home-bar-toggle { display: none; }
+.home-carousel.is-single .home-bar { display: none; }
+
+/* ----- Hero motion: transform, opacity, clip and blur only ----- */
+@media (prefers-reduced-motion: no-preference) {
+  /* A slide arrives through a circle that opens from the middle of the big
+     circle and covers the old picture (the stage is opaque cream), so two
+     pictures never show through each other. Inside it the picture rises
+     into place, the brush phrase writes itself in from the left and the two
+     small circles settle with a soft spring; the old picture recedes as it
+     is covered. The words leave first and come back in two beats. The
+     button box stays put; only its label changes. */
+  .home-slide.is-entering .home-panel { animation: home-open 1100ms var(--ease-curtain) both; }
+  .home-slide.is-entering .home-disc { animation: home-disc-in 1300ms var(--ease-expo) both; }
+  .home-slide.is-entering .home-character { animation: home-rise 1200ms var(--ease-expo) 60ms both; }
+  .home-slide.is-entering .home-script { animation: home-write 1200ms var(--ease-out) 420ms both; }
+  .home-slide.is-entering .home-panel::after { animation: home-pop 1000ms var(--ease-settle) 560ms both; }
+  .home-slide.is-entering .home-panel::before { animation: home-pop 900ms var(--ease-settle) 680ms both; }
+  .home-slide.is-leaving .home-character { animation: home-sink 1100ms var(--ease-in-out) both; }
+  .home-slide.is-leaving .home-copy, .home-slide.is-leaving .home-cta > * { animation: home-out 180ms var(--ease-in) both; }
+  .home-slide.is-entering .home-eyebrow { animation: home-copy-in 700ms var(--ease-expo) 200ms both; }
+  .home-slide.is-entering .home-title { animation: home-lift 900ms var(--ease-expo) 230ms both; }
+  .home-slide.is-entering :is(.home-title-lead, .home-title em) { animation: home-blur-in 760ms var(--ease-expo) 250ms both; }
+  .home-slide.is-entering .home-title em { animation-delay: 360ms; }
+  .home-slide.is-entering .home-line { animation: home-copy-in 700ms var(--ease-expo) 440ms both; }
+  .home-slide.is-entering .home-cta { animation: home-fade 420ms var(--ease-out) 260ms both; }
+  /* First paint: the picture is the page's largest image, so it is never
+     faded; it only settles while the circle, the phrase and the words
+     arrive. The button only fades in: its box never moves. */
+  html.motion .home-slide.is-intro .home-character { animation: home-settle 1500ms var(--ease-expo) both; }
+  html.motion .home-slide.is-intro .home-disc { animation: home-disc-in 1300ms var(--ease-expo) both; }
+  html.motion .home-slide.is-intro .home-script { animation: home-write 1500ms var(--ease-out) 420ms both; }
+  html.motion .home-slide.is-intro .home-panel::after { animation: home-pop 1100ms var(--ease-settle) 560ms both; }
+  html.motion .home-slide.is-intro .home-panel::before { animation: home-pop 1000ms var(--ease-settle) 700ms both; }
+  html.motion .home-slide.is-intro .home-eyebrow { animation: home-copy-in 800ms var(--ease-expo) 120ms both; }
+  html.motion .home-slide.is-intro .home-title { animation: home-lift 1000ms var(--ease-expo) 160ms both; }
+  html.motion .home-slide.is-intro :is(.home-title-lead, .home-title em) { animation: home-blur-in 900ms var(--ease-expo) 180ms both; }
+  html.motion .home-slide.is-intro .home-title em { animation-delay: 300ms; }
+  html.motion .home-slide.is-intro .home-line { animation: home-copy-in 800ms var(--ease-expo) 420ms both; }
+  html.motion .home-slide.is-intro .home-cta { animation: home-fade 700ms var(--ease-out) 520ms both; }
+}
+/* Depth on a computer: the picture, the word and the circle drift a few
+   pixels apart with the pointer (home.js sets --px and --py, -1 to 1). */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .home-disc { translate: calc(var(--px, 0) * -12px) calc(var(--py, 0) * -9px); }
+  .home-script { translate: calc(var(--px, 0) * -22px) calc(var(--py, 0) * -12px); }
+  .home-character { translate: calc(var(--px, 0) * 9px) calc(var(--py, 0) * 5px); }
+  .home-panel::before { translate: calc(var(--px, 0) * -28px) calc(var(--py, 0) * -16px); }
+  .home-panel::after { translate: calc(var(--px, 0) * -18px) calc(var(--py, 0) * -14px); }
+}
+@keyframes home-fade { from { opacity: 0; } }
+@keyframes home-out { to { opacity: 0; } }
+@keyframes home-settle { from { transform: scale(1.04); } }
+@keyframes home-copy-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes home-lift { from { transform: translateY(20px); } }
+@keyframes home-blur-in { from { opacity: 0; filter: blur(10px); } }
+@keyframes home-open { from { clip-path: circle(0% at 50% 46%); } to { clip-path: circle(110% at 50% 46%); } }
+@keyframes home-disc-in { from { opacity: 0; transform: scale(.82); } }
+@keyframes home-pop { from { opacity: 0; transform: scale(.4); } }
+@keyframes home-write {
+  from { opacity: .3; clip-path: inset(-40% 110% -40% -10%); }
+  to { opacity: 1; clip-path: inset(-40% -10% -40% -10%); }
+}
+@keyframes home-rise { from { transform: translateY(4%) scale(1.03); } }
+@keyframes home-sink { to { transform: scale(.95); } }
+
+/* ----- Hero: tablet ----- */
+@media (min-width: 760px) and (max-width: 1039px) {
+  .home-hero { --hero-h: clamp(500px, calc(100svh - var(--header-h) - var(--announce-h) - 40px), 620px); --text-w: 40vw; }
+  .home-title { font-size: clamp(2.375rem, 1.2rem + 3.6vw, 3.375rem); }
+  .home-line { font-size: var(--fs-base); }
+}
+
+/* ----- Hero: phone (its own composition: the picture large on top on a
+   full-width cream stage, the words and the call to action below it on
+   white, the control bar last). The words' box has a fixed height, so the
+   call to action never moves. ----- */
+@media (max-width: 759px) {
+  .home-hero {
+    --stage-h: min(460px, calc(100vw * 1.12));
+    --copy-h: 164px; --bar-h: 52px;
+    background: var(--paper);
+  }
+  .home-carousel { height: calc(var(--stage-h) + var(--copy-h) + var(--bar-h)); }
+  .home-slides { bottom: var(--bar-h); }
+  .home-slide { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--stage-h) var(--copy-h); }
+  .home-panel { grid-row: 1; margin: 0; --top: 6cqh; }
+  .home-copy-col { grid-row: 2; padding: 18px var(--gutter) 0; }
+  .home-copy { padding-bottom: 14px; }
+  .home-eyebrow { margin-bottom: 8px; font-size: 0.625rem; gap: 8px; }
+  .home-eyebrow::before { width: 14px; }
+  .home-title { font-size: clamp(1.5rem, 1rem + 2.6vw, 1.875rem); line-height: 1.04; }
+  .home-line { display: none; }
+  .home-cta { width: 100%; min-height: 50px; padding-inline: 22px 20px; }
+  .home-cta-full { display: none; }
+  .home-cta-short { display: inline; }
+  .home-bar {
+    left: 0; right: 0; bottom: 0; width: auto; gap: 14px;
+    padding: 0 var(--gutter);
+  }
+  .home-bar-btn { width: 40px; height: 40px; }
+}
+@media (max-width: 360px) {
+  .home-eyebrow::before { display: none; }   /* keeps "Modern menswear" on one line */
+  .home-cta .icon { display: none; }
+  .home-cta { justify-content: center; }
+}
+
+/* ======================================================================
+   Shared section head tweaks
+   ====================================================================== */
+.home-head-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 20px; }
+.home-head-tools { display: flex; align-items: center; gap: 28px; }
+
+/* ======================================================================
+   2. Shop by category
+   ====================================================================== */
+.home-cats { padding-block: clamp(56px, 7vw, 104px) clamp(8px, 1.5vw, 24px); }
+.home-cats-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 20px); list-style: none; padding: 0; }
+.home-cat-link { display: grid; }
+.home-cat-media { display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-md); background: var(--canvas); isolation: isolate; }
+.home-cat-media .pic { height: 100%; transition: transform 600ms var(--ease-out); }
+/* The photo fades in without rising, so it never slides over its label. */
+html.js.motion .home-cat-media[data-reveal] { transform: none; }
+.home-cat-label {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px;
+  font-size: 0.8125rem; font-weight: var(--w-heading); letter-spacing: .08em; text-transform: uppercase;
+}
+.home-cat-label .icon { flex: none; transition: transform var(--d-base) var(--ease-out); }
+.home-cat-line { margin-top: 6px; font-size: var(--fs-sm); line-height: 1.5; color: var(--muted); }
+@media (hover: hover) and (pointer: fine) {
+  .home-cat-link:hover .home-cat-media .pic { transform: scale(1.03); }
+  .home-cat-link:hover .home-cat-label .icon { transform: translateX(4px); }
+}
+@media (min-width: 760px) and (max-width: 1179px) {
+  .home-cats-list { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 36px; }
+}
+@media (max-width: 759px) {
+  .home-cats { padding-block: 28px 4px; }
+  .home-cats .section-head { margin-bottom: 16px; align-items: center; }
+  .home-cats .section-head h2 { font-size: 1.625rem; }
+  .home-cats .home-cats-list {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 42%; gap: 12px;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+  }
+  .home-cats .home-cats-list::-webkit-scrollbar { display: none; }
+  .home-cat { scroll-snap-align: start; }
+  .home-cat-label { margin-top: 10px; font-size: 0.75rem; letter-spacing: .06em; }
+  .home-cat-line { font-size: var(--fs-xs); }
+}
+
+/* ======================================================================
+   3. New arrivals: a snap rail (four across on desktop, a swipe row on phones)
+   ====================================================================== */
+.home-new { padding-block: clamp(56px, 7vw, 104px) clamp(24px, 3vw, 48px); }
+@media (max-width: 759px) {
+  .home-new.section { padding-block: 40px 16px; }
+  .home-new .section-head { flex-wrap: nowrap; align-items: flex-end; margin-bottom: 18px; }
+  .home-new .section-head h2 { font-size: 1.625rem; }
+  .home-new .home-head-title { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .home-new .rail-nav { display: none; }
+  .home-new .rail {
+    --rail-col: 62%; --rail-gap: 12px;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+  }
+}
+
+/* ======================================================================
+   4. Shop the look
+   ====================================================================== */
+.home-look-grid {
+  display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.15fr) minmax(300px, .95fr);
+  gap: clamp(28px, 4vw, 64px); align-items: start;
+}
+.home-look-info { padding-top: 8px; }
+.home-look-name {
+  margin-top: 22px; font-family: var(--display); font-weight: var(--w-heading);
+  font-size: clamp(2.25rem, 1.5rem + 2vw, 3.5rem); line-height: 1; letter-spacing: var(--tracking-display);
+}
+.home-look-count { margin-top: 12px; font-size: 0.75rem; font-weight: var(--w-medium); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.home-look-line { margin-top: 20px; max-width: 34ch; line-height: 1.7; color: var(--ink-soft); }
+.home-look-switch { display: flex; flex-wrap: wrap; gap: 10px; min-width: 0; margin: 28px 0 0; padding: 0; border: 0; }
+.home-look-radio { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+.home-look-option {
+  display: inline-grid; place-items: center; min-height: 44px; padding: 0 20px; border: 1px solid var(--control); border-radius: var(--r-pill); cursor: pointer;
+  font-size: 0.875rem; font-weight: var(--w-medium);
+  transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard), color var(--d-fast) var(--ease-standard);
+}
+@media (hover: hover) { .home-look-option:hover { border-color: var(--ink); } }
+.home-look-radio:checked + .home-look-option { background: var(--black); border-color: var(--black); color: #FFFFFF; }
+.home-look-radio:focus-visible + .home-look-option { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+.home-look-stage { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: var(--canvas); isolation: isolate; }
+.home-look-figure { position: absolute; inset: 0; }
+.home-look-pic { position: absolute; inset: 5% 0 0; z-index: 1; }
+
+.home-look-panel { padding: 4px 24px 8px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper); }
+.home-panel-label {
+  display: flex; justify-content: space-between; gap: 12px; padding: 18px 0 14px; border-bottom: 1px solid var(--line);
+  font-family: var(--sans); font-size: 0.75rem; font-weight: var(--w-heading); letter-spacing: .1em; text-transform: uppercase;
+}
+.home-gone { padding: 20px 0; color: var(--muted); }
+
+/* Product rows with an add control (look panel and watch panel). */
+.home-items { list-style: none; padding: 0; }
+.home-item { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.home-item:last-child { border-bottom: 0; }
+.home-item-media { display: block; width: 72px; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-sm); background: var(--canvas); }
+.home-item-media .pic { height: 100%; }
+.home-item-media.is-cut .pic img { transform: scale(1.45); transform-origin: 50% 12%; }
+.home-item-name { font-size: 0.9375rem; font-weight: var(--w-medium); line-height: 1.35; }
+.home-item-name a { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: text-decoration-color var(--d-fast) var(--ease-standard); }
+@media (hover: hover) { .home-item-name a:hover { text-decoration-color: currentColor; } }
+.home-item-sub { margin-top: 2px; font-size: var(--fs-xs); color: var(--muted); }
+.home-item-price { margin-top: 4px; font-size: var(--fs-sm); font-weight: var(--w-medium); font-variant-numeric: tabular-nums; }
+.home-item-add {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 92px; min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--control); border-radius: var(--r-pill); font-size: 0.875rem; font-weight: var(--w-medium);
+  transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard), color var(--d-fast) var(--ease-standard);
+}
+.home-item-add .icon { transition: transform var(--d-base) var(--ease-out); }
+@media (hover: hover) { .home-item-add:hover { border-color: var(--ink); } }
+.home-item-add[aria-expanded="true"] { background: var(--black); border-color: var(--black); color: #FFFFFF; }
+.home-item-add[aria-expanded="true"] .icon { transform: rotate(45deg); }
+.home-item-add.is-added { background: var(--olive); border-color: var(--olive); color: var(--olive-ink); }
+.home-item-out { font-size: 0.875rem; font-weight: var(--w-medium); color: var(--muted); }
+.home-item-sizes { grid-column: 2 / -1; padding-bottom: 4px; }
+.home-item-sizes-label { margin-bottom: 8px; font-size: 0.6875rem; font-weight: var(--w-medium); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.home-item-sizes .chips { gap: 6px; }
+.home-item-sizes .chip { min-width: 44px; height: 44px; padding: 0 10px; font-size: var(--fs-xs); }
+
+/* Look switch crossfade (same-page view transition; names set only during it). */
+::view-transition-old(home-look-stage), ::view-transition-old(home-look-panel), ::view-transition-old(home-look-text) { animation: 200ms var(--ease-in) both home-vt-out; }
+::view-transition-new(home-look-stage), ::view-transition-new(home-look-panel), ::view-transition-new(home-look-text) { animation: 380ms var(--ease-out) 60ms both home-vt-in; }
+::view-transition-old(home-look-panel), ::view-transition-new(home-look-panel), ::view-transition-old(home-look-text), ::view-transition-new(home-look-text) { height: auto; object-fit: none; object-position: 50% 0; }
+::view-transition-group(home-look-panel), ::view-transition-group(home-look-text) { animation-duration: 320ms; animation-timing-function: var(--ease-out); }
+@keyframes home-vt-out { to { opacity: 0; } }
+@keyframes home-vt-in { from { opacity: 0; } }
+
+@media (max-width: 1039px) {
+  .home-look-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .home-look-info { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 0 32px; }
+  .home-look-info .eyebrow { grid-column: 1 / -1; }
+  .home-look-switch { margin-top: 0; }
+}
+@media (max-width: 759px) {
+  .home-look.section { padding-block: 48px; }
+  .home-look .section-head { margin-bottom: 20px; }
+  .home-look-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .home-look-info { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .home-look-name { margin-top: 12px; font-size: 2rem; }
+  .home-look-line { margin-top: 10px; }
+  .home-look-switch { margin-top: 18px; }
+  .home-look-option { flex: 1; }
+  .home-look-stage { aspect-ratio: auto; height: min(96vw, 380px); }
+  .home-look-pic { inset: 4% 0 0; }
+  .home-look-panel { padding-inline: 16px; }
+  .home-item { padding: 12px 0; }
+}
+
+/* ======================================================================
+   5. The watch feature (dark ground)
+   ====================================================================== */
+/* No content-visibility here: skipping the render hid this section's dark
+   ground from contrast checks (light words read as if on the ivory page). */
+.home-watch {
+  /* One dark rounded panel inside the page margins, like every other
+     picture block; it lines up with the content edges at any width. */
+  margin-inline: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+  border-radius: var(--r-lg); padding-block: clamp(48px, 6vw, 96px);
+}
+.home-watch-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(32px, 4.5vw, 72px); align-items: center;
+}
+.home-watch-story h2 { margin-top: 20px; font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-h2); line-height: 1.04; letter-spacing: var(--tracking-display); }
+.home-watch-text { margin-top: 22px; max-width: 40ch; line-height: 1.75; color: var(--night-muted); }
+.home-watch-details { margin: 28px 0 32px; padding: 0; list-style: none; border-top: 1px solid rgba(237, 232, 223, .14); }
+.home-watch-details li { padding: 11px 0; border-bottom: 1px solid rgba(237, 232, 223, .14); font-size: var(--fs-sm); }
+.home-watch-photo { aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: var(--night-2); isolation: isolate; }
+.home-watch-photo .pic { height: 100%; }
+.home-watch-name { font-family: var(--sans); font-weight: var(--w-heading); font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; }
+.home-watch-price { margin-top: 10px; font-size: 1.125rem; font-weight: var(--w-medium); }
+.home-watch-meta { margin-top: 10px; font-size: 0.75rem; font-weight: var(--w-medium); letter-spacing: .1em; text-transform: uppercase; color: var(--night-muted); }
+.home-watch-actions { display: grid; justify-items: start; gap: 16px; margin-top: 24px; }
+.home-watch-actions .btn.is-added { --btn-bg: var(--olive); --btn-bd: var(--olive); --btn-fg: var(--olive-ink); }
+.home-watch-ctl { margin-top: 36px; }
+.home-watch .home-panel-label, .home-watch .home-item { border-color: rgba(237, 232, 223, .14); }
+.home-watch .home-item-media { background: var(--night-2); }
+.home-watch .dot { border-color: rgba(237, 232, 223, .4); }
+.home-watch .home-item-sub, .home-watch .home-item-sizes-label, .home-watch .home-item-out { color: var(--night-muted); }
+.home-watch .home-item-add { border-color: rgba(237, 232, 223, .4); }
+@media (hover: hover) { .home-watch .home-item-add:hover { border-color: var(--night-text); } }
+.home-watch .home-item-add[aria-expanded="true"] { background: var(--night-text); border-color: var(--night-text); color: var(--night); }
+.home-watch .chip { border-color: rgba(237, 232, 223, .4); }
+@media (hover: hover) { .home-watch .chip:hover:not(:disabled) { border-color: var(--night-text); } }
+.home-watch .chip.is-out { color: var(--night-muted); }
+.home-watch-alt { margin-top: 24px; font-size: var(--fs-sm); color: var(--night-muted); }
+.home-watch-alt a { color: var(--night-text); }
+.home-watch-gone { display: grid; gap: 16px; justify-items: start; color: var(--night-muted); }
+@media (max-width: 1039px) {
+  .home-watch-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .home-watch-story { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 40px; }
+  .home-watch-story > * { grid-column: 1; }
+  .home-watch-story .home-watch-details { grid-column: 2; grid-row: 1 / span 4; margin-top: 0; }
+}
+@media (max-width: 759px) {
+  .home-watch { padding-block: 36px; }
+  .home-watch-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .home-watch-story { display: block; }
+  .home-watch-story .home-watch-details { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; margin: 20px 0 22px; }
+  .home-watch-photo { aspect-ratio: 1; }
+}
+
+/* ======================================================================
+   6. Brand note
+   ====================================================================== */
+.home-note { border-top: 1px solid var(--line); text-align: center; content-visibility: auto; contain-intrinsic-size: auto 520px; }
+.home-note-inner { display: grid; justify-items: center; gap: 28px; }
+.home-note-text { max-width: 26ch; font-family: var(--display); font-weight: var(--w-heading); font-size: clamp(1.625rem, 1rem + 2.2vw, 2.875rem); line-height: 1.18; letter-spacing: var(--tracking-display); text-wrap: balance; }
+.home-note-text em { font-style: normal; color: var(--accent-ink); }
+@media (max-width: 759px) {
+  .home-note.section { padding-block: 48px; }
+  .home-note-inner { gap: 20px; }
+}
+
+/* ======================================================================
+   7. Newsletter (demo)
+   ====================================================================== */
+.home-news {
+  margin: 0 max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter))) var(--section);
+  border-radius: var(--r-lg); padding-block: clamp(40px, 5vw, 80px); background: var(--stone);
+  content-visibility: auto; contain-intrinsic-size: auto 340px;
+}
+.home-news-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 28px 64px; }
+.home-news-copy h2 { font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-h2); line-height: 1.05; letter-spacing: var(--tracking-display); }
+.home-news-copy p { margin-top: 12px; max-width: 42ch; color: var(--muted); }
+.home-news-label { display: block; margin-bottom: 8px; font-size: var(--fs-sm); font-weight: var(--w-medium); }
+.home-news-row { display: flex; gap: 8px; }
+.home-news-row .input { flex: 1; min-width: 0; min-height: 52px; border-radius: var(--r-pill); padding-inline: 22px; }
+.home-news-row .btn { flex: none; min-height: 52px; }
+.home-news-note { margin-top: 10px; font-size: var(--fs-xs); color: var(--muted); }
+.home-news-msg { min-height: 1.5em; margin-top: 6px; font-size: var(--fs-sm); color: var(--success); }
+.home-news-msg.is-error { color: var(--danger); }
+@media (max-width: 759px) {
+  .home-news-inner { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .home-news-row .btn { padding: 0 20px; }
+}

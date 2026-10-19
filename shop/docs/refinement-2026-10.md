@@ -1,0 +1,207 @@
+# MONO refinement round (October 2026)
+
+The owner asked for a refinement of the finished demo, not a rebuild: a calmer, more modern visual identity, a lighter hero, three products per category only where real photos allow, and motion that never slows shopping down. This file records the audit, the decisions, what changed and how it was checked. The decisions themselves are summarised in `design-references.md` ("Owner decisions, refinement round").
+
+Before screenshots: `shop/.qa/before/` (local only, not in Git). After screenshots: `shop/.qa/after/`.
+
+## 1. Audit of the site before this round
+
+### What already worked
+
+- Every shopping function worked end to end: filters, search, product pages, bag, a validated checkout with a demo payment, demo orders and the admin. 396 browser tests passed on desktop and phone.
+- Honest demo labelling: demo price tags, a demo banner, the footer disclosure, no reviews, no scarcity lines.
+- One consistent product look: the clothing photos are cut out onto one canvas, so cards and galleries match.
+- Fast and accessible: Lighthouse performance 98 to 100 and accessibility 97 to 100 on a phone profile; no sideways scroll at 390 and 1440 px.
+
+### What did not
+
+- The hero did too much at once: a brand line and a product message on the same slide, a size column, angle thumbnails, a price and add panel, a product-coloured bar and a giant serif word, six slides in all. On phones the brand line ran into the giant word.
+- Giant ghost words were everywhere (collection heads, behind the product photo on the product page, content pages, the admin, a huge MONO in the footer), so headings competed with decoration and the product.
+- Thin categories: two products in a four-column grid left half of every row empty, and the category head was tall enough to push the first products to the bottom of the first screen.
+- Too much motion: cards, headings and text blocks rose in on scroll, the product page's buy panel staggered in on load, admin tiles rose one by one, and the base durations ran from 200 to 1100 ms.
+- The same photos repeated on the home page (the wrist watch photo three times, the grey linen shirt photo twice), and the thin italic serif read small and dated next to the owner's new "modern, bold" direction.
+- Smaller things: uppercase tracked breadcrumbs were hard to read; the phone announcement did not fit on one line at 320 px; "More in Shirts" on the product page was padded with T-shirts; delivery dates in the bag and checkout read like promises; the footer said MONO twice.
+
+### The five highest-impact problems
+
+1. **The hero:** too many elements and two messages per slide, with a text collision on phones.
+2. **Ghost words and type:** decorative giant words competing with content everywhere, and a serif-led system that no longer matched the brief.
+3. **Thin, tall category pages:** empty grid slots and products starting too low.
+4. **Motion that slowed browsing:** entrance animations on everything, with long timings.
+5. **Repeated photos:** the same images more than once on the home page.
+
+### Priorities (the brief's order)
+
+Visual identity, then the responsive home and category pages, product cards and the product page, button states, motion, cart and checkout, and finally performance, accessibility and QA.
+
+## 2. Reference audit
+
+The five reference videos, as numbered in the brief:
+
+| Reference | Keep | Borrow | Do not copy |
+| --- | --- | --- | --- |
+| **Ref 1**, Percival "Vincent Button" (one jacket at several scales) | One product told at more than one scale on a light canvas; generous space; the olive bar | The two-scale cut-out composition for the hero's brand slide | The "Autumn Sale" promo panel, the giant serif name crossing the product, the serif type |
+| **Ref 2**, "Tied Green V-Neck Shirt" product view | A clear buying order: name, price, size, angles, add | A bold sans product name at display size; the angle thumbnail strip (on the product page) | The doodles and squiggles, cards floating over the photo, the round red add button, the lime and purple colours |
+| **Ref 3**, "Modern Women Cloth" shop | The confident sans headline and a tidy product row | The scale and weight of the sans display type | The lime palette, the "Loved by our customers" review block (no invented reviews), the promo-style community banner |
+| **Ref 4**, Marc Jacobs lookbook | A look with its pieces listed beside it; small spaced capitals; white space | "Shop the look" with LOOK 01 / LOOK 02 and the item panel | The blurred crowd of models (no such photos), heart icons (no wishlist in this demo) |
+| **Ref 5**, Percival product slider | Cut-out models on one canvas; a counter with Previous and Next | The control bar idea for the hero | Sizes and thumbnails inside the hero (they belong on the product page), the giant serif category word behind the model |
+
+## 3. What changed
+
+### Visual identity
+
+- **Type:** Jost only, sans-led and bold. Hero headings 700, section headings and the product page title 600, product names 500, body 400. Bodoni Moda was retired and its files removed; an `em` in a heading is set in olive instead of italics. Breadcrumbs, accordion titles and text links are in sentence case. Share cards (`npm run shop:og`) were redrawn in Jost.
+- **Ghost words:** removed from collection heads, the product page, content pages, the 404 page, search, the admin and the footer. The only one left is the faint, widely spaced "MONO" behind the clothing on the hero's brand slide.
+- **Buttons:** one system. Charcoal primary at 48 px (52 px on phones), outlined secondary, text links, size chips and pills, with hover, focus, pressed, disabled, busy (spinner), done and error states.
+
+### Home
+
+- **Hero:**
+  - Three slides, each with one message:
+    - "Less noise. Better essentials." with the navy polo front and back at two sizes;
+    - "The everyday uniform." for T-shirts;
+    - "Made for daylight." for sunglasses.
+  - No sizes, thumbnails, prices or add buttons in the hero, and the call to action never moves.
+  - A 600 ms cross-fade. Autoplay every 8 s only on wide screens with a mouse, with Pause; never on phones or with reduced motion.
+  - Phone hero 352 px tall at 390 px wide and 324 px at 320 px.
+- **No photo appears twice on the page:**
+  - The watch feature now shows the White Dial Watch.
+  - The sunglasses and accessories strip was removed, because both of its photos repeated scenes already on the page.
+  - New arrivals cards no longer swap to lifestyle photos on hover.
+- **Phone page:** about 5,500 px long instead of about 8,000. New arrivals is a swipe row.
+
+### Collections and search
+
+- **Short heads:** breadcrumb, title, one line and the count. The first products now start on the first screen: the top of the first card is at 375 px on a category page and 447 px on Shop all at 1440 × 900, and at about 380 to 400 px on phones.
+- **Grid:** three columns from 1000 px, two below.
+- **Editorial tile:** an incomplete last row ends with a tile that spans exactly the empty slots. It is recomputed after every filter and hidden when the row is full. Its photo appears nowhere else on that page, and it links to Shop the Look, the size guide or a related category. It never shows a price or an add button.
+- **Motion:** the sort and filter glide is 280 ms at most and is off with reduced motion.
+
+### Product page
+
+- **Order:** gallery, category, name (now 600), price with the demo tag, description, colour, size with the size guide, quantity, Add to bag, notes, details.
+- **No entrance motion:** the buy panel no longer staggers in, and the faint word behind the photo is gone.
+- **Honest heading:** "More in Shirts" appears only when every card in the row is a shirt; otherwise the heading is "You may also like".
+- **Buttons:** Add to bag is 50 px on desktop and 52 px on phones, as is the phone sticky bar's button.
+
+### Catalogue
+
+- **Light Blue Oxford Shirt added**, cut out of the only photo of it, so Shirts has three products.
+- **No other category had a genuinely different third product in the photos.** They stayed at two, and `photo-shotlist.md` (round 3) listed the photos needed, with file names and prompts.
+- **Update, 19 October 2026:** the owner generated the round 3 photos, so every category now has three products: the Navy Crew Tee, the Cream Knit Polo, the Navy Dial Watch, the Tortoiseshell Round Sunglasses and the Black Card Holder. New arrivals are now the six newest products. With three per category, the editorial tile is hidden on desktop (the row is full) and fills the last slot on phones.
+
+### Motion
+
+- **Timings:** buttons 160 ms, small changes 240 ms, drawers 300 ms, reveals 450 ms, hero 600 ms.
+- **What still moves:** editorial photos reveal once. Product cards, headings, text blocks and buttons do not animate in, and the admin tiles and order page no longer stagger. The order page keeps only the drawn tick.
+
+### Phones, the bag and checkout
+
+- **Announcement:** one sentence-case line on phones that fits at 320 px with "How it works". The short line is used below 900 px.
+- **Header:** 44 px icon buttons, and the bag count is a badge, hidden when the bag is empty.
+- **Breadcrumbs:** stay on one line, with the current page shortened by an ellipsis.
+- **Delivery dates:** in the bag and checkout they read "Demo estimate". Product page delivery times are labelled as demo. Nothing is filled in for the shopper.
+- **Layout shift:** the bag, checkout, search and admin no longer shift. `main` is at least one screen tall, so the footer never jumps when JavaScript draws those pages.
+- **First images:** the first row of a product grid loads at once, with one high-priority image per page.
+
+## 4. How it was checked
+
+- **Tests:** `npx playwright test -c playwright.shop.config.mjs` passed 465 tests on desktop (1440 × 900) and a phone (Pixel 7). 3 were skipped by design: they are phone-only or desktop-only. New tests cover:
+  - the hero's slide count, the call to action keeping its place, autoplay rules and phone height;
+  - no repeated photos on the home page;
+  - the collection tile at each column count, after filters, and with no repeated photos;
+  - the first products on the first screen;
+  - catalogue-driven counts everywhere.
+- **HTML:** `html-validate` is clean on every built page.
+- **Accessibility:** axe on the home page, Shop all, a category, a product, search, the bag and checkout, on desktop and phone. No findings.
+  - Two earlier findings were false: `content-visibility` hid the dark footer and the dark watch section from the contrast check. Both sections now render normally.
+- **Lighthouse** (local build, 19 October 2026). SEO is 92 on indexable pages only because canonical links are paths until `SITE_URL` is set. Utility pages score 63 for SEO by design, because they are `noindex`.
+
+  | Page | Phone: perf / a11y / best practices | Phone LCP, CLS | Desktop perf | Desktop LCP |
+  | --- | --- | --- | --- | --- |
+  | Home | 99 / 100 / 100 | 1.8 s, 0 | 100 | 0.5 s |
+  | Shop all | 99 / 100 / 100 | 2.0 s, 0 | 100 | 0.5 s |
+  | Polos | 99 / 100 / 100 | 1.8 s, 0 | 100 | 0.4 s |
+  | Olive Piqué Polo | 99 / 100 / 100 | 1.9 s, 0 | 100 | 0.5 s |
+  | Search "olive" | 100 / 100 / 100 | 1.7 s, 0.009 | 100 | 0.4 s |
+  | Bag | 99 / 100 / 100 | 1.9 s, 0 | 100 | 0.5 s |
+  | Checkout | 100 / 100 / 100 | 1.7 s, 0 | 100 | 0.4 s |
+  | About | 100 / 100 / 100 | 1.8 s, 0 | 100 | 0.4 s |
+
+  Total blocking time was 0 ms everywhere, and desktop layout shift was 0 on every page.
+- **Widths:** screenshots of the home page, Shop all, Polos, a product, the bag, checkout and the admin at 320, 360, 390, 430, 768, 1024, 1280 and 1440 px. None had sideways scroll, console errors or failed requests.
+- **Before and after sheets** for the same pages at 1440 and 390 px are in `shop/.qa/compare/` (local only).
+
+## 5. What is left
+
+- **Light Blue Oxford Shirt:** it has a front view and the library photo only. The generated back view (#27) was not used because the model's hair does not match; `photo-shotlist.md` says how to generate it again.
+- **Page-to-page photo morph:** the morph from a card into the product page works in Chrome, Edge and Safari 18.2 and newer. In automated headless Chrome it does not always run when going forward, so the page simply loads. That is a fallback, not an error.
+- **Before launch with real products:** set `LIVE_ADDRESS` or `SITE_URL`. A real store also needs a server: sign-in for the admin, a database, server-side checks of prices and stock, and a payment provider. This demo keeps everything in the visitor's browser.
+
+## 6. Hero refinement (19 October 2026)
+
+The owner asked to refine only the home hero, from two interface references and four photos of the shop's own models. The decisions are in `design-references.md` ("Owner decisions, hero refinement").
+
+- **Character:** the transparent cut-out of `looks/look-02.png`, shown whole at its own proportions. The two PNGs the owner sent are the same files as the look photos already in the repository, and neither is transparent, so the existing cut-out of that exact file is used. Look 02 was chosen because Shop the Look opens on Look 01, so no photo shows twice, and because its dark trousers anchor the figure on white.
+- **Cut-out quality:** inspected at 2x on the new white ground. rembg had stored the edge colours multiplied by the mask, which drew a thin dark outline around the shirt, and it had lost the thin wire frame of the aviators in his hand, so the lenses floated. Both were rebuilt from the untouched original (see `media/originals/CATALOG.md`). Shop the Look and the product pages that use the same photo get the cleaner version too.
+- **Ground and panel:** a white hero with the character on plain white and a faint shadow at his feet. A first version had a soft lime glow behind him; the owner asked for no green, so it was removed. The T-shirt and sunglasses photos sit in one panel with 20 px corners (16 on phones) in the same place on every slide. The faint MONO word behind the clothing is gone, so nothing sits behind or over him.
+- **Call to action:** a black pill in sentence case with an arrow (56 px on desktop, 50 px on phones), the same box on every slide. Previous and next are round outlined buttons.
+- **Phones:** the same two-column layout, 383 px tall at 390 px wide and 348 px at 320 px, with the whole figure in the panel. At 360 px and below the eyebrow drops its short rule so "Modern menswear" stays on one line.
+- **Checked:** captures of every slide at 1440, 1280, 1024, 768, 430, 390, 360 and 320 px with no sideways scroll, no overlap and no console errors. New tests check the white ground, the panel's corners, the character's proportions, that he is whole inside the panel, the black pill, and that the picture panel never overlaps the words on any slide.
+
+## 7. White refresh (19 October 2026)
+
+After the hero, the owner asked for white everywhere, every picture rounded, and the buttons and size boxes of their product page reference. Decisions: `design-references.md` ("Owner decisions, hero refinement and white refresh").
+
+- **Colour tokens:** the page, header, panels and dialogs are white; one soft warm surface (#F3F2EE) behind product pictures and in the newsletter band; size boxes on #F2F1ED; outlines in #DAD6CF; buttons and chosen sizes in #111110. The watch feature and the footer stay dark.
+- **Shapes:** shape tokens in `base.css` (20, 16, 12 and 8 px, smaller on phones, and pills). Every picture frame on the storefront and in the admin is rounded, and so are panels, notices, dialogs, inputs and toasts.
+- **Controls:** every `.btn` is a black pill in sentence case; outlined pills for secondary buttons, the collection filter triggers, the Shop the Look switch, the small add buttons and the size guide's jump links. Size boxes are filled pills like the reference. Product details are rounded boxes. The search field is a pill.
+- **Phones:** the product gallery keeps the page margins so its rounded corners show.
+- **Checked:** every page at 1440 and 390 px; the full test suite (485 passed, 5 skipped by design); html-validate; axe on ten pages on desktop and phone with no findings (one, the demo tag on the dark watch section, was fixed). Lighthouse after the refresh: home 99 on a phone (LCP 1.8 s, CLS 0) and 100 on desktop; the Cream Knit Polo page 99 and 100; accessibility and best practices 100 everywhere.
+
+## 8. Fuller hero (19 October 2026)
+
+The owner found the hero character too small and the hero too empty, then asked to keep their own polo photos and Look 01 in the hero and to give the characters a stylish background. Decisions: `design-references.md` ("Owner decisions, fuller hero").
+
+- **Six slides, best first,** each with one large picture in the same rounded panel. The order is: Look 02, the owner's two polo photos side by side, Look 01 in sunglasses, the blue stripe shirt, the charcoal tee, and the accessories table photo.
+- **Studio wall:** the models fill the panel's height in front of a warm sand wall with MONO set large in white behind them. The look photos are shown from the head to just above the knee.
+- **New originals:** `lifestyle/olive-polo-green-wall.jpg` and `lifestyle/cream-knit-polo-terrace-walk.jpg`, the owner's photos (525 and 474 px wide, so they are only shown at about that size).
+- **Phones:** a stacked hero (picture about 400 px tall at 390 px wide, then the words, a full-width pill and the control bar), 622 px tall at 390 px, with the categories still on the first screen.
+- **Matching:** the watch feature, the newsletter and the About page's dark section became rounded panels inside the page margins.
+- **Checked:** every slide at 1440 and 390 px. New tests cover:
+  - the six slides;
+  - the large characters: their own proportions, pinned to the top, centred, never cut at the head or sides;
+  - the studio wall word behind the brand character;
+  - the polo pair;
+  - the stacked phone hero.
+
+  The full test suite passes.
+
+## 9. Cream hero (19 October 2026)
+
+The owner reviewed the site preview and asked for:
+- a lighter, more stylish hero after a fashion reference;
+- one character on the polo slide;
+- no T-shirt slide;
+- premium animation.
+
+Decisions: `design-references.md` ("Owner decisions, cream hero").
+
+- **Slides:** five: Look 02, the walking polo model, Look 01, the blue stripe shirt, and the belt and wallet still life.
+- **New cut-outs:**
+  - `cutouts/cream-polo-walk.png`: rembg `birefnet-portrait` on a 2x copy of the owner's 474 px terrace photo, edges decontaminated, then set on the shared 1122 x 1402 canvas at the looks' scale.
+  - `cutouts/accessories-still.png`: the belt and the wallet cut from their still-life photos and set together with soft shadows.
+- **Stage:** light cream, with a large soft circle and two small ones behind each picture, and the brush phrase behind the model's head. There is no box, wall or MONO word. All sizes are in container units, so desktop, tablet and phone are composed the same way.
+- **Type:** Alex Brush, for the phrase only: SIL OFL, a 22 KB latin subset, preloaded on the home page only, `font-display: block`.
+- **Motion:**
+  - A widening-circle slide change (1.1 s) over an opaque stage, so two pictures never show through each other. A plain cross-fade had ghosted the two models over each other.
+  - The leaving slide stays drawn until it is covered.
+  - A written-in phrase, a spring on the small circles, and a two-beat headline with a short blur.
+  - A few pixels of pointer depth on computers.
+  - None of it runs under reduced motion.
+- **Removed:** the web copies of the olive wall and terrace photos. The terrace photo now feeds the cut-out; both originals stay in `media/originals/`.
+- **Checked:**
+  - every slide at 1440, 900 and 390 px;
+  - frames of the first paint and of a slide change, on desktop and phone;
+  - the full test suite and html-validate;
+  - axe and Lighthouse (numbers in the README).

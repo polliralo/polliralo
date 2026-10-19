@@ -1,0 +1,639 @@
+{
+  "belt-black": {
+    "w": 1121,
+    "h": 1403,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "belt-black-800.jpg",
+    "color": "#482818"
+  },
+  "blue-stripe-shirt-closeup": {
+    "w": 1121,
+    "h": 1403,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "blue-stripe-shirt-closeup-800.jpg",
+    "color": "#B8B8B8"
+  },
+  "card-holder-black": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "card-holder-black-800.jpg",
+    "color": "#482818"
+  },
+  "charcoal-textured-tee-closeup": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "charcoal-textured-tee-closeup-800.jpg",
+    "color": "#282828"
+  },
+  "cream-knit-polo-closeup": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "cream-knit-polo-closeup-800.jpg",
+    "color": "#F8E8E8"
+  },
+  "cut-accessories-still": {
+    "w": 1340,
+    "h": 1018,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-accessories-still-800.webp",
+    "color": null
+  },
+  "cut-blue-oxford-shirt-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-blue-oxford-shirt-front-800.webp",
+    "color": null
+  },
+  "cut-blue-stripe-shirt-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-blue-stripe-shirt-back-800.webp",
+    "color": null
+  },
+  "cut-blue-stripe-shirt-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-blue-stripe-shirt-front-800.webp",
+    "color": null
+  },
+  "cut-charcoal-textured-tee-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-charcoal-textured-tee-back-800.webp",
+    "color": null
+  },
+  "cut-charcoal-textured-tee-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-charcoal-textured-tee-front-800.webp",
+    "color": null
+  },
+  "cut-cream-knit-polo-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-cream-knit-polo-back-800.webp",
+    "color": null
+  },
+  "cut-cream-knit-polo-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-cream-knit-polo-front-800.webp",
+    "color": null
+  },
+  "cut-cream-polo-walk": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-cream-polo-walk-800.webp",
+    "color": null
+  },
+  "cut-ivory-heavy-tee-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-ivory-heavy-tee-back-800.webp",
+    "color": null
+  },
+  "cut-ivory-heavy-tee-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-ivory-heavy-tee-front-800.webp",
+    "color": null
+  },
+  "cut-ivory-oxford-shirt-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-ivory-oxford-shirt-back-800.webp",
+    "color": null
+  },
+  "cut-ivory-oxford-shirt-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-ivory-oxford-shirt-front-800.webp",
+    "color": null
+  },
+  "cut-look-01": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-look-01-800.webp",
+    "color": null
+  },
+  "cut-look-02": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-look-02-800.webp",
+    "color": null
+  },
+  "cut-navy-crew-tee-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-navy-crew-tee-back-800.webp",
+    "color": null
+  },
+  "cut-navy-crew-tee-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-navy-crew-tee-front-800.webp",
+    "color": null
+  },
+  "cut-navy-pique-polo-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-navy-pique-polo-back-800.webp",
+    "color": null
+  },
+  "cut-navy-pique-polo-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-navy-pique-polo-front-800.webp",
+    "color": null
+  },
+  "cut-olive-pique-polo-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-olive-pique-polo-back-800.webp",
+    "color": null
+  },
+  "cut-olive-pique-polo-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-olive-pique-polo-front-800.webp",
+    "color": null
+  },
+  "ivory-heavy-tee-closeup": {
+    "w": 1121,
+    "h": 1403,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "ivory-heavy-tee-closeup-800.jpg",
+    "color": "#E8E8E8"
+  },
+  "ivory-oxford-shirt-closeup": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "ivory-oxford-shirt-closeup-800.jpg",
+    "color": "#B8B8B8"
+  },
+  "life-accessories-flatlay": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-accessories-flatlay-800.jpg",
+    "color": "#080808"
+  },
+  "life-blue-oxford-library": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-blue-oxford-library-800.jpg",
+    "color": "#080808"
+  },
+  "life-charcoal-tee-wardrobe": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-charcoal-tee-wardrobe-800.jpg",
+    "color": "#181818"
+  },
+  "life-ivory-tee-concrete": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-ivory-tee-concrete-800.jpg",
+    "color": "#383828"
+  },
+  "life-olive-polo-terrace": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-olive-polo-terrace-800.jpg",
+    "color": "#383828"
+  },
+  "life-sunglasses-jacket": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-sunglasses-jacket-800.jpg",
+    "color": "#585858"
+  },
+  "life-sunglasses-linen": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-sunglasses-linen-800.jpg",
+    "color": "#C8B8A8"
+  },
+  "life-watch-wrist": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "life-watch-wrist-800.jpg",
+    "color": "#080808"
+  },
+  "navy-crew-tee-closeup": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "navy-crew-tee-closeup-800.jpg",
+    "color": "#282848"
+  },
+  "navy-pique-polo-closeup": {
+    "w": 1121,
+    "h": 1403,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "navy-pique-polo-closeup-800.jpg",
+    "color": "#181828"
+  },
+  "olive-pique-polo-closeup": {
+    "w": 1121,
+    "h": 1403,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "olive-pique-polo-closeup-800.jpg",
+    "color": "#484838"
+  },
+  "sunglasses-black-rectangular": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "sunglasses-black-rectangular-800.jpg",
+    "color": "#282828"
+  },
+  "sunglasses-silver-aviator": {
+    "w": 1121,
+    "h": 1403,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "sunglasses-silver-aviator-800.jpg",
+    "color": "#282828"
+  },
+  "sunglasses-tortoiseshell-round": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "sunglasses-tortoiseshell-round-800.jpg",
+    "color": "#282828"
+  },
+  "wallet-brown-bifold": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "wallet-brown-bifold-800.jpg",
+    "color": "#482818"
+  },
+  "watch-black-dial": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "watch-black-dial-800.jpg",
+    "color": "#282828"
+  },
+  "watch-navy-dial": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "watch-navy-dial-800.jpg",
+    "color": "#282828"
+  },
+  "watch-white-dial": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "watch-white-dial-800.jpg",
+    "color": "#686868"
+  },
+  "wide-accessories-table": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      640,
+      1024,
+      1440,
+      1672
+    ],
+    "alpha": false,
+    "fallback": "wide-accessories-table-1024.jpg",
+    "color": "#382818"
+  },
+  "wide-sunglasses-rooftop": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      640,
+      1024,
+      1440,
+      1672
+    ],
+    "alpha": false,
+    "fallback": "wide-sunglasses-rooftop-1024.jpg",
+    "color": "#282828"
+  },
+  "wide-watch-desk": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      640,
+      1024,
+      1440,
+      1672
+    ],
+    "alpha": false,
+    "fallback": "wide-watch-desk-1024.jpg",
+    "color": "#080808"
+  }
+}
