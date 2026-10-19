@@ -5,8 +5,8 @@ shared foundation and the page templates. Paths are relative to `shop/`.
 
 ## 1. What MONO is
 
-A fictional premium menswear shop, built as a portfolio demo: 13 products in
-6 categories, a working bag, a validated demo checkout (no real payment), demo
+A fictional premium menswear shop, built as a portfolio demo: 18 products in
+6 categories (three each), a working bag, a validated demo checkout (no real payment), demo
 order history and a demo admin, all in the visitor's browser (localStorage).
 Static HTML pre-rendered by Node, enhanced by vanilla ES modules. No
 frameworks, no libraries, no build step in the browser.

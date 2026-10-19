@@ -1,6 +1,11 @@
 // Home page checks (desktop 1440x900 and Pixel 7). Run from the repo root:
 //   SHOP_TEST_PORT=4481 npx playwright test -c playwright.shop.config.mjs shop/tests/home.spec.mjs --workers=2
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+
+// Counts come from the shipped catalogue, so adding a product needs no test edits.
+const SEED = JSON.parse(readFileSync(new URL('../src/data/catalog.json', import.meta.url), 'utf8'));
+const newCount = (products) => products.filter((p) => p.newArrival && !p.hidden).length;
 
 const isPhone = (testInfo) => testInfo.project.name === 'mobile';
 
@@ -215,7 +220,7 @@ test.describe('page sections', () => {
   test('new arrivals: product cards in a sideways snap rail', async ({ page }) => {
     await openHome(page);
     const rail = page.locator('[data-new-list]');
-    await expect(rail.locator('.card')).toHaveCount(7);
+    await expect(rail.locator('.card')).toHaveCount(newCount(SEED.products));
     await expect(page.locator('.home-new a.link', { hasText: 'Shop all' })).toHaveAttribute('href', '/collections/?sort=new');
     const layout = await rail.evaluate((el) => ({ flow: getComputedStyle(el).gridAutoFlow, snap: getComputedStyle(el).scrollSnapType, scrolls: el.scrollWidth > el.clientWidth }));
     expect(layout.flow).toContain('column');
@@ -339,9 +344,11 @@ test.describe('page basics', () => {
   test('admin edits in this browser reach the hero art, new arrivals and panels', async ({ page }) => {
     await page.goto('/');
     const seed = await page.evaluate(() => fetch('/assets/data/store.json').then((r) => r.json()));
+    const hide = ['navy-pique-polo', 'black-rectangular-sunglasses', 'tortoiseshell-round-sunglasses'];
     const products = seed.catalog.products.map((p) => {
       if (p.slug === 'olive-pique-polo') return { ...p, price: 52 };
-      if (p.slug === 'navy-pique-polo' || p.slug === 'black-rectangular-sunglasses') return { ...p, hidden: true };
+      if (p.slug === 'cream-knit-polo') return { ...p, price: 54 };
+      if (hide.includes(p.slug)) return { ...p, hidden: true };
       return p;
     });
     await page.evaluate(({ version, products: list }) => {
@@ -352,8 +359,9 @@ test.describe('page basics', () => {
     await expect(page.locator('[data-art]')).toHaveAttribute('data-art-slug', 'blue-stripe-shirt');
     await expect(page.locator('[data-hero] img[src*="navy-pique-polo"]')).toHaveCount(0);
     await expect(page.locator('[data-slide]')).toHaveCount(3);
-    await expect(page.locator('.home-new .card')).toHaveCount(6);
-    await expect(page.locator('.home-new .card[data-slug="olive-pique-polo"] .card-price')).toHaveText('$52');
+    await expect(page.locator('.home-new .card')).toHaveCount(newCount(products));
+    await expect(page.locator('.home-new .card[data-slug="tortoiseshell-round-sunglasses"]')).toHaveCount(0);
+    await expect(page.locator('.home-new .card[data-slug="cream-knit-polo"] .card-price')).toHaveText('$54');
     await expect(page.locator('.home-look-list[data-look="look-01"] .home-item')).toHaveCount(2);
     await expect(page.locator('.home-look-list[data-look="look-01"]')).toContainText('$52');
   });

@@ -248,12 +248,13 @@ test.describe('products', () => {
 
   test('search and category filter the table', async ({ page }) => {
     await open(page, '/admin/products/');
+    const watches = SEED.products.filter((p) => p.sku.startsWith('MONO-WT')).length;
     await page.locator('#adm-q').fill('MONO-WT');
-    await expect(page.locator('tr[data-row]')).toHaveCount(2);
-    await expect(page.locator('.adm-count')).toHaveText(`Showing 2 of ${N} products`);
+    await expect(page.locator('tr[data-row]')).toHaveCount(watches);
+    await expect(page.locator('.adm-count')).toHaveText(`Showing ${watches} of ${N} products`);
     await page.locator('#adm-q').fill('');
     await page.locator('#adm-cat').selectOption('polos');
-    await expect(page.locator('tr[data-row]')).toHaveCount(2);
+    await expect(page.locator('tr[data-row]')).toHaveCount(SEED.products.filter((p) => p.category === 'polos').length);
     await expect(page).toHaveURL(/category=polos/);
   });
 

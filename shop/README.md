@@ -1,6 +1,6 @@
 # MONO
 
-**MONO** is a fictional premium menswear shop, built as a portfolio demo. It has 13 products (three shirts, and two each of T-shirts, polos, watches, sunglasses and accessories) and every part of a real shop works: browsing, filters, search, product pages, a bag, a validated checkout with a demo payment, order confirmation and a store admin. All prices, stock and orders are demo data. No payment is ever taken and nothing ships.
+**MONO** is a fictional premium menswear shop, built as a portfolio demo. It has 18 products, three in each of its six categories (shirts, T-shirts, polos, watches, sunglasses and accessories), and every part of a real shop works: browsing, filters, search, product pages, a bag, a validated checkout with a demo payment, order confirmation and a store admin. All prices, stock and orders are demo data. No payment is ever taken and nothing ships.
 
 ![MONO home page on a desktop screen](docs/screens/home-desktop.jpg)
 
@@ -32,7 +32,7 @@ Use the preview server rather than opening the HTML files directly: the pages lo
 
 ## How the demo data works
 
-The 13 products live in `src/data/catalog.json`. The build copies them, with the image list, into `site/assets/data/store.json`, which every page reads. Anything a visitor changes is kept only in **their own browser** (localStorage), so it survives a reload but nobody else sees it:
+The 18 products live in `src/data/catalog.json`. The build copies them, with the image list, into `site/assets/data/store.json`, which every page reads. Anything a visitor changes is kept only in **their own browser** (localStorage), so it survives a reload but nobody else sees it:
 
 | Browser storage key | What it holds |
 | --- | --- |
@@ -116,7 +116,8 @@ Last full run (19 October 2026): 465 tests passed and 3 were skipped by design (
 - Everything a visitor does stays in their browser: no accounts, no emails, no real orders, no shared stock.
 - The admin is a demonstration of the screens, not a secure back office.
 - Prices, stock, delivery rates and the size guide figures are demo data.
-- Shirts has three products; the other five categories have two until new photos arrive. Products are only added with genuinely different photos, never with a copied or recoloured one. The photos needed, with file names and prompts, are listed in `docs/photo-shotlist.md` (round 3).
+- Every category has three products, each with its own photos (the third T-shirt, polo, watch, pair of sunglasses and accessory arrived with round 3 of `docs/photo-shotlist.md` in October 2026). Products are only added with genuinely different photos, never with a copied or recoloured one. New arrivals (the home page row, the New flag and the "New arrivals first" sort) are the six newest: the Light Blue Oxford Shirt and the round 3 products.
+- The Light Blue Oxford Shirt has a front view and the library photo only. Its generated back view was not used because the model's hair does not match; `docs/photo-shotlist.md` says how to generate it again.
 - Page-to-page photo transitions need a recent Chrome, Edge or Safari; elsewhere pages load normally.
 
 ## Credits

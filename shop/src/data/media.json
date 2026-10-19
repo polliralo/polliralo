@@ -25,6 +25,19 @@
     "fallback": "blue-stripe-shirt-closeup-800.jpg",
     "color": "#B8B8B8"
   },
+  "card-holder-black": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "card-holder-black-800.jpg",
+    "color": "#482818"
+  },
   "charcoal-textured-tee-closeup": {
     "w": 1122,
     "h": 1402,
@@ -37,6 +50,19 @@
     "alpha": false,
     "fallback": "charcoal-textured-tee-closeup-800.jpg",
     "color": "#282828"
+  },
+  "cream-knit-polo-closeup": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "cream-knit-polo-closeup-800.jpg",
+    "color": "#F8E8E8"
   },
   "cut-blue-oxford-shirt-front": {
     "w": 1122,
@@ -101,6 +127,32 @@
     ],
     "alpha": true,
     "fallback": "cut-charcoal-textured-tee-front-800.webp",
+    "color": null
+  },
+  "cut-cream-knit-polo-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-cream-knit-polo-back-800.webp",
+    "color": null
+  },
+  "cut-cream-knit-polo-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-cream-knit-polo-front-800.webp",
     "color": null
   },
   "cut-ivory-heavy-tee-back": {
@@ -179,6 +231,32 @@
     ],
     "alpha": true,
     "fallback": "cut-look-02-800.webp",
+    "color": null
+  },
+  "cut-navy-crew-tee-back": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-navy-crew-tee-back-800.webp",
+    "color": null
+  },
+  "cut-navy-crew-tee-front": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-navy-crew-tee-front-800.webp",
     "color": null
   },
   "cut-navy-pique-polo-back": {
@@ -363,6 +441,19 @@
     "fallback": "life-watch-wrist-800.jpg",
     "color": "#080808"
   },
+  "navy-crew-tee-closeup": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "navy-crew-tee-closeup-800.jpg",
+    "color": "#282848"
+  },
   "navy-pique-polo-closeup": {
     "w": 1121,
     "h": 1403,
@@ -415,6 +506,19 @@
     "fallback": "sunglasses-silver-aviator-800.jpg",
     "color": "#282828"
   },
+  "sunglasses-tortoiseshell-round": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "sunglasses-tortoiseshell-round-800.jpg",
+    "color": "#282828"
+  },
   "wallet-brown-bifold": {
     "w": 1122,
     "h": 1402,
@@ -439,6 +543,19 @@
     ],
     "alpha": false,
     "fallback": "watch-black-dial-800.jpg",
+    "color": "#282828"
+  },
+  "watch-navy-dial": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": false,
+    "fallback": "watch-navy-dial-800.jpg",
     "color": "#282828"
   },
   "watch-white-dial": {

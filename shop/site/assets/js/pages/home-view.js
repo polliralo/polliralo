@@ -27,7 +27,7 @@ export const HERO_SLIDES = [
     level: 2,
     eyebrow: 'T-shirts',
     title: 'The everyday <em>uniform.</em>',
-    line: 'Crew necks that keep their shape: one textured in charcoal, one heavy and plain in ivory.',
+    line: 'Crew necks that keep their shape: textured charcoal, heavy ivory and plain navy.',
     image: {
       key: 'life-charcoal-tee-wardrobe',
       alt: 'Man in the charcoal textured tee standing by an open wardrobe',
@@ -42,7 +42,7 @@ export const HERO_SLIDES = [
     level: 2,
     eyebrow: 'Sunglasses',
     title: 'Made for <em>daylight.</em>',
-    line: 'A strong black rectangle and a thin silver aviator.',
+    line: 'A strong black rectangle, a thin silver aviator and a round tortoiseshell.',
     image: {
       key: 'wide-sunglasses-rooftop',
       alt: 'Man in black sunglasses and a stone overshirt on a city rooftop in daylight',

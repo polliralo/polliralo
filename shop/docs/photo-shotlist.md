@@ -101,6 +101,8 @@ Edit the first uploaded photo. Keep the black leather belt exactly as it is: sam
 
 ## Round 3: a third product in every category (October 2026)
 
+**Status (19 October 2026): done.** The owner generated all ten photos. #18 to #26 are on the site, so every category now has three products: the Navy Crew Tee, the Cream Knit Polo, the Navy Dial Watch, the Tortoiseshell Round Sunglasses and the Black Card Holder. The sunglasses use a retouched copy (tiny pseudo-letters on the temple plate removed; see `media/originals/CATALOG.md`). #27, the light blue Oxford back view, is stored but not used: the model's hair is black and tightly curled, while the man in the library photo has dark brown hair in loose waves. To use it, generate it again with "dark brown hair worn in loose waves, swept back, exactly like the first reference" added to the prompt.
+
 The owner asked for three distinct products per category, but only with photos that really show a different product: no duplicate or recoloured copies of an existing photo. The photos in `media/originals/` were checked one by one:
 
 - **Shirts** has its third product: the Light Blue Oxford Shirt, cut out of `lifestyle/blue-oxford-shirt-library.png`, the only photo of it (so it has a front view and the library photo, no back view yet).

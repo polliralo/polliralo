@@ -15,11 +15,11 @@ import {
 // A short line under each category photo, from the catalogue facts.
 const CATEGORY_LINES = {
   shirts: 'Two Oxfords and a fine blue stripe.',
-  't-shirts': 'Textured charcoal and heavy ivory.',
-  polos: 'Piqué knit in olive and navy.',
+  't-shirts': 'Textured charcoal, heavy ivory and plain navy.',
+  polos: 'Piqué in olive and navy, knit in cream.',
   watches: 'Two hands and a quiet dial.',
-  sunglasses: 'A black rectangle and a silver aviator.',
-  accessories: 'A bifold wallet and a dress belt.',
+  sunglasses: 'Black rectangle, silver aviator, round tortoiseshell.',
+  accessories: 'A wallet, a dress belt and a card holder.',
 };
 
 const CAT_SIZES = '(min-width: 1180px) 15vw, (min-width: 760px) 30vw, 44vw';

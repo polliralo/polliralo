@@ -11,6 +11,21 @@ import { test, expect } from '@playwright/test';
 
 const catalog = JSON.parse(readFileSync(new URL('../src/data/catalog.json', import.meta.url), 'utf8'));
 
+// The store's search (assets/js/lib/search.js) run on the shipped catalogue,
+// so result counts follow the data when products are added.
+const CATEGORY_TEXT = Object.fromEntries(catalog.categories.map((c) => [c.slug, `${c.name} ${c.title}`.toLowerCase()]));
+const searchHits = (query, hidden = []) => {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return catalog.products.filter((p) => !hidden.includes(p.slug)).filter((p) => {
+    const hay = [p.name, p.summary, p.description, p.colour?.name, CATEGORY_TEXT[p.category], p.category, p.sku, ...(p.details ?? [])]
+      .join(' ').toLowerCase();
+    return terms.every((t) => hay.includes(t) || (t.length > 3 && hay.includes(t.replace(/(es|s)$/, ''))));
+  });
+};
+const results = (n) => `${n} ${n === 1 ? 'result' : 'results'}`;
+const styles = (n) => `${n} ${n === 1 ? 'style' : 'styles'}`;
+const POLOS = catalog.products.filter((p) => p.category === 'polos').length;
+
 const OLIVE = { slug: 'olive-pique-polo', name: 'Olive Piqué Polo' };   // $48, XXL stock 2
 const NAVY = { slug: 'navy-pique-polo', name: 'Navy Piqué Polo' };      // $48
 const WATCH = { slug: 'black-dial-watch', name: 'Black Dial Watch' };   // $180, one size
@@ -180,22 +195,25 @@ test.describe('2. admin edits reach the store', () => {
     await ready(page, '/collections/polos/');
     await expect(card(page, OLIVE.slug).locator('.card-price')).toHaveText('$52');
     await expect(card(page, NAVY.slug)).toHaveCount(0);
-    await expect(page.locator('[data-grid] .card')).toHaveCount(1);
-    await expect(page.locator('[data-total]')).toHaveText('1 style');
+    await expect(page.locator('[data-grid] .card')).toHaveCount(POLOS - 1);
+    await expect(page.locator('[data-total]')).toHaveText(styles(POLOS - 1));
     await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
 
     // Search page and the header search dialog.
+    const polos = searchHits('polo', [NAVY.slug]);
     await ready(page, '/search/?q=polo');
-    await expect(page.locator('[data-search-status]')).toHaveText('1 result for “polo”');
+    await expect(page.locator('[data-search-status]')).toHaveText(`${results(polos.length)} for “polo”`);
     await expect(card(page, OLIVE.slug).locator('.card-price')).toHaveText('$52');
     await expect(card(page, NAVY.slug)).toHaveCount(0);
     const dialog = await openSearchDialog(page);
-    await page.locator('#search-q').fill('navy');
-    await expect(dialog.locator('[data-search-results]')).toContainText('Nothing matches "navy"');
+    // Only the hidden polo is both navy and piqué.
+    expect(searchHits('navy piqué').map((p) => p.slug)).toEqual([NAVY.slug]);
+    await page.locator('#search-q').fill('navy piqué');
+    await expect(dialog.locator('[data-search-results]')).toContainText('Nothing matches "navy piqué"');
     await page.locator('#search-q').fill('polo');
-    await expect(dialog.locator('.mini-card')).toHaveCount(1);
-    await expect(dialog.locator('.mini-card')).toContainText(OLIVE.name);
-    await expect(dialog.locator('.mini-card')).toContainText('$52');
+    await expect(dialog.locator('.mini-card')).toHaveCount(polos.length);
+    await expect(dialog.locator('.mini-card', { hasText: OLIVE.name })).toContainText('$52');
+    await expect(dialog.locator('.mini-card', { hasText: NAVY.name })).toHaveCount(0);
 
     // Home: three message slides with no prices; the brand slide no longer
     // shows the hidden navy polo; no navy polo anywhere; the olive polo at the new price.
@@ -206,7 +224,6 @@ test.describe('2. admin edits reach the store', () => {
     await expect(carousel.locator('[data-art]')).not.toHaveAttribute('data-art-slug', NAVY.slug);
     await expect(carousel.locator('img[src*="navy-pique-polo"]')).toHaveCount(0);
     await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
-    await expect(page.locator(`[data-new-list] .card[data-slug="${OLIVE.slug}"] .card-price`)).toHaveText('$52');
     await expect(page.locator(`.home-look-list[data-look="look-01"] .home-item[data-slug="${OLIVE.slug}"] .home-item-price`)).toHaveText('$52');
 
     // The hidden product's own page.
@@ -239,10 +256,11 @@ test.describe('2. admin edits reach the store', () => {
     await ready(page, `/products/${NAVY.slug}/`);
     await expect(page.locator('h1')).toHaveText(NAVY.name);
     await ready(page, '/collections/polos/');
-    await expect(page.locator('[data-grid] .card')).toHaveCount(2);
+    await expect(page.locator('[data-grid] .card')).toHaveCount(POLOS);
     await expect(card(page, OLIVE.slug).locator('.card-price')).toHaveText('$48');
     await ready(page, '/search/?q=navy');
-    await expect(page.locator('[data-search-status]')).toHaveText('1 result for “navy”');
+    await expect(page.locator('[data-search-status]')).toHaveText(`${results(searchHits('navy').length)} for “navy”`);
+    await expect(card(page, NAVY.slug)).toBeVisible();
     await ready(page, '/');
     await expect(page.locator('[data-carousel] [data-slide]')).toHaveCount(3);
     await expect(page.locator('[data-carousel] [data-art]')).toHaveAttribute('data-art-slug', NAVY.slug);
@@ -385,25 +403,25 @@ test.describe('5. the header search dialog', () => {
     await ready(page, '/');
     let dialog = await openSearchDialog(page);
     await page.locator('#search-q').fill('watch');
-    const results = dialog.locator('[data-search-results]');
-    await expect(results).toContainText('2 results');
-    await expect(results.locator('.mini-card')).toHaveCount(2);
-    await results.locator('.mini-card', { hasText: WATCH.name }).click();
+    const watches = searchHits('watch');
+    const found = dialog.locator('[data-search-results]');
+    await expect(found).toContainText(results(watches.length));
+    await expect(found.locator('.mini-card')).toHaveCount(watches.length);
+    await found.locator('.mini-card', { hasText: WATCH.name }).click();
     await expect(page).toHaveURL(/\/products\/black-dial-watch\/$/);
     await expect(page.locator('h1')).toHaveText(WATCH.name);
 
     await expect(page.locator('html')).toHaveClass(/store-ready/);
     dialog = await openSearchDialog(page);
     await page.locator('#search-q').fill('watch');
-    await expect(dialog.locator('.mini-card')).toHaveCount(2);
+    await expect(dialog.locator('.mini-card')).toHaveCount(watches.length);
     await page.locator('#search-q').press('Enter');
     await expect(page).toHaveURL(/\/search\/\?q=watch$/);
     await expect(page.locator('[data-search-page]')).toHaveAttribute('data-ready', 'true');
     await expect(page.locator('#srch-q')).toHaveValue('watch');
-    await expect(page.locator('[data-search-status]')).toHaveText('2 results for “watch”');
-    await expect(page.locator('[data-grid] .card')).toHaveCount(2);
-    await expect(card(page, 'black-dial-watch')).toBeVisible();
-    await expect(card(page, 'white-dial-watch')).toBeVisible();
+    await expect(page.locator('[data-search-status]')).toHaveText(`${results(watches.length)} for “watch”`);
+    await expect(page.locator('[data-grid] .card')).toHaveCount(watches.length);
+    for (const w of watches) await expect(card(page, w.slug)).toBeVisible();
   });
 });
 

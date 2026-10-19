@@ -18,35 +18,35 @@
       "slug": "t-shirts",
       "name": "T-Shirts",
       "title": "Men's T-Shirts",
-      "description": "Crew necks that keep their shape: one textured in charcoal, one heavy and plain in ivory.",
+      "description": "Crew necks that keep their shape: textured charcoal, heavy ivory and plain navy.",
       "image": { "key": "life-ivory-tee-concrete", "alt": "Man in an ivory crew-neck T-shirt leaning on a sunlit concrete wall" }
     },
     {
       "slug": "polos",
       "name": "Polos",
       "title": "Men's Polo Shirts",
-      "description": "Piqué-knit polos with a flat-knit collar and a neat two-button placket, in olive and navy.",
+      "description": "Piqué polos in olive and navy with a flat-knit collar and a two-button placket, and an open-textured knit polo in cream.",
       "image": { "key": "life-olive-polo-terrace", "alt": "Man in an olive polo on a sunlit terrace above the sea" }
     },
     {
       "slug": "watches",
       "name": "Watches",
       "title": "Men's Watches",
-      "description": "Two-hand dress watches with quiet dials, on a brown strap or a link bracelet.",
+      "description": "Two-hand dress watches with quiet dials: black on a brown strap, white on a link bracelet, navy on a black strap.",
       "image": { "key": "life-watch-wrist", "alt": "Black-dial watch on a brown strap, worn with a grey wool sleeve at a desk" }
     },
     {
       "slug": "sunglasses",
       "name": "Sunglasses",
       "title": "Men's Sunglasses",
-      "description": "A strong black rectangle and a thin silver aviator.",
+      "description": "A strong black rectangle, a thin silver aviator and a round tortoiseshell frame.",
       "image": { "key": "life-sunglasses-linen", "alt": "Man in black rectangular sunglasses and a grey shirt against a concrete wall in the sun" }
     },
     {
       "slug": "accessories",
       "name": "Accessories",
       "title": "Men's Accessories",
-      "description": "A brown bifold wallet and a black dress belt to finish the outfit.",
+      "description": "A brown bifold wallet, a black dress belt and a slim black card holder to finish the outfit.",
       "image": { "key": "life-accessories-flatlay", "alt": "Brown bifold wallet, black belt and black card holder on a dark wood table" }
     }
   ],
@@ -79,7 +79,7 @@
       ],
       "completeTheLook": ["black-dress-belt", "white-dial-watch", "silver-aviator-sunglasses"],
       "featured": true,
-      "newArrival": true
+      "newArrival": false
     },
     {
       "slug": "blue-stripe-shirt",
@@ -166,7 +166,7 @@
       ],
       "completeTheLook": ["black-rectangular-sunglasses", "black-dial-watch", "brown-bifold-wallet"],
       "featured": true,
-      "newArrival": true
+      "newArrival": false
     },
     {
       "slug": "ivory-heavyweight-tee",
@@ -196,6 +196,35 @@
       ],
       "completeTheLook": ["silver-aviator-sunglasses", "black-dial-watch", "black-dress-belt"],
       "featured": true,
+      "newArrival": false
+    },
+    {
+      "slug": "navy-crew-tee",
+      "sku": "MONO-TS-03",
+      "name": "Navy Crew Tee",
+      "category": "t-shirts",
+      "price": 32,
+      "colour": { "name": "Navy", "hex": "#252D47" },
+      "accent": "#252D47",
+      "group": null,
+      "summary": "A plain crew neck in deep navy.",
+      "description": "A plain navy crew-neck tee in a smooth knit, with a ribbed neckline and a straight, relaxed body. Easy on its own with charcoal trousers, or under an open shirt.",
+      "details": ["Ribbed crew neck", "Smooth knit in navy", "Straight, relaxed body", "Short sleeves"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 8 },
+        { "id": "M", "label": "M", "stock": 11 },
+        { "id": "L", "label": "L", "stock": 9 },
+        { "id": "XL", "label": "XL", "stock": 5 },
+        { "id": "XXL", "label": "XXL", "stock": 4 }
+      ],
+      "images": [
+        { "key": "cut-navy-crew-tee-front", "alt": "Navy crew-neck tee, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-navy-crew-tee-back", "alt": "Navy crew-neck tee, back view", "kind": "cutout", "view": "Back" },
+        { "key": "navy-crew-tee-closeup", "alt": "Close-up of the ribbed neckline of the navy tee", "kind": "photo", "view": "Detail" }
+      ],
+      "completeTheLook": ["white-dial-watch", "tortoiseshell-round-sunglasses", "black-dress-belt"],
+      "featured": false,
       "newArrival": true
     },
     {
@@ -227,7 +256,7 @@
       ],
       "completeTheLook": ["black-rectangular-sunglasses", "black-dial-watch", "brown-bifold-wallet"],
       "featured": true,
-      "newArrival": true
+      "newArrival": false
     },
     {
       "slug": "navy-pique-polo",
@@ -259,6 +288,35 @@
       "newArrival": false
     },
     {
+      "slug": "cream-knit-polo",
+      "sku": "MONO-PL-03",
+      "name": "Cream Knit Polo",
+      "category": "polos",
+      "price": 58,
+      "colour": { "name": "Cream", "hex": "#EDE5D8" },
+      "accent": "#8A7B63",
+      "group": null,
+      "summary": "An open-textured knit polo in cream.",
+      "description": "A cream polo in an open-textured knit, with a soft knitted collar, a two-button placket and ribbed cuffs and hem. Easy with navy trousers.",
+      "details": ["Open-textured knit", "Soft knitted collar", "Two-button placket", "Ribbed cuffs and hem"],
+      "option": { "type": "size", "label": "Size" },
+      "variants": [
+        { "id": "S", "label": "S", "stock": 4 },
+        { "id": "M", "label": "M", "stock": 7 },
+        { "id": "L", "label": "L", "stock": 6 },
+        { "id": "XL", "label": "XL", "stock": 3 },
+        { "id": "XXL", "label": "XXL", "stock": 2 }
+      ],
+      "images": [
+        { "key": "cut-cream-knit-polo-front", "alt": "Cream knit polo worn with navy trousers, front view", "kind": "cutout", "view": "Front" },
+        { "key": "cut-cream-knit-polo-back", "alt": "Cream knit polo, back view", "kind": "cutout", "view": "Back" },
+        { "key": "cream-knit-polo-closeup", "alt": "Close-up of the knitted collar, two-button placket and open knit", "kind": "photo", "view": "Detail" }
+      ],
+      "completeTheLook": ["navy-dial-watch", "tortoiseshell-round-sunglasses", "brown-bifold-wallet"],
+      "featured": false,
+      "newArrival": true
+    },
+    {
       "slug": "black-dial-watch",
       "sku": "MONO-WT-01",
       "name": "Black Dial Watch",
@@ -279,7 +337,7 @@
       ],
       "completeTheLook": ["brown-bifold-wallet", "black-dress-belt", "olive-pique-polo"],
       "featured": false,
-      "newArrival": true
+      "newArrival": false
     },
     {
       "slug": "white-dial-watch",
@@ -304,6 +362,29 @@
       "newArrival": false
     },
     {
+      "slug": "navy-dial-watch",
+      "sku": "MONO-WT-03",
+      "name": "Navy Dial Watch",
+      "category": "watches",
+      "price": 185,
+      "colour": { "name": "Navy dial, black strap", "hex": "#1A2740" },
+      "accent": "#1A2740",
+      "group": null,
+      "summary": "The same quiet design with a navy sunburst dial on a black strap.",
+      "description": "The same quiet two-hand design with a navy sunburst dial, slim silver-tone markers and a black strap with a pin buckle.",
+      "details": ["Two hands, no date", "Navy sunburst dial with baton markers", "Polished round case", "Black strap with pin buckle"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [
+        { "id": "OS", "label": "One size", "stock": 5 }
+      ],
+      "images": [
+        { "key": "watch-navy-dial", "alt": "Navy-dial watch on a black strap standing on dark stone", "kind": "photo", "view": "Product" }
+      ],
+      "completeTheLook": ["navy-crew-tee", "black-card-holder", "tortoiseshell-round-sunglasses"],
+      "featured": false,
+      "newArrival": true
+    },
+    {
       "slug": "black-rectangular-sunglasses",
       "sku": "MONO-SG-01",
       "name": "Black Rectangular Sunglasses",
@@ -324,7 +405,7 @@
       ],
       "completeTheLook": ["olive-pique-polo", "black-dial-watch", "charcoal-textured-tee"],
       "featured": false,
-      "newArrival": true
+      "newArrival": false
     },
     {
       "slug": "silver-aviator-sunglasses",
@@ -347,6 +428,29 @@
       "completeTheLook": ["ivory-heavyweight-tee", "white-dial-watch", "navy-pique-polo"],
       "featured": false,
       "newArrival": false
+    },
+    {
+      "slug": "tortoiseshell-round-sunglasses",
+      "sku": "MONO-SG-03",
+      "name": "Tortoiseshell Round Sunglasses",
+      "category": "sunglasses",
+      "price": 64,
+      "colour": { "name": "Tortoiseshell", "hex": "#7A4523" },
+      "accent": "#7A4523",
+      "group": null,
+      "summary": "A round frame in warm tortoiseshell with dark green lenses.",
+      "description": "A softly rounded frame in warm brown tortoiseshell, with dark green lenses and small silver-tone details at the hinges.",
+      "details": ["Round shape", "Tortoiseshell frame", "Dark green lenses", "Silver-tone hinge details"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [
+        { "id": "OS", "label": "One size", "stock": 7 }
+      ],
+      "images": [
+        { "key": "sunglasses-tortoiseshell-round", "alt": "Round tortoiseshell sunglasses on a dark charcoal surface", "kind": "photo", "view": "Product" }
+      ],
+      "completeTheLook": ["cream-knit-polo", "navy-dial-watch", "brown-bifold-wallet"],
+      "featured": false,
+      "newArrival": true
     },
     {
       "slug": "brown-bifold-wallet",
@@ -398,6 +502,29 @@
       "completeTheLook": ["ivory-oxford-shirt", "brown-bifold-wallet", "white-dial-watch"],
       "featured": false,
       "newArrival": false
+    },
+    {
+      "slug": "black-card-holder",
+      "sku": "MONO-AC-03",
+      "name": "Black Card Holder",
+      "category": "accessories",
+      "price": 30,
+      "colour": { "name": "Black", "hex": "#1B1A17" },
+      "accent": "#232323",
+      "group": null,
+      "summary": "A slim black card holder with stitched edges.",
+      "description": "A slim black card holder with stitched edges and card slots on the front. Small enough for any pocket.",
+      "details": ["Card slots on the front", "Stitched edges", "Slim profile"],
+      "option": { "type": "none", "label": "One size" },
+      "variants": [
+        { "id": "OS", "label": "One size", "stock": 10 }
+      ],
+      "images": [
+        { "key": "card-holder-black", "alt": "Black card holder on a dark wood table in window light", "kind": "photo", "view": "Product" }
+      ],
+      "completeTheLook": ["brown-bifold-wallet", "black-dress-belt", "navy-dial-watch"],
+      "featured": false,
+      "newArrival": true
     }
   ],
   "looks": [

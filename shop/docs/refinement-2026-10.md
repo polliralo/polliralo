@@ -87,7 +87,8 @@ The five reference videos, as numbered in the brief:
 ### Catalogue
 
 - **Light Blue Oxford Shirt added**, cut out of the only photo of it, so Shirts has three products.
-- **No other category has a genuinely different third product in the photos.** They stay at two, and `photo-shotlist.md` (round 3) lists the photos needed, with file names and prompts.
+- **No other category had a genuinely different third product in the photos.** They stayed at two, and `photo-shotlist.md` (round 3) listed the photos needed, with file names and prompts.
+- **Update, 19 October 2026:** the owner generated the round 3 photos, so every category now has three products: the Navy Crew Tee, the Cream Knit Polo, the Navy Dial Watch, the Tortoiseshell Round Sunglasses and the Black Card Holder. New arrivals are now the six newest products. With three per category, the editorial tile is hidden on desktop (the row is full) and fills the last slot on phones.
 
 ### Motion
 
@@ -133,7 +134,6 @@ The five reference videos, as numbered in the brief:
 
 ## 5. What is left
 
-- **Third products:** T-shirts, polos, watches, sunglasses and accessories need one new product photo set each (`photo-shotlist.md`, round 3). Until then they show two products and an editorial tile.
-- **Light Blue Oxford Shirt:** it has a front view and the library photo only. A back view is listed as optional.
+- **Light Blue Oxford Shirt:** it has a front view and the library photo only. The generated back view (#27) was not used because the model's hair does not match; `photo-shotlist.md` says how to generate it again.
 - **Page-to-page photo morph:** the morph from a card into the product page works in Chrome, Edge and Safari 18.2 and newer. In automated headless Chrome it does not always run when going forward, so the page simply loads. That is a fallback, not an error.
 - **Before launch with real products:** set `LIVE_ADDRESS` or `SITE_URL`. A real store also needs a server: sign-in for the admin, a database, server-side checks of prices and stock, and a payment provider. This demo keeps everything in the visitor's browser.
