@@ -1,27 +1,31 @@
 /* MONO home page. Every selector is scoped with a home- prefix.
-   Sections: hero (six messages), categories, new arrivals, shop the look,
+   Sections: hero (five messages), categories, new arrivals, shop the look,
    the watch feature, brand note, newsletter.
    Breakpoints: 760px (phone), 1040px (header menu), 1180px (wide). */
 
 /* ======================================================================
    1. Hero: one message per slide, the words always in the same column.
-   The owner's direction (October 2026): a white hero, six slides with the
-   best first, large characters, every picture in the same rounded panel
-   (the soft surface of the product cards), and a black pill call to
-   action. Nothing is drawn over a character.
+   The owner's direction (19 October 2026, after the "Stay Foolish"
+   reference): a light cream hero with no box, a large soft circle behind
+   each picture and a two-word brush phrase behind it, five slides with
+   the best first, and a black pill call to action. Nothing is drawn over
+   a picture.
    ====================================================================== */
 
 .home-hero {
   --hero-h: clamp(540px, calc(100svh - var(--header-h) - var(--announce-h) - 40px), 760px);
   --text-w: clamp(360px, 34vw, 500px);      /* message column: same on every slide */
-  --copy-gap: clamp(28px, 3.2vw, 56px);     /* column to picture panel */
-  --stage-inset: clamp(12px, 1.6vw, 24px);  /* panel to the hero's top and bottom edges */
+  --copy-gap: clamp(28px, 3.2vw, 56px);     /* column to picture */
   --bar-h: 48px;
-  --bar-gap: var(--stage-inset);            /* the control bar ends level with the panel */
+  --bar-gap: clamp(14px, 2.4vh, 26px);      /* control bar to the hero's bottom edge */
   --cta-gap: clamp(24px, 3.6vh, 40px);      /* call to action to the control bar */
-  --hero-white: #FFFFFF;
+  --hero-cream: #F7F1E8;                    /* the ground */
+  --hero-disc: #ECDDC7;                     /* the circle */
+  --hero-disc-light: #F4E9DA;               /* its lit side */
+  --hero-disc-deep: #E3CEB2;                /* the small circles' shaded side */
+  --hero-script: #B98C5B;                   /* the brush phrase */
   position: relative;
-  background: var(--hero-white);
+  background: var(--hero-cream);
   overflow: clip;
 }
 .home-carousel { position: relative; max-width: var(--max); height: var(--hero-h); margin-inline: auto; }
@@ -58,51 +62,64 @@
 .home-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .home-cta-short { display: none; }
 
-/* The picture panel: one rounded box in the same place on every slide,
-   opaque, so an incoming slide fully covers the old one. */
+/* The stage: no box. The picture stands on the hero's cream in front of a
+   large circle, with the brush phrase behind it at head height (the head in
+   the gap between its two words, so both stay readable); the hero's
+   bottom edge cuts the full-length figures at the knee. Everything is sized
+   in container units, so every slide is composed the same way at any size.
+   --crop is the share of the cut-out's height on show: 1 for the studio
+   views (framed head to mid-thigh), .78 for the full-length ones. */
 .home-panel {
+  --top: 7cqh;                    /* air above the head */
+  --crop: 1;
+  --disc: min(78cqh, 92cqw);      /* the circle */
+  --disc-y: 46cqh;                /* its centre */
+  --word: min(14cqh, 12.6cqw);    /* the brush phrase's size */
+  --word-y: 21cqh;                /* its centre line: level with the head */
+  --gap: 17cqh;                   /* between its words: about a head's width */
   position: relative; min-width: 0; overflow: hidden; isolation: isolate;
-  margin: var(--stage-inset) var(--gutter) var(--stage-inset) 0;
-  border-radius: var(--r-lg);
-  background: var(--canvas);
+  margin-right: var(--gutter);
+  background: var(--hero-cream);  /* opaque: an incoming stage covers the old one */
   container-type: size;
 }
-.home-art { position: absolute; inset: 0; z-index: 1; transform-origin: 50% 100%; }
-.home-panel.is-photo .pic { width: 100%; height: 100%; }
-.home-panel.is-photo .pic img { object-position: var(--x, 50%) var(--y, 50%); }
-
-/* Character slides: the cut-out fills the panel's height, centred, so he
-   stands large in front of a warm studio wall (sand, lighter behind him)
-   with MONO set large across it, behind him. --crop is the share of the
-   cut-out's height inside the panel: 1 for the studio views (framed head to
-   mid-thigh), .74 for the full-length looks (cut just above the knee, with
-   the hands and anything held in them inside). The panel clips the rest;
-   his proportions never change. */
-.home-panel.is-stage {
-  background:
-    radial-gradient(70% 62% at 50% 42%, #F8F3EB 0%, rgba(248, 243, 235, 0) 72%),
-    linear-gradient(180deg, #EFE6D9 0%, #E7DAC7 60%, #DDCCB4 100%);
+.home-panel.is-full { --crop: .78; --gap: 13cqh; }
+.home-disc {
+  position: absolute; z-index: 0;
+  left: calc(50% - var(--disc) / 2); top: calc(var(--disc-y) - var(--disc) / 2);
+  width: var(--disc); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 34% 26%, var(--hero-disc-light), var(--hero-disc) 66%);
 }
-.home-panel.is-stage.is-full { --crop: .74; }
-.home-word {
-  position: absolute; z-index: 0; left: 50%; top: 10cqh; translate: -50% 0;
-  font-family: var(--display); font-weight: var(--w-medium); font-size: min(21cqw, 30cqh); line-height: .8;
-  letter-spacing: .3em; text-indent: .3em; text-transform: uppercase; white-space: nowrap;
-  color: rgba(255, 255, 255, .82); pointer-events: none; user-select: none;
+/* Two small circles keep the big one company (the reference's side
+   circles): a small one out to the left, a larger one low on the right. */
+.home-panel::before, .home-panel::after {
+  content: ""; position: absolute; z-index: 0; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, var(--hero-disc-light), var(--hero-disc-deep) 72%);
 }
-.home-word::before { content: attr(data-word); }
-.home-character {
-  inset: 0 auto auto 50%; width: auto; height: calc(100cqh / var(--crop, 1));
-  aspect-ratio: 1122 / 1402; translate: -50% 0; transform-origin: 50% 30%;
+.home-panel::before { width: calc(var(--disc) * .11); left: max(3cqw, calc(50% - var(--disc) * .64)); top: calc(var(--disc-y) - var(--disc) * .02); }
+.home-panel::after { width: calc(var(--disc) * .21); left: calc(50% + var(--disc) * .31); top: calc(var(--disc-y) + var(--disc) * .2); }
+.home-script {
+  position: absolute; z-index: 1; left: 0; right: 0;
+  top: calc(var(--word-y) - var(--word) * .62);
+  display: grid; grid-template-columns: minmax(0, 1fr) var(--gap) minmax(0, 1fr);
+  font-family: var(--script); font-weight: 400; font-size: var(--word); line-height: 1.24;
+  white-space: nowrap; color: var(--hero-script);
+  rotate: -6deg; pointer-events: none; user-select: none;
 }
-.home-character .pic { width: 100%; height: 100%; }
-
-/* A pair: two portrait photos side by side on white, each rounded. */
-.home-panel.is-pair { background: var(--hero-white); }
-.home-panel.is-pair .home-art { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 1vw, 14px); }
-.home-pair-item { position: relative; min-width: 0; overflow: hidden; border-radius: var(--r-lg); background: var(--canvas); isolation: isolate; }
-.home-pair-item .pic { width: 100%; height: 100%; }
-.home-pair-item .pic img { object-position: var(--x, 50%) var(--y, 50%); }
+.home-script::before { content: attr(data-a); grid-column: 1; justify-self: end; }
+.home-script::after { content: attr(data-b); grid-column: 3; justify-self: start; }
+.home-art { position: absolute; inset: 0; z-index: 2; }
+/* The canvas may be wider than a narrow stage (its sides are empty), so it
+   is centred on the stage rather than squeezed into it. */
+.home-character .pic {
+  position: absolute; left: 50%; top: var(--top); translate: -50% 0;
+  width: auto; max-width: none; height: calc((100cqh - var(--top)) / var(--crop)); aspect-ratio: 1122 / 1402;
+}
+/* The still life rests on the circle, below its word. */
+.home-panel.is-still { --disc-y: 50cqh; --word-y: 15cqh; --gap: .3em; }
+.home-panel.is-still .home-character .pic {
+  top: calc(var(--disc-y) + 4cqh); translate: -50% -50%;
+  width: min(84cqw, calc(var(--disc) * 1.08)); height: auto; aspect-ratio: 1340 / 1018;
+}
 
 /* Control bar: counter, a thin segmented progress line, previous, pause, next. */
 .home-bar {
@@ -122,29 +139,74 @@
   border: 1px solid rgba(28, 28, 26, .14);
   transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard);
 }
-@media (hover: hover) { .home-bar-btn:hover { background: rgba(28, 28, 26, .05); border-color: rgba(28, 28, 26, .32); } }
+@media (hover: hover) { .home-bar-btn:hover { background: rgba(255, 255, 255, .7); border-color: rgba(28, 28, 26, .32); } }
 .home-toggle-icon { display: inline-grid; place-items: center; width: 16px; height: 16px; }
 /* No autoplay (phones, tablets, reduced motion): no pause button either. */
 .home-carousel[data-autoplay="off"] .home-bar-toggle { display: none; }
 .home-carousel.is-single .home-bar { display: none; }
 
-/* ----- Hero motion: transform and opacity only ----- */
+/* ----- Hero motion: transform, opacity, clip and blur only ----- */
 @media (prefers-reduced-motion: no-preference) {
-  /* Crossfade 600ms; the incoming picture settles from 1.03. */
-  .home-slide.is-entering .home-panel { animation: home-fade 600ms var(--ease-in-out) both; }
-  .home-slide.is-entering .home-art { animation: home-settle 1000ms var(--ease-out) both; }
-  /* Old words leave first, new words arrive after, so they never collide.
-     The button box stays put; only its label changes. */
+  /* A slide arrives through a circle that opens from the middle of the big
+     circle and covers the old picture (the stage is opaque cream), so two
+     pictures never show through each other. Inside it the picture rises
+     into place, the brush phrase writes itself in from the left and the two
+     small circles settle with a soft spring; the old picture recedes as it
+     is covered. The words leave first and come back in two beats. The
+     button box stays put; only its label changes. */
+  .home-slide.is-entering .home-panel { animation: home-open 1100ms var(--ease-curtain) both; }
+  .home-slide.is-entering .home-disc { animation: home-disc-in 1300ms var(--ease-expo) both; }
+  .home-slide.is-entering .home-character { animation: home-rise 1200ms var(--ease-expo) 60ms both; }
+  .home-slide.is-entering .home-script { animation: home-write 1200ms var(--ease-out) 420ms both; }
+  .home-slide.is-entering .home-panel::after { animation: home-pop 1000ms var(--ease-settle) 560ms both; }
+  .home-slide.is-entering .home-panel::before { animation: home-pop 900ms var(--ease-settle) 680ms both; }
+  .home-slide.is-leaving .home-character { animation: home-sink 1100ms var(--ease-in-out) both; }
   .home-slide.is-leaving .home-copy, .home-slide.is-leaving .home-cta > * { animation: home-out 180ms var(--ease-in) both; }
-  .home-slide.is-entering .home-copy { animation: home-copy-in 380ms var(--ease-out) 200ms both; }
-  .home-slide.is-entering .home-cta { animation: home-fade 380ms var(--ease-out) 200ms both; }
-  /* First paint: the first picture is never faded, it only settles. */
-  html.motion .home-slide.is-intro .home-art { animation: home-settle 1200ms var(--ease-out) both; }
+  .home-slide.is-entering .home-eyebrow { animation: home-copy-in 700ms var(--ease-expo) 200ms both; }
+  .home-slide.is-entering .home-title { animation: home-lift 900ms var(--ease-expo) 230ms both; }
+  .home-slide.is-entering :is(.home-title-lead, .home-title em) { animation: home-blur-in 760ms var(--ease-expo) 250ms both; }
+  .home-slide.is-entering .home-title em { animation-delay: 360ms; }
+  .home-slide.is-entering .home-line { animation: home-copy-in 700ms var(--ease-expo) 440ms both; }
+  .home-slide.is-entering .home-cta { animation: home-fade 420ms var(--ease-out) 260ms both; }
+  /* First paint: the picture is the page's largest image, so it is never
+     faded; it only settles while the circle, the phrase and the words
+     arrive. The button only fades in: its box never moves. */
+  html.motion .home-slide.is-intro .home-character { animation: home-settle 1500ms var(--ease-expo) both; }
+  html.motion .home-slide.is-intro .home-disc { animation: home-disc-in 1300ms var(--ease-expo) both; }
+  html.motion .home-slide.is-intro .home-script { animation: home-write 1500ms var(--ease-out) 420ms both; }
+  html.motion .home-slide.is-intro .home-panel::after { animation: home-pop 1100ms var(--ease-settle) 560ms both; }
+  html.motion .home-slide.is-intro .home-panel::before { animation: home-pop 1000ms var(--ease-settle) 700ms both; }
+  html.motion .home-slide.is-intro .home-eyebrow { animation: home-copy-in 800ms var(--ease-expo) 120ms both; }
+  html.motion .home-slide.is-intro .home-title { animation: home-lift 1000ms var(--ease-expo) 160ms both; }
+  html.motion .home-slide.is-intro :is(.home-title-lead, .home-title em) { animation: home-blur-in 900ms var(--ease-expo) 180ms both; }
+  html.motion .home-slide.is-intro .home-title em { animation-delay: 300ms; }
+  html.motion .home-slide.is-intro .home-line { animation: home-copy-in 800ms var(--ease-expo) 420ms both; }
+  html.motion .home-slide.is-intro .home-cta { animation: home-fade 700ms var(--ease-out) 520ms both; }
+}
+/* Depth on a computer: the picture, the word and the circle drift a few
+   pixels apart with the pointer (home.js sets --px and --py, -1 to 1). */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .home-disc { translate: calc(var(--px, 0) * -12px) calc(var(--py, 0) * -9px); }
+  .home-script { translate: calc(var(--px, 0) * -22px) calc(var(--py, 0) * -12px); }
+  .home-character { translate: calc(var(--px, 0) * 9px) calc(var(--py, 0) * 5px); }
+  .home-panel::before { translate: calc(var(--px, 0) * -28px) calc(var(--py, 0) * -16px); }
+  .home-panel::after { translate: calc(var(--px, 0) * -18px) calc(var(--py, 0) * -14px); }
 }
 @keyframes home-fade { from { opacity: 0; } }
 @keyframes home-out { to { opacity: 0; } }
-@keyframes home-settle { from { transform: scale(1.03); } }
-@keyframes home-copy-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes home-settle { from { transform: scale(1.04); } }
+@keyframes home-copy-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes home-lift { from { transform: translateY(20px); } }
+@keyframes home-blur-in { from { opacity: 0; filter: blur(10px); } }
+@keyframes home-open { from { clip-path: circle(0% at 50% 46%); } to { clip-path: circle(110% at 50% 46%); } }
+@keyframes home-disc-in { from { opacity: 0; transform: scale(.82); } }
+@keyframes home-pop { from { opacity: 0; transform: scale(.4); } }
+@keyframes home-write {
+  from { opacity: .3; clip-path: inset(-40% 110% -40% -10%); }
+  to { opacity: 1; clip-path: inset(-40% -10% -40% -10%); }
+}
+@keyframes home-rise { from { transform: translateY(4%) scale(1.03); } }
+@keyframes home-sink { to { transform: scale(.95); } }
 
 /* ----- Hero: tablet ----- */
 @media (min-width: 760px) and (max-width: 1039px) {
@@ -153,19 +215,21 @@
   .home-line { font-size: var(--fs-base); }
 }
 
-/* ----- Hero: phone (its own composition: the picture large on top, the
-   words and the call to action below it, the control bar last). The words'
-   box has a fixed height, so the call to action never moves. ----- */
+/* ----- Hero: phone (its own composition: the picture large on top on a
+   full-width cream stage, the words and the call to action below it on
+   white, the control bar last). The words' box has a fixed height, so the
+   call to action never moves. ----- */
 @media (max-width: 759px) {
   .home-hero {
-    --stage-h: min(440px, calc((100vw - 2 * var(--gutter)) * 1.08));
+    --stage-h: min(460px, calc(100vw * 1.12));
     --copy-h: 164px; --bar-h: 52px;
+    background: var(--paper);
   }
-  .home-carousel { height: calc(12px + var(--stage-h) + var(--copy-h) + var(--bar-h)); }
+  .home-carousel { height: calc(var(--stage-h) + var(--copy-h) + var(--bar-h)); }
   .home-slides { bottom: var(--bar-h); }
-  .home-slide { grid-template-columns: minmax(0, 1fr); grid-template-rows: calc(12px + var(--stage-h)) var(--copy-h); }
-  .home-panel { grid-row: 1; margin: 12px var(--gutter) 0; }
-  .home-copy-col { grid-row: 2; padding: 16px var(--gutter) 0; }
+  .home-slide { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--stage-h) var(--copy-h); }
+  .home-panel { grid-row: 1; margin: 0; --top: 6cqh; }
+  .home-copy-col { grid-row: 2; padding: 18px var(--gutter) 0; }
   .home-copy { padding-bottom: 14px; }
   .home-eyebrow { margin-bottom: 8px; font-size: 0.625rem; gap: 8px; }
   .home-eyebrow::before { width: 14px; }

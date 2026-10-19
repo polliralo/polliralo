@@ -5,6 +5,8 @@
 @font-face { font-family: "Jost"; src: url("/assets/fonts/jost-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
 @font-face { font-family: "Jost"; src: url("/assets/fonts/jost-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
 @font-face { font-family: "Jost"; src: url("/assets/fonts/jost-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+/* The hero's brush word only (decoration): hidden until the font is in, never a stand-in script. */
+@font-face { font-family: "Alex Brush"; src: url("/assets/fonts/alex-brush-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
 
 :root {
   /* Colour. The owner's refresh (October 2026): white everywhere, one soft
@@ -37,12 +39,14 @@
   --success: #3F5B3C;
   --focus: #5C5F45;
 
-  /* Type: one family, Jost, led by weight and size (hero 700, headings 600,
+  /* Type: Jost everywhere, led by weight and size (hero 700, headings 600,
      names and prices 500 to 600, text 400). --serif is kept as an alias so
-     any older rule falls back to the same family. */
+     any older rule falls back to the same family. The one exception is the
+     hero's decorative brush word (--script, the owner's October 2026 choice). */
   --sans: "Jost", "Futura", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --display: var(--sans);
   --serif: var(--display);
+  --script: "Alex Brush", "Snell Roundhand", "Segoe Script", cursive;  /* the hero's brush word */
   --w-text: 400;
   --w-medium: 500;
   --w-heading: 600;

@@ -176,3 +176,32 @@ The owner found the hero character too small and the hero too empty, then asked 
   - the stacked phone hero.
 
   The full test suite passes.
+
+## 9. Cream hero (19 October 2026)
+
+The owner reviewed the site preview and asked for:
+- a lighter, more stylish hero after a fashion reference;
+- one character on the polo slide;
+- no T-shirt slide;
+- premium animation.
+
+Decisions: `design-references.md` ("Owner decisions, cream hero").
+
+- **Slides:** five: Look 02, the walking polo model, Look 01, the blue stripe shirt, and the belt and wallet still life.
+- **New cut-outs:**
+  - `cutouts/cream-polo-walk.png`: rembg `birefnet-portrait` on a 2x copy of the owner's 474 px terrace photo, edges decontaminated, then set on the shared 1122 x 1402 canvas at the looks' scale.
+  - `cutouts/accessories-still.png`: the belt and the wallet cut from their still-life photos and set together with soft shadows.
+- **Stage:** light cream, with a large soft circle and two small ones behind each picture, and the brush phrase behind the model's head. There is no box, wall or MONO word. All sizes are in container units, so desktop, tablet and phone are composed the same way.
+- **Type:** Alex Brush, for the phrase only: SIL OFL, a 22 KB latin subset, preloaded on the home page only, `font-display: block`.
+- **Motion:**
+  - A widening-circle slide change (1.1 s) over an opaque stage, so two pictures never show through each other. A plain cross-fade had ghosted the two models over each other.
+  - The leaving slide stays drawn until it is covered.
+  - A written-in phrase, a spring on the small circles, and a two-beat headline with a short blur.
+  - A few pixels of pointer depth on computers.
+  - None of it runs under reduced motion.
+- **Removed:** the web copies of the olive wall and terrace photos. The terrace photo now feeds the cut-out; both originals stay in `media/originals/`.
+- **Checked:**
+  - every slide at 1440, 900 and 390 px;
+  - frames of the first paint and of a slide change, on desktop and phone;
+  - the full test suite and html-validate;
+  - axe and Lighthouse (numbers in the README).

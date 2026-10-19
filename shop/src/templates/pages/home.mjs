@@ -155,8 +155,12 @@ export default function render(ctx) {
     jsonld: [website(), organization()],
     ogImage: '/assets/img/og/default.jpg',
     ogImageAlt: 'MONO, modern menswear essentials: a fictional demo store',
-    // The hero headline is set in Jost 700, which the layout does not preload.
-    preload: ['<link rel="preload" href="/assets/fonts/jost-700.woff2" as="font" type="font/woff2" crossorigin>'],
+    // The hero headline is set in Jost 700 and its brush word in Alex Brush,
+    // neither of which the layout preloads.
+    preload: [
+      '<link rel="preload" href="/assets/fonts/jost-700.woff2" as="font" type="font/woff2" crossorigin>',
+      '<link rel="preload" href="/assets/fonts/alex-brush-400.woff2" as="font" type="font/woff2" crossorigin>',
+    ],
     bodyClass: 'page-home',
   };
 }

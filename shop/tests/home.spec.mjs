@@ -32,21 +32,20 @@ const activeSlide = (page) => page.locator('[data-slide].is-active');
 const toggle = (page) => page.locator('[data-hero-toggle]');
 const keyOf = (src) => (src ?? '').split('/').pop().replace(/-\d+\.(jpg|webp|avif)$/, '');
 
-// The hero's six messages, best first (HERO_SLIDES in assets/js/pages/home-view.js).
+// The hero's five messages, best first (HERO_SLIDES in assets/js/pages/home-view.js).
 const SLIDES = [
-  { id: 'brand', title: 'Less noise. Better essentials.', href: '/collections/?sort=new' },
-  { id: 'polos', title: 'Weekends, with a collar.', link: 'Shop polos', href: '/collections/polos/' },
-  { id: 'daylight', title: 'Made for daylight.', link: 'Shop sunglasses', href: '/collections/sunglasses/' },
-  { id: 'shirts', title: 'Oxfords and a fine stripe.', link: 'Shop shirts', href: '/collections/shirts/' },
-  { id: 'uniform', title: 'The everyday uniform.', link: 'Shop T-shirts', href: '/collections/t-shirts/' },
-  { id: 'finish', title: 'Finish the outfit.', link: 'Shop accessories', href: '/collections/accessories/' },
+  { id: 'brand', title: 'Less noise. Better essentials.', href: '/collections/?sort=new', script: ['Modern', 'classics'] },
+  { id: 'polos', title: 'Weekends, with a collar.', link: 'Shop polos', href: '/collections/polos/', script: ['Off', 'duty'] },
+  { id: 'daylight', title: 'Made for daylight.', link: 'Shop sunglasses', href: '/collections/sunglasses/', script: ['Golden', 'hour'] },
+  { id: 'shirts', title: 'Oxfords and a fine stripe.', link: 'Shop shirts', href: '/collections/shirts/', script: ['Sharp', 'lines'] },
+  { id: 'finish', title: 'Finish the outfit.', link: 'Shop accessories', href: '/collections/accessories/', script: ['Fine', 'details'] },
 ];
 const N = SLIDES.length;
 const pad2 = (n) => String(n).padStart(2, '0');
 const count = (i) => `${pad2(i)} / ${pad2(N)}`;
 
 test.describe('hero', () => {
-  test('six message slides, the h1 on the brand slide, the counter reads 01 / 06', async ({ page }) => {
+  test('five message slides, the h1 on the brand slide, the counter reads 01 / 05', async ({ page }) => {
     await openHome(page);
     const carousel = page.locator('[data-carousel]');
     await expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
@@ -110,29 +109,93 @@ test.describe('hero', () => {
     }
   });
 
-  test('every character fills his panel at his own proportions, never cut at the head or the sides', async ({ page }) => {
-    // Layout only: no settle animation while measuring.
+  test('every character stands at his own proportions from just below the top to the bottom edge, centred', async ({ page }) => {
+    // Layout only: no animation while measuring.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await openHome(page);
     for (let i = 0; i < N; i += 1) {
       const m = await activeSlide(page).evaluate((el) => {
+        if (el.querySelector('.home-panel.is-still')) return null;
         const img = el.querySelector('.home-character img');
-        if (!img) return null;
         const p = el.querySelector('.home-panel').getBoundingClientRect();
         const b = img.getBoundingClientRect();
-        return { ratio: b.width / b.height, top: b.top - p.top, left: b.left - p.left, right: p.right - b.right, h: b.height, ph: p.height, pw: p.width };
+        return { ratio: b.width / b.height, top: b.top - p.top, bottom: b.bottom - p.bottom, left: b.left - p.left, right: p.right - b.right, ph: p.height };
       });
       if (m) {
         expect(Math.abs(m.ratio - 1122 / 1402), SLIDES[i].id).toBeLessThan(0.01);
-        // Pinned to the panel's top (the cut-outs carry their own headroom) and at least as tall as the panel.
-        expect(Math.abs(m.top), SLIDES[i].id).toBeLessThan(1);
-        expect(m.h, SLIDES[i].id).toBeGreaterThanOrEqual(m.ph - 1);
+        // A little air above the head (the cut-outs carry their own headroom
+        // too), and the hero's bottom edge cuts the rest.
+        expect(m.top / m.ph, SLIDES[i].id).toBeGreaterThan(0.04);
+        expect(m.top / m.ph, SLIDES[i].id).toBeLessThan(0.09);
+        expect(m.bottom, SLIDES[i].id).toBeGreaterThanOrEqual(-1);
         // Centred: the cut-outs' empty margins may overhang, the person never does.
         expect(Math.abs(m.left - m.right), SLIDES[i].id).toBeLessThan(2);
       }
       await page.locator('[data-hero-next]').click();
       await expect(counter(page)).toHaveText(count(((i + 1) % N) + 1));
     }
+  });
+
+  test('every slide has the same stage: no box, a big circle, two small ones and a brush phrase, all behind the picture', async ({ page }, testInfo) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openHome(page);
+    for (let i = 0; i < N; i += 1) {
+      const slide = activeSlide(page);
+      const script = slide.locator('.home-script');
+      await expect(script).toHaveAttribute('aria-hidden', 'true');
+      await expect(script).toHaveAttribute('data-a', SLIDES[i].script[0]);
+      await expect(script).toHaveAttribute('data-b', SLIDES[i].script[1]);
+      const m = await slide.evaluate((el) => {
+        const panel = el.querySelector('.home-panel');
+        const disc = el.querySelector('.home-disc');
+        const art = el.querySelector('.home-art');
+        const z = (node) => Number(getComputedStyle(node).zIndex);
+        const p = panel.getBoundingClientRect();
+        const d = disc.getBoundingClientRect();
+        const cs = getComputedStyle(panel);
+        return {
+          hero: getComputedStyle(document.querySelector('[data-hero]')).backgroundColor,
+          panel: cs.backgroundColor, radius: parseFloat(cs.borderTopLeftRadius),
+          dots: ['::before', '::after'].map((pseudo) => getComputedStyle(panel, pseudo)).map((d2) => d2.content !== 'none' && parseFloat(d2.borderTopLeftRadius) > 0 && parseFloat(d2.width) > 0),
+          round: Math.abs(d.width - d.height) < 1 && getComputedStyle(disc).borderTopLeftRadius === '50%',
+          centred: Math.abs((d.left + d.width / 2) - (p.left + p.width / 2)) < 2,
+          order: [z(disc), z(el.querySelector('.home-script')), z(art)],
+          font: getComputedStyle(el.querySelector('.home-script')).fontFamily,
+          text: panel.textContent.trim(),
+        };
+      });
+      // A light cream stage with no box around it (on phones the words below sit on white).
+      expect(m.panel, SLIDES[i].id).toBe('rgb(247, 241, 232)');
+      expect(m.hero, SLIDES[i].id).toBe(isPhone(testInfo) ? 'rgb(255, 255, 255)' : 'rgb(247, 241, 232)');
+      expect(m.radius, SLIDES[i].id).toBe(0);
+      expect(m.round && m.centred, SLIDES[i].id).toBe(true);
+      expect(m.dots, SLIDES[i].id).toEqual([true, true]);
+      // Circle, then phrase, then picture: nothing is drawn over the picture.
+      expect(m.order[0] < m.order[1] && m.order[1] < m.order[2], SLIDES[i].id).toBe(true);
+      expect(m.font, SLIDES[i].id).toContain('Alex Brush');
+      // The phrase is decoration (drawn from data attributes): no text in the stage, and no MONO wall word.
+      expect(m.text, SLIDES[i].id).toBe('');
+      await page.locator('[data-hero-next]').click();
+      await expect(counter(page)).toHaveText(count(((i + 1) % N) + 1));
+    }
+    await expect(page.locator('.home-word, .ghost-word')).toHaveCount(0);
+  });
+
+  test('a slide change opens the new stage in a widening circle over the old one', async ({ page }) => {
+    await openHome(page);
+    await page.locator('[data-hero-next]').click();
+    const anim = await page.locator('[data-slide-id="polos"]').evaluate((el) => ({
+      entering: el.classList.contains('is-entering'),
+      names: getComputedStyle(el.querySelector('.home-panel')).animationName,
+      script: getComputedStyle(el.querySelector('.home-script')).animationName,
+    }));
+    expect(anim.entering).toBe(true);
+    expect(anim.names).toContain('home-open');
+    expect(anim.script).toContain('home-write');
+    // The old slide stays drawn beneath until it is covered, then goes.
+    await expect(page.locator('[data-slide-id="brand"]')).toHaveClass(/is-leaving/);
+    await expect(page.locator('[data-slide-id="brand"]')).not.toHaveClass(/is-leaving/, { timeout: 3000 });
+    await expect(page.locator('[data-slide-id="polos"]')).not.toHaveClass(/is-entering/, { timeout: 3000 });
   });
 
   test('arrow keys move between slides', async ({ page }) => {
@@ -232,64 +295,74 @@ test.describe('hero', () => {
     expect(cats.y).toBeLessThan(page.viewportSize().height);
   });
 
-  test('the brand slide: the owner\'s character, large, in front of the studio wall, nothing over him', async ({ page }) => {
+  test('the brand slide: the owner\'s character, large, with his head inside the circle and between the two words', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await openHome(page);
     const slide = page.locator('[data-slide-id="brand"]');
     await expect(slide.locator('.home-character img')).toHaveAttribute('src', /cut-look-02-/);
-    await expect(page.locator('.ghost-word')).toHaveCount(0);
-    // MONO on the wall is decoration, behind him.
-    const word = slide.locator('.home-word');
-    await expect(word).toHaveAttribute('aria-hidden', 'true');
-    await expect(word).toHaveAttribute('data-word', 'Mono');
-    const z = await slide.evaluate((el) => [el.querySelector('.home-word'), el.querySelector('.home-character')].map((n) => Number(getComputedStyle(n).zIndex)));
-    expect(z[0]).toBeLessThan(z[1]);
     const m = await slide.evaluate((el) => {
       const panel = el.querySelector('.home-panel');
       const img = el.querySelector('.home-character img');
+      const disc = el.querySelector('.home-disc').getBoundingClientRect();
       const p = panel.getBoundingClientRect();
       const b = img.getBoundingClientRect();
       // The person inside the 1122 x 1402 cut-out (measured from
-      // media/cutouts/look-02.png): x 343 to 793, head at y 50, the
-      // aviators in his hand end near y 968.
+      // media/cutouts/look-02.png): x 343 to 793, head at y 50 (its middle
+      // at x 539), the aviators in his hand end near y 968.
       const person = {
         left: b.left + b.width * (343 / 1122), right: b.left + b.width * (793 / 1122),
-        head: b.top + b.height * (50 / 1402), glasses: b.top + b.height * (968 / 1402),
+        head: b.top + b.height * (50 / 1402), headX: b.left + b.width * (539 / 1122), glasses: b.top + b.height * (968 / 1402),
       };
-      const bg = (node) => getComputedStyle(node).backgroundColor;
+      const r = disc.width / 2;
+      const cx = disc.left + r;
+      const cy = disc.top + r;
+      // The gap between the phrase's two words, centred on the stage.
+      const gap = parseFloat(getComputedStyle(el.querySelector('.home-script')).columnGap) || 0;
+      const cols = getComputedStyle(el.querySelector('.home-script')).gridTemplateColumns.split(' ').map(parseFloat);
       return {
-        hero: bg(document.querySelector('[data-hero]')),
-        panel: getComputedStyle(panel).backgroundImage,
-        radius: parseFloat(getComputedStyle(panel).borderTopLeftRadius),
         share: (person.glasses - person.head) / p.height,
         inside: person.left >= p.left + 4 && person.right <= p.right - 4 && person.head >= p.top + 8 && person.glasses <= p.bottom - 4,
+        headInCircle: Math.hypot(person.headX - cx, person.head + 0.05 * p.height - cy) < r,
+        headNearGap: Math.abs(person.headX - (p.left + p.width / 2)) < cols[1] / 2 + gap,
       };
     });
-    // A white hero, a warm studio wall in a gently rounded panel, and the
-    // character large: head to hand fills most of the panel.
-    expect(m.hero).toBe('rgb(255, 255, 255)');
-    expect(m.panel).toContain('gradient');
-    expect(m.radius).toBeGreaterThanOrEqual(12);
-    expect(m.radius).toBeLessThanOrEqual(24);
-    expect(m.share).toBeGreaterThan(0.8);
+    // Head to hand fills most of the stage, nothing is cut, and his head
+    // sits inside the big circle, in the gap between "Modern" and "classics".
+    expect(m.share).toBeGreaterThan(0.75);
     expect(m.inside).toBe(true);
+    expect(m.headInCircle).toBe(true);
+    expect(m.headNearGap).toBe(true);
   });
 
-  test('the polos slide: the owner\'s two photos side by side, each whole in height', async ({ page }) => {
+  test('the polos slide: one character cut from the owner\'s terrace photo, on the same stage', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await openHome(page);
     await page.locator('[data-hero-next]').click();
     await expect(activeSlide(page)).toHaveAttribute('data-slide-id', 'polos');
-    const items = activeSlide(page).locator('.home-pair-item');
-    await expect(items).toHaveCount(2);
-    await expect(items.nth(0).locator('img')).toHaveAttribute('src', /life-olive-polo-wall-/);
-    await expect(items.nth(1).locator('img')).toHaveAttribute('src', /life-cream-polo-walk-/);
-    const [a, b] = [await items.nth(0).boundingBox(), await items.nth(1).boundingBox()];
-    const panel = await activeSlide(page).locator('.home-panel').boundingBox();
-    expect(Math.abs(a.y - b.y)).toBeLessThan(1);
-    expect(Math.abs(a.height - b.height)).toBeLessThan(1);
-    expect(Math.abs(a.width - b.width)).toBeLessThan(1);
-    expect(a.x + a.width).toBeLessThan(b.x);
-    expect(Math.abs(a.height - panel.height)).toBeLessThan(1);
+    await expect(activeSlide(page).locator('.home-character img')).toHaveCount(1);
+    await expect(activeSlide(page).locator('.home-character img')).toHaveAttribute('src', /cut-cream-polo-walk-/);
+    await expect(activeSlide(page).locator('.home-pair-item')).toHaveCount(0);
+    await expect(activeSlide(page).locator('.home-panel')).toHaveClass(/is-full/);
+  });
+
+  test('the accessories slide: the belt and wallet still life rests on the circle, under its phrase', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openHome(page);
+    await page.locator('[data-hero-prev]').click();
+    await expect(activeSlide(page)).toHaveAttribute('data-slide-id', 'finish');
+    const img = activeSlide(page).locator('.home-character img');
+    await expect(img).toHaveAttribute('src', /cut-accessories-still-/);
+    const m = await activeSlide(page).evaluate((el) => {
+      const p = el.querySelector('.home-panel').getBoundingClientRect();
+      const b = el.querySelector('.home-character img').getBoundingClientRect();
+      const d = el.querySelector('.home-disc').getBoundingClientRect();
+      return { inside: b.left >= p.left && b.right <= p.right && b.top >= p.top && b.bottom <= p.bottom, ratio: b.width / b.height, onDisc: Math.abs((b.left + b.width / 2) - (d.left + d.width / 2)) < 2 };
+    });
+    expect(m.inside).toBe(true);
+    expect(m.onDisc).toBe(true);
+    expect(Math.abs(m.ratio - 1340 / 1018)).toBeLessThan(0.01);
+    // No T-shirt slide any more.
+    await expect(page.locator('[data-hero] a[href="/collections/t-shirts/"]')).toHaveCount(0);
   });
 
   test('the call to action is a black pill', async ({ page }) => {

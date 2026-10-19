@@ -1,5 +1,6 @@
-// Home page behaviour: the three-message hero (autoplay on wide, hover-capable
-// screens only, with pause; swipe and arrow keys everywhere), the shop-the-look
+// Home page behaviour: the five-message hero (autoplay on wide, hover-capable
+// screens only, with pause; swipe and arrow keys everywhere; a little pointer
+// depth on computers), the shop-the-look
 // switch, the small add controls in the look and watch panels, and store
 // hydration. Markup builders are shared with the build: ./home-view.js.
 
@@ -169,15 +170,16 @@ function go(target, { manual = false } = {}) {
     next.classList.remove('is-leaving', 'is-entering');
     next.inert = false;
     if (motion) {
-      // Crossfade: the new slide fades in on top (600ms) while the old one
-      // stays beneath; the old words leave first so words never overlap.
+      // Layered change (home.css): the new stage opens over the old one in
+      // a widening circle (1100ms), so the old slide stays drawn beneath
+      // until it is covered; the old words leave first so words never overlap.
       from.classList.add('is-leaving');
       clearTimeout(from._leave);
-      from._leave = setTimeout(() => from.classList.remove('is-leaving'), 640);
+      from._leave = setTimeout(() => from.classList.remove('is-leaving'), 1160);
       void next.offsetWidth;
       next.classList.add('is-entering');
       clearTimeout(next._enter);
-      next._enter = setTimeout(() => next.classList.remove('is-entering'), 1300);
+      next._enter = setTimeout(() => next.classList.remove('is-entering'), 1800);
     } else {
       from.classList.remove('is-leaving');
     }
@@ -189,6 +191,31 @@ function go(target, { manual = false } = {}) {
     restartCycle();
     warmNeighbours();
   });
+}
+
+// Depth on a computer: the picture, the brush phrase and the circle drift a
+// few pixels apart with the pointer (home.css reads --px and --py, -1 to 1),
+// easing back to rest when the pointer leaves.
+function setupDepth() {
+  const FINE = window.matchMedia('(hover: hover) and (pointer: fine)');
+  let target = { x: 0, y: 0 };
+  const now = { x: 0, y: 0 };
+  let frame = 0;
+  const step = () => {
+    now.x += (target.x - now.x) * 0.08;
+    now.y += (target.y - now.y) * 0.08;
+    carousel.style.setProperty('--px', now.x.toFixed(3));
+    carousel.style.setProperty('--py', now.y.toFixed(3));
+    frame = Math.abs(target.x - now.x) + Math.abs(target.y - now.y) > 0.002 ? requestAnimationFrame(step) : 0;
+  };
+  const run = () => { if (!frame) frame = requestAnimationFrame(step); };
+  carousel.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || !FINE.matches || reducedMotion()) return;
+    const r = carousel.getBoundingClientRect();
+    target = { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: ((e.clientY - r.top) / r.height) * 2 - 1 };
+    run();
+  }, { passive: true });
+  carousel.addEventListener('pointerleave', () => { target = { x: 0, y: 0 }; run(); });
 }
 
 function setupHero() {
@@ -251,8 +278,9 @@ function setupHero() {
 
   carousel.dataset.ready = '';
   syncAutoplay();
-  // The first-paint settle is a one-off.
-  setTimeout(() => $$('.home-slide.is-intro', carousel).forEach((s) => s.classList.remove('is-intro')), 1600);
+  setupDepth();
+  // The first-paint entrance is a one-off.
+  setTimeout(() => $$('.home-slide.is-intro', carousel).forEach((s) => s.classList.remove('is-intro')), 2100);
   if (document.readyState === 'complete') warmNeighbours();
   else window.addEventListener('load', warmNeighbours, { once: true });
 }

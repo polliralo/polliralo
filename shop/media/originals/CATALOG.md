@@ -47,7 +47,9 @@ Prices, sizes, fabric content and stock are not known yet and must come from the
 
 ### The owner's polo photos (October 2026)
 
-Two full-length lifestyle photos the owner supplied for the home hero, kept exactly as sent: `lifestyle/olive-polo-green-wall.jpg` (olive polo and charcoal trousers by an olive-green wall, 525 × 1086) and `lifestyle/cream-knit-polo-terrace-walk.jpg` (cream knit polo and navy trousers on a sunlit terrace, 474 × 1086). They are small, so the site never shows them wider than that; a larger copy of each would sharpen the hero on big screens.
+Two full-length lifestyle photos the owner supplied for the home hero, kept exactly as sent: `lifestyle/olive-polo-green-wall.jpg` (olive polo and charcoal trousers by an olive-green wall, 525 × 1086) and `lifestyle/cream-knit-polo-terrace-walk.jpg` (cream knit polo and navy trousers on a sunlit terrace, 474 × 1086). Since the cream hero round (19 October 2026), the terrace photo is the source of `cutouts/cream-polo-walk.png`, the hero's polo character. That cut-out was made with rembg `birefnet-portrait` on a 2x copy, its edges decontaminated, and set on the shared 1122 × 1402 canvas at the look photos' scale. The olive wall photo is not shown on the site at the moment. Both are small; a larger copy of the terrace photo would sharpen the hero on big screens.
+
+Still life for the hero's accessories slide: `cutouts/accessories-still.png` sets the belt from `still-life/black-leather-belt.png` and the wallet from `still-life/brown-bifold-wallet.png` together, each cut out with rembg and given a soft shadow. The originals are unchanged.
 
 ### Round 3 (October 2026)
 

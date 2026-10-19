@@ -64,6 +64,19 @@
     "fallback": "cream-knit-polo-closeup-800.jpg",
     "color": "#F8E8E8"
   },
+  "cut-accessories-still": {
+    "w": 1340,
+    "h": 1018,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-accessories-still-800.webp",
+    "color": null
+  },
   "cut-blue-oxford-shirt-front": {
     "w": 1122,
     "h": 1402,
@@ -153,6 +166,19 @@
     ],
     "alpha": true,
     "fallback": "cut-cream-knit-polo-front-800.webp",
+    "color": null
+  },
+  "cut-cream-polo-walk": {
+    "w": 1122,
+    "h": 1402,
+    "widths": [
+      360,
+      560,
+      800,
+      1120
+    ],
+    "alpha": true,
+    "fallback": "cut-cream-polo-walk-800.webp",
     "color": null
   },
   "cut-ivory-heavy-tee-back": {
@@ -376,17 +402,6 @@
     "fallback": "life-charcoal-tee-wardrobe-800.jpg",
     "color": "#181818"
   },
-  "life-cream-polo-walk": {
-    "w": 474,
-    "h": 1086,
-    "widths": [
-      360,
-      474
-    ],
-    "alpha": false,
-    "fallback": "life-cream-polo-walk-474.jpg",
-    "color": "#383838"
-  },
   "life-ivory-tee-concrete": {
     "w": 1122,
     "h": 1402,
@@ -412,17 +427,6 @@
     "alpha": false,
     "fallback": "life-olive-polo-terrace-800.jpg",
     "color": "#383828"
-  },
-  "life-olive-polo-wall": {
-    "w": 525,
-    "h": 1086,
-    "widths": [
-      360,
-      525
-    ],
-    "alpha": false,
-    "fallback": "life-olive-polo-wall-525.jpg",
-    "color": "#282818"
   },
   "life-sunglasses-jacket": {
     "w": 1122,

@@ -141,3 +141,31 @@ After the white refresh the owner found the hero character too small and the her
 3. **The look photos may repeat.** Both look photos now appear in the hero and in Shop the Look (where their pieces are bought), by the owner's choice. No other photo appears twice on the home page.
 4. **Phones:** the picture sits large above the words (about 400 px tall at 390 px wide), the call to action is a full-width pill below it, and the control bar closes the hero. The categories still start on the first screen.
 5. **Matching blocks:** the dark watch feature, the newsletter and the About page's dark section are now rounded panels inside the page margins, like every other picture block. The footer stays full width.
+
+## Owner decisions, cream hero (19 October 2026)
+
+After the site preview the owner asked to drop the T-shirt slide, to show one character on the polo slide on the same background as the others, and to make the backgrounds lighter and more beautiful in cream. They pointed to a "Stay Foolish" fashion reference: no MONO word and no boxed background, stylish script writing behind the character, and circles. They also asked for the best, most premium animation.
+
+1. **Five slides, best first:**
+   - the brand message with the owner's Look 02 model;
+   - polos, with one walking model cut from the owner's terrace photo (`cutouts/cream-polo-walk.png`, full length at the looks' scale);
+   - sunglasses, with the Look 01 model;
+   - shirts (blue stripe shirt);
+   - accessories, a belt and wallet still life cut from their product photos.
+
+   The T-shirt slide is gone, and the olive wall photo is no longer shown.
+2. **Cream stage, no box.** The hero is light cream (#F7F1E8) from edge to edge. Each picture stands in front of a large, soft sand circle (#ECDDC7, lighter at its top left), with two small circles beside it as in the reference. There is no rounded panel, no studio wall and no MONO word. The hero's bottom edge cuts the full-length figures at the knee. On phones the stage is a full-width cream band above the words, which sit on white.
+3. **Brush phrase.** A two-word phrase in Alex Brush, warm caramel (#B98C5B) and tilted slightly, sits behind the model at head height. His head falls in the gap between the two words, so both stay readable:
+   - "Modern classics"
+   - "Off duty"
+   - "Golden hour"
+   - "Sharp lines"
+   - "Fine details" (above the still life)
+
+   Alex Brush is the one exception to Jost on the site. The phrase is decoration only: it is drawn from data attributes and hidden from screen readers. Nothing is drawn over a picture.
+4. **Premium motion.**
+   - A new slide opens in a widening circle from the middle of the big circle and covers the old one.
+   - Inside it, the picture rises into place, the phrase writes itself in from the left, the small circles settle with a soft spring, and the headline arrives in two beats with a short blur.
+   - On a computer, the picture, the phrase and the circles drift a few pixels apart with the pointer.
+   - The first screen never fades the main picture; it only settles.
+   - None of this runs under reduced motion.

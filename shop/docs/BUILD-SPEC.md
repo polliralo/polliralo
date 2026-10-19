@@ -39,11 +39,11 @@ approved previews in `docs/preview/*.jpg`. Research to follow:
   (the stock is demo data and the owner's research rules such lines out); the
   quantity stepper still stops at what is in stock.
 - The footer disclosure stays (it is in `layout.mjs`).
-- Words never sit on top of photos. Labels go under or beside images. The
-  only giant word on the site is MONO on the home hero's studio wall, always
-  behind the models (`.home-word`, drawn from `data-word` and
-  `aria-hidden`). Share cards from `npm run shop:og` also set a faint word
-  behind their cut-outs.
+- Words never sit on top of photos. Labels go under or beside images. There
+  are no giant words on the site. The home hero's two-word brush phrase
+  (`.home-script`, drawn from `data-a` and `data-b`, `aria-hidden`) always
+  sits behind the model, his head in the gap between the words. Share cards
+  from `npm run shop:og` set a faint word behind their cut-outs.
 - Decorative giant words are written as
   `<span class="ghost-word" data-word="Polo" aria-hidden="true"></span>`: the
   text comes from a CSS pseudo-element, so screen readers and contrast checks
@@ -186,6 +186,9 @@ product page title 600 (`--w-heading`), product names on cards 500
 (`--w-medium`), body 400 (`--w-text`); display sizes use
 `--tracking-display`. An `em` inside a heading is set in the olive accent
 (`--accent-ink`), never italic. Small capitals labels: `.eyebrow`, `.label`.
+The one exception to Jost: the home hero's brush phrases are set in Alex
+Brush (`--script`; a 22 KB latin subset, preloaded on the home page only,
+`font-display: block` so a stand-in script never shows).
 Every picture frame and panel is rounded with the shape tokens (pictures
 20px large, 16px cards and tiles, 12px thumbnails, inputs and notices).
 No shadows except toasts and the filter dropdowns. No icon rows, no
@@ -217,8 +220,8 @@ Page CSS must be scoped: prefix every selector with your page's root class
 scroll ever.
 
 Images: always `r.picture(key, {...})` with correct `sizes`. Cut-outs (keys
-`cut-*`) have alpha and sit on `--canvas` (the home hero's character stands
-on plain white); give their frame `aspect-ratio: 4 / 5`
+`cut-*`) have alpha and sit on `--canvas` (the home hero's characters stand
+on its cream stage in front of a large circle); give their frame `aspect-ratio: 4 / 5`
 (the media is 1122x1402). Photos are 4:5 except `wide-*` (16:9). Every image
 below the first screen is lazy. The LCP image of a page uses
 `priority: true` and is never faded or hidden at first paint. One image per
@@ -237,8 +240,8 @@ JavaScript never move the footer (no layout shift).
   `--ease-in-out`, `--ease-curtain`, `--ease-in`, `--ease-standard`,
   `--ease-settle`; `--d-fast` 160 for buttons and small hovers, `--d-base`
   240 for minor changes, `--d-drawer` 300 for drawers and dialogs,
-  `--d-slow` 450 for reveals, `--d-slower` 600 for the home hero cross-fade,
-  `--stagger` 50ms). No parallax, no bounce.
+  `--d-slow` 450 for reveals, `--d-slower` 600 for larger image changes,
+  `--stagger` 50ms). No parallax, no bounce, except in the home hero (below).
 - Animate only `transform`, `opacity` (and `clip-path` for one-shot reveals).
   Never `transition: all`. Never animate width, height, top, left or margins.
 - Scroll reveals are for editorial images only: `data-reveal` (rise and
@@ -253,6 +256,15 @@ JavaScript never move the footer (no layout shift).
   gallery image) go through `withTransition()`.
 - Add to bag: no fly-to-cart, no shake. Button label swaps to "Added" for
   2 seconds with a fixed min-width; `addToBag` does the rest.
+- The home hero is the one place with richer motion (the owner asked for
+  premium motion, 19 October 2026). A new slide opens in a widening circle
+  (`clip-path`, 1.1 s) over the opaque stage, and the leaving slide stays
+  drawn until it is covered. The picture rises, the brush phrase is wiped in
+  from the left, the two small circles settle on `--ease-settle`, and the
+  headline arrives in two beats with a short blur. On fine pointers the
+  layers drift a few pixels with the pointer (`--px` and `--py`, set by
+  `home.js`). The first picture is never faded; it only settles. Nothing
+  else on the site gains motion from this.
 - Reduced motion: everything is visible and usable with
   `prefers-reduced-motion: reduce`, with JS off, and before the store loads.
   Check `reducedMotion()` at call time. The home hero is the only thing

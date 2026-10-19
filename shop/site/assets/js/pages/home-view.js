@@ -8,23 +8,23 @@ import { esc, money, picture, productUrl, productCard, icon, stockInfo, needsCho
 const slugId = (value) => String(value ?? '').replace(/[^a-z0-9_-]/gi, '-');
 export const pad = (n) => String(n).padStart(2, '0');
 
-/* ----- Hero: six message slides ----- */
+/* ----- Hero: five message slides ----- */
 
 // One message per slide, best first. The text column is always on the left
 // at the same width and the call to action sits at the bottom of it, so it
-// never moves. Every picture fills the same rounded panel on the right (on
-// phones, above the words): words never sit on a picture.
+// never moves. The picture stands on the right (on phones, above the words):
+// words never sit on a picture.
 //
-// Characters are cut-outs shown large on the panel's soft surface, filling
-// its height. The studio views are framed from the head to mid-thigh; the
-// owner's two look photos are full length, so `full` shows them from the
-// head to just above the knee (the panel clips the rest). A `pair` puts two
-// portrait photos side by side in the panel.
+// The owner's direction (19 October 2026, after the "Stay Foolish"
+// reference): a light cream hero with no box, a large soft circle behind
+// each character and a two-word phrase in a brush script behind him, his
+// head between the two words so both stay readable. The cut-outs
+// share one canvas: the studio views are framed from the head to mid-thigh;
+// the full-length ones (`full`) are shown from the head to the knee and the
+// hero's bottom edge cuts the rest. The accessories slide is a still life.
 const HERO_CUT_SIZES = '(min-width: 1040px) 40vw, (min-width: 760px) 62vw, 82vw';
-const HERO_LOOK_SIZES = '(min-width: 1040px) 54vw, (min-width: 760px) 84vw, 112vw';
-const HERO_PAIR_SIZES = '(min-width: 1040px) 27vw, (min-width: 760px) 30vw, 48vw';
-// Cover crops of the wide photos: drawn wider than their panel.
-const HERO_WIDE_SIZES = '(min-width: 1040px) 88vw, (min-width: 760px) 138vw, 180vw';
+const HERO_LOOK_SIZES = '(min-width: 1040px) 50vw, (min-width: 760px) 80vw, 104vw';
+const HERO_STILL_SIZES = '(min-width: 1040px) 38vw, (min-width: 760px) 60vw, 84vw';
 
 export const HERO_SLIDES = [
   {
@@ -33,6 +33,7 @@ export const HERO_SLIDES = [
     eyebrow: 'Modern menswear',
     title: 'Less noise. <em>Better essentials.</em>',
     line: 'Shirts, T-shirts and polos in calm colours, and the few accessories that finish them.',
+    script: ['Modern', 'classics'],
     // The owner's character (October 2026): the transparent cut-out of
     // looks/look-02.png at its own proportions.
     character: {
@@ -47,11 +48,12 @@ export const HERO_SLIDES = [
     eyebrow: 'Polos',
     title: 'Weekends, <em>with a collar.</em>',
     line: 'Piqué polos in olive and navy, and an open-textured knit polo in cream.',
-    // The owner's two full-length polo photos, side by side.
-    pair: [
-      { key: 'life-olive-polo-wall', x: '50%', y: '28%', alt: 'Man in an olive polo and charcoal trousers by an olive-green wall in the sun' },
-      { key: 'life-cream-polo-walk', x: '50%', y: '24%', alt: 'Man in a cream knit polo and navy trousers walking along a sunlit terrace' },
-    ],
+    script: ['Off', 'duty'],
+    // Cut from the owner's terrace photo (lifestyle/cream-knit-polo-terrace-walk.jpg).
+    character: {
+      key: 'cut-cream-polo-walk', full: true, sizes: HERO_LOOK_SIZES,
+      alt: 'Model in a cream knit polo, navy trousers and brown loafers, walking',
+    },
     cta: { label: 'Shop polos', href: '/collections/polos/' },
   },
   {
@@ -60,6 +62,7 @@ export const HERO_SLIDES = [
     eyebrow: 'Sunglasses',
     title: 'Made for <em>daylight.</em>',
     line: 'A strong black rectangle, a thin silver aviator and a round tortoiseshell.',
+    script: ['Golden', 'hour'],
     // The owner's Look 01 photo: black rectangular sunglasses with the olive polo.
     character: {
       key: 'cut-look-01', full: true, sizes: HERO_LOOK_SIZES,
@@ -73,17 +76,9 @@ export const HERO_SLIDES = [
     eyebrow: 'Shirts',
     title: 'Oxfords and a <em>fine stripe.</em>',
     line: 'Button-down Oxfords in ivory and light blue, and fine blue and white stripes with a point collar.',
+    script: ['Sharp', 'lines'],
     character: { key: 'cut-blue-stripe-shirt-front', sizes: HERO_CUT_SIZES, alt: 'Model in the blue stripe shirt' },
     cta: { label: 'Shop shirts', href: '/collections/shirts/' },
-  },
-  {
-    id: 'uniform',
-    level: 2,
-    eyebrow: 'T-shirts',
-    title: 'The everyday <em>uniform.</em>',
-    line: 'Crew necks that keep their shape: textured charcoal, heavy ivory and plain navy.',
-    character: { key: 'cut-charcoal-textured-tee-front', sizes: HERO_CUT_SIZES, alt: 'Model in the charcoal textured tee' },
-    cta: { label: 'Shop T-shirts', href: '/collections/t-shirts/' },
   },
   {
     id: 'finish',
@@ -91,10 +86,8 @@ export const HERO_SLIDES = [
     eyebrow: 'Accessories',
     title: 'Finish the <em>outfit.</em>',
     line: 'A brown bifold wallet, a black dress belt and a slim black card holder.',
-    image: {
-      key: 'wide-accessories-table', x: '52%', y: '50%', sizes: HERO_WIDE_SIZES,
-      alt: 'Black dress belt, black card holder and brown bifold wallet on a dark wood table in window light',
-    },
+    script: ['Fine', 'details'],
+    still: { key: 'cut-accessories-still', sizes: HERO_STILL_SIZES, alt: 'Black dress belt and brown bifold wallet' },
     cta: { label: 'Shop accessories', href: '/collections/accessories/' },
   },
 ];
@@ -106,27 +99,19 @@ function ctaHTML(cta) {
   return `<a class="btn home-cta" href="${esc(cta.href)}"><span class="home-cta-label">${label}</span>${icon('arrow', { size: 16 })}</a>`;
 }
 
+// The words before the accent get their own span so the headline can arrive
+// in two beats. The heading's text is unchanged.
+const titleHTML = (title) => title.replace(/^([^<]+)(?=<em>)/, '<span class="home-title-lead">$1</span>');
+
 function panelHTML(slide, first) {
-  if (slide.pair) {
-    return `<div class="home-panel is-pair">`
-      + `<div class="home-art">${slide.pair.map((img, i) => `<div class="home-pair-item" style="--x:${esc(img.x ?? '50%')};--y:${esc(img.y ?? '50%')}">`
-        + picture(img.key, { alt: img.alt ?? '', sizes: HERO_PAIR_SIZES, priority: first && i === 0 })
-        + `</div>`).join('')}</div>`
-      + `</div>`;
-  }
-  if (slide.image) {
-    const img = slide.image;
-    return `<div class="home-panel is-photo" style="--x:${esc(img.x ?? '50%')};--y:${esc(img.y ?? '50%')}">`
-      + `<div class="home-art">${picture(img.key, { alt: img.alt ?? '', sizes: img.sizes, priority: first })}</div>`
-      + `</div>`;
-  }
-  // The character stands large in front of a warm studio wall with the
-  // brand name across it. The word is decoration (drawn from data-word, so
-  // it is not read out) and always sits behind him; nothing is drawn over him.
-  const c = slide.character;
-  return `<div class="home-panel is-stage${c.full ? ' is-full' : ''}">`
-    + `<span class="home-word" data-word="Mono" aria-hidden="true"></span>`
-    + `<div class="home-art home-character">${picture(c.key, { alt: c.alt ?? '', sizes: c.sizes, priority: first })}</div>`
+  // Behind the picture: the circle, then the phrase (decoration, drawn from
+  // data attributes so it is not read out). Nothing is drawn over the picture.
+  const art = slide.character ?? slide.still;
+  const kind = slide.still ? ' is-still' : (art.full ? ' is-full' : '');
+  return `<div class="home-panel is-stage${kind}">`
+    + `<span class="home-disc" aria-hidden="true"></span>`
+    + `<span class="home-script" data-a="${esc(slide.script[0])}" data-b="${esc(slide.script[1])}" aria-hidden="true"></span>`
+    + `<div class="home-art home-character">${picture(art.key, { alt: art.alt ?? '', sizes: art.sizes, priority: first })}</div>`
     + `</div>`;
 }
 
@@ -138,7 +123,7 @@ export function heroSlideHTML(slide, i, total) {
     + `<div class="home-copy-col">`
     + `<div class="home-copy">`
     + `<p class="eyebrow home-eyebrow">${esc(slide.eyebrow)}</p>`
-    + `<${h} class="home-title">${slide.title}</${h}>`
+    + `<${h} class="home-title">${titleHTML(slide.title)}</${h}>`
     + (slide.line ? `<p class="home-line">${esc(slide.line)}</p>` : '')
     + `</div>`
     + ctaHTML(slide.cta)
