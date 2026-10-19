@@ -106,6 +106,8 @@ The owner asked for three distinct products per category, but only with photos t
 - **Shirts** has its third product: the Light Blue Oxford Shirt, cut out of `lifestyle/blue-oxford-shirt-library.png`, the only photo of it (so it has a front view and the library photo, no back view yet).
 - **Every other category** has no third product in the photos. The cream knitted polo, the linen overshirt, the chore jacket and the card holder only appear in wide or group shots, too small or shared with other pieces to make a clean product photo. So those categories stay at two products, and the collection pages fill the last row with an editorial tile instead of a fake product.
 
+Higgsfield note (19 October 2026): on the free Higgsfield plan no image model runs from the MCP connection ("Requires basic plan or higher"), so these photos need a paid plan there, or any other tool that accepts reference photos. The reference photos can be imported straight from this public repository's raw GitHub links.
+
 When the photos below arrive, Claude adds them to `media/originals/` and `CATALOG.md`, then to `scripts/media.mjs` and `src/data/catalog.json` (with a demo price), and runs `npm run shop:media`, `npm run shop:og` and `npm run shop:check`. The same rules as above apply: upload the reference photos named, portrait 4:5, check every result, send them in the chat and say which item each one is.
 
 | # | Category | New product | Files to send (save under these names) | Upload as reference |
@@ -132,10 +134,10 @@ Back view: upload the new front photo and use the prompt of item 1 with `[GARMEN
 Front:
 
 ```
-Use the first uploaded photo as the exact reference for the man, the trousers, the pose, the plain grey studio background, the soft even light and the framing from head to mid-thigh. Change only the polo: he now wears the cream knitted polo from the second photo, copied exactly: the same cream colour, the same fine knit texture, the same open knitted collar with no buttons, short sleeves with ribbed cuffs and a ribbed hem. Same relaxed fit as the polo in the first photo. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
+Use the first uploaded photo as the exact reference for the man, the trousers, the pose, the plain grey studio background, the soft even light and the framing from head to mid-thigh. Change only the polo: he now wears the cream knitted polo from the second photo, copied exactly: the same cream colour, the same fine open-textured knit, the same soft knitted collar and short three-button placket, short sleeves and a straight hem. Same relaxed fit as the polo in the first photo. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
 ```
 
-Back view and close-up: as item 18, with `[GARMENT]` = cream knitted polo and `[DETAIL]` = the open knitted collar and the fine knit texture.
+Back view and close-up: as item 18, with `[GARMENT]` = cream knitted polo and `[DETAIL]` = the soft knitted collar, the three-button placket and the open-textured knit.
 
 ### 20. Steel watch, navy dial (1 photo)
 
