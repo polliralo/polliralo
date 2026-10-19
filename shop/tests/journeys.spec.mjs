@@ -244,7 +244,8 @@ test.describe('2. admin edits reach the store', () => {
     await ready(page, '/search/?q=navy');
     await expect(page.locator('[data-search-status]')).toHaveText('1 result for “navy”');
     await ready(page, '/');
-    await expect(page.locator('[data-carousel] [data-slide]')).toHaveCount(6);
+    await expect(page.locator('[data-carousel] [data-slide]')).toHaveCount(3);
+    await expect(page.locator('[data-carousel] [data-art]')).toHaveAttribute('data-art-slug', NAVY.slug);
     await ready(page, '/cart/');
     await expect(bagLine(page, OLIVE.slug, 'M').locator('.line-price')).toHaveText('$48.00');
   });

@@ -308,6 +308,7 @@ html.js .pic img.is-loaded { opacity: 1; }
   .tool-btn { position: relative; justify-content: center; width: 44px; padding: 0; }
   .tool-btn .icon { flex: none; }
   .tool-btn .bag-count { position: absolute; top: 5px; right: 1px; min-width: 18px; height: 18px; padding: 0 4px; font-size: 0.625rem; }
+  .tool-btn .bag-count[data-count="0"] { display: none; }
 }
 @media (max-width: 360px) { .logo { letter-spacing: .38em; margin-right: -.38em; } }
 

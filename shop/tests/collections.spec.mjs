@@ -189,9 +189,12 @@ test.describe('editorial tile', () => {
       const tile = page.locator('[data-tile]');
       await expect(tile.locator('img')).toHaveCount(1);
       await expect(tile.locator('.card-price, [data-quick-add]')).toHaveCount(0);
-      // A real link with a sensible name, and a sensibly named group.
+      // A sensibly named group (named by its kicker) with a real link. A
+      // hidden tile is out of the accessibility tree, as it should be.
       const kicker = (await tile.locator('.coll-tile-kicker').textContent()).trim();
-      await expect(page.getByRole('group', { name: kicker })).toHaveCount(1);
+      await expect(tile).toHaveAttribute('aria-labelledby', await tile.locator('.coll-tile-kicker').getAttribute('id'));
+      if ((await tileState(page)).shown) await expect(page.getByRole('group', { name: kicker })).toHaveCount(1);
+      else await expect(page.getByRole('group', { name: kicker })).toHaveCount(0);
       const href = await tile.locator('a').getAttribute('href');
       const res = await page.request.get(href.split('#')[0]);
       expect(res.status(), `${href} exists`).toBe(200);
