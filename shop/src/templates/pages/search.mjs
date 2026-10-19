@@ -31,7 +31,7 @@ export default function render(ctx) {
   </div>
   <section class="wrap srch-results" aria-labelledby="srch-results-title" data-srch-results hidden>
     <h2 class="visually-hidden" id="srch-results-title">Results</h2>
-    <div class="grid-products srch-grid" data-grid data-stagger></div>
+    <div class="grid-products srch-grid" data-grid></div>
   </section>
   <section class="wrap srch-empty" aria-labelledby="srch-empty-title" data-search-empty>
     <div class="srch-empty-text">

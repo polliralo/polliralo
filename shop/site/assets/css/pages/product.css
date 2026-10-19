@@ -32,11 +32,6 @@
 }
 
 .pdp-frame { position: relative; aspect-ratio: 4 / 5; background: var(--canvas); overflow: hidden; isolation: isolate; container-type: inline-size; }
-.pdp-ghost {
-  top: 6%; left: -0.05em; font-size: clamp(5rem, 40cqi, 20rem);
-  transform: translate3d(calc(var(--ghost-shift, 0) * -3%), 0, 0);
-  transition: transform var(--d-slower) var(--ease-expo);
-}
 .pdp-track { position: absolute; inset: 0; z-index: 1; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); cursor: zoom-in; }
 /* Only the active slide (and, for one crossfade, the one leaving) is rendered. */
 .pdp-slide { display: none; grid-area: 1 / 1; position: relative; min-width: 0; min-height: 0; }
@@ -77,10 +72,10 @@
 .pdp-eyebrow { transition: color var(--d-fast) var(--ease-standard); }
 @media (hover: hover) { .pdp-eyebrow:hover { color: var(--ink); } }
 .pdp-name {
-  margin-top: 18px; font-family: var(--sans); font-weight: 500;
-  font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.375rem); line-height: 1.12; letter-spacing: -0.005em;
+  margin-top: 18px; font-family: var(--display); font-weight: var(--w-heading);
+  font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.375rem); line-height: 1.1; letter-spacing: var(--tracking-display);
 }
-.pdp-price { margin-top: 14px; font-size: var(--fs-lg); }
+.pdp-price { margin-top: 14px; font-size: var(--fs-lg); font-weight: var(--w-medium); }
 .pdp-summary { margin-top: 16px; color: var(--muted); max-width: 44ch; }
 
 .pdp-label { display: block; color: var(--muted); }
@@ -124,10 +119,11 @@
 .pdp-stock[data-state="out"]::before { background: var(--danger); }
 
 .pdp-actions { display: flex; gap: 12px; margin-top: 14px; }
-.pdp-qty { height: 54px; flex: none; }
+.pdp-qty { height: 50px; flex: none; }
 .pdp-qty button { width: 44px; transition: color var(--d-fast) var(--ease-standard); }
 .pdp-qty output { width: 32px; }
-.pdp .pdp-add { flex: 1; min-width: 12rem; min-height: 54px; display: grid; place-items: center; }
+.pdp .pdp-add { flex: 1; min-width: 12rem; min-height: 50px; display: grid; place-items: center; }
+@media (max-width: 760px) { .pdp-qty { height: 52px; } .pdp .pdp-add { min-height: 52px; } }
 .pdp-add-label, .pdp-add-done {
   grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 10px;
   transition: opacity var(--d-fast) var(--ease-standard), transform var(--d-base) var(--ease-out);
@@ -246,24 +242,14 @@ html.js .pdp-viewer .pic img:not([fetchpriority="high"]) { opacity: 1; transitio
 /* ---------- Motion ---------- */
 @keyframes pdp-rise { from { opacity: 0; transform: translate3d(0, -4px, 0); } }
 @keyframes pdp-nudge { 0% { transform: none; } 30% { transform: translate3d(4px, 0, 0); } 100% { transform: none; } }
-@keyframes pdp-in { from { opacity: 0; transform: translate3d(0, 14px, 0); } }
-@keyframes pdp-ghost-in { from { opacity: 0; transform: translate3d(5%, 0, 0); } }
 @keyframes pdp-viewer-in { from { opacity: 0; transform: scale(.985); } }
 @keyframes pdp-viewer-out { to { opacity: 0; } }
 @keyframes pdp-slide-in { from { opacity: 0; } }
 @keyframes pdp-slide-out { to { opacity: 0; } }
 @keyframes pdp-settle { from { transform: scale(1.035); } }
 
-@media (prefers-reduced-motion: no-preference) {
-  /* First paint: the image stays put (it is the LCP and the morph target); the words settle in. */
-  html.motion .pdp-ghost { animation: pdp-ghost-in 1400ms var(--ease-expo) 120ms backwards; }
-  html.motion .pdp-buy > * { animation: pdp-in var(--d-slower) var(--ease-expo) backwards; animation-delay: calc(80ms + var(--k, 0) * var(--stagger)); }
-  .pdp-buy > :nth-child(2) { --k: 1; }
-  .pdp-buy > :nth-child(3) { --k: 2; }
-  .pdp-buy > :nth-child(4) { --k: 3; }
-  .pdp-buy > :nth-child(5) { --k: 4; }
-  .pdp-buy > :nth-child(n + 6) { --k: 5; }
-}
+/* First paint is still: the image is the LCP and the morph target, and the
+   buy panel is there at once. Motion is kept for state changes only. */
 
 /* ---------- Tablet: thumbnails go under the frame ---------- */
 @media (min-width: 761px) and (max-width: 1040px) {
@@ -276,7 +262,6 @@ html.js .pdp-viewer .pic img:not([fetchpriority="high"]) { opacity: 1; transitio
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
   .pdp-crumbs { padding-block: 14px; }
-  .pdp-crumbs .crumbs ol { font-size: 0.625rem; }
   .pdp-main { display: block; padding-bottom: 56px; }
   .pdp-gallery { position: static; display: block; margin-inline: calc(var(--gutter) * -1); }
   .pdp-stage { width: auto; }
@@ -320,7 +305,7 @@ html.js .pdp-viewer .pic img:not([fetchpriority="high"]) { opacity: 1; transitio
   .pdp-sticky-name { font-size: var(--fs-sm); font-weight: 500; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pdp-sticky-meta { display: flex; gap: 10px; font-size: var(--fs-xs); color: var(--muted); }
   .pdp-sticky-meta span + span::before { content: "/"; margin-right: 10px; color: var(--faint); }
-  .pdp .pdp-sticky-add { min-height: 46px; min-width: 8.5rem; display: grid; place-items: center; padding-inline: 18px; }
+  .pdp .pdp-sticky-add { min-height: 50px; min-width: 8.5rem; display: grid; place-items: center; padding-inline: 18px; }
 
   .pdp-viewer { --pdp-vh: calc(100dvh - 190px); }
   .pdp-viewer-slide { padding: 12px 16px 84px; }

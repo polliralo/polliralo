@@ -1,7 +1,14 @@
 // Demo admin: noindex frame, product create/edit/hide/delete, reset, restock,
 // and demo orders. Each test runs in a fresh browser context, so localStorage
 // starts empty (seed catalogue, no orders).
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+
+// Counts come from the shipped catalogue, so adding a product needs no test edits.
+const SEED = JSON.parse(readFileSync(new URL('../src/data/catalog.json', import.meta.url), 'utf8'));
+const N = SEED.products.length;
+// The editor suggests the next free SKU in a category, e.g. MONO-SH-04 after three shirts.
+const NEXT_SHIRT_SKU = `MONO-SH-${String(Math.max(...SEED.products.filter((p) => p.sku.startsWith('MONO-SH-')).map((p) => Number(p.sku.slice(8)))) + 1).padStart(2, '0')}`;
 
 const BANNER = 'Demo admin. Anyone can open this page, and changes are saved only in this browser. A real store needs server-side sign-in, a database and server-side checks.';
 
@@ -77,7 +84,7 @@ test.describe('dashboard', () => {
   test('shows metrics from the demo data and restocks a low option by 5', async ({ page }) => {
     await open(page, '/admin/');
     const metric = (label) => page.locator('.adm-metric').filter({ has: page.locator('dt', { hasText: label }) }).locator('.adm-metric-value');
-    await expect(metric('Live products')).toHaveText('12');
+    await expect(metric('Live products')).toHaveText(String(N));
     await expect(metric('Hidden products')).toHaveText('0');
     await expect(metric('Demo orders')).toHaveText('0');
     await expect(page.locator('.adm-metric', { hasText: 'Demo revenue' })).toContainText('Demo');
@@ -91,7 +98,7 @@ test.describe('dashboard', () => {
     await expect(page.locator(':focus')).toHaveAttribute('data-restock', /\|/);
   });
 
-  test('reset demo data restores the 12 products and clears orders, after confirming', async ({ page }) => {
+  test('reset demo data restores the seed products and clears orders, after confirming', async ({ page }) => {
     await seedOrders(page, [demoOrder('MONO-TEST-01', 5)]);
     await open(page, '/admin/products/');
     await row(page, 'navy-pique-polo').getByRole('button', { name: 'Delete Navy Piqué Polo' }).click();
@@ -100,28 +107,28 @@ test.describe('dashboard', () => {
 
     await open(page, '/admin/');
     const live = page.locator('.adm-metric', { hasText: 'Live products' }).locator('.adm-metric-value');
-    await expect(live).toHaveText('11');
+    await expect(live).toHaveText(String(N - 1));
     await page.getByRole('button', { name: 'Reset demo data' }).click();
     await expect(confirmBox(page)).toBeVisible();
     await expect(confirmBox(page)).toContainText('Reset the demo data?');
     await confirmBox(page).getByRole('button', { name: 'Reset demo data' }).click();
     await expect(confirmBox(page)).toBeHidden();
-    await expect(live).toHaveText('12');
+    await expect(live).toHaveText(String(N));
     await expect(page.locator('.adm-metric', { hasText: 'Demo orders' }).locator('.adm-metric-value')).toHaveText('0');
     expect(await stored(page, 'mono.catalog.v1')).toBeNull();
     expect(await stored(page, 'mono.orders.v1')).toBeNull();
     await expect(page.getByRole('button', { name: 'Reset demo data' })).toBeFocused();
 
     await open(page, '/admin/products/');
-    await expect(page.locator('.adm-count')).toHaveText('12 products');
-    await expect(page.locator('tr[data-row]')).toHaveCount(12);
+    await expect(page.locator('.adm-count')).toHaveText(`${N} products`);
+    await expect(page.locator('tr[data-row]')).toHaveCount(N);
   });
 });
 
 test.describe('products', () => {
   test('creates a product: errors first, then a valid one saved as custom', async ({ page }) => {
     await open(page, '/admin/products/');
-    await expect(page.locator('tr[data-row]')).toHaveCount(12);
+    await expect(page.locator('tr[data-row]')).toHaveCount(N);
     await page.getByRole('button', { name: 'Add product' }).click();
     const ed = editor(page);
     await expect(ed).toBeVisible();
@@ -147,7 +154,7 @@ test.describe('products', () => {
     await expect(ed.locator('#ed-name')).not.toHaveAttribute('aria-invalid', 'true');
     await expect(ed.locator('#ed-slug')).toHaveValue('sand-linen-shirt');
     await ed.locator('#ed-category').selectOption('shirts');
-    await expect(ed.locator('#ed-sku')).toHaveValue('MONO-SH-03');
+    await expect(ed.locator('#ed-sku')).toHaveValue(NEXT_SHIRT_SKU);
     await ed.locator('#ed-price').fill('72');
     await ed.locator('#ed-summary').fill('A relaxed shirt in warm sand.');
     await ed.locator('#ed-description').fill('A relaxed shirt in warm sand with a soft collar.');
@@ -164,12 +171,12 @@ test.describe('products', () => {
     const r = row(page, 'sand-linen-shirt');
     await expect(r).toBeVisible();
     await expect(r).toContainText('Sand Linen Shirt');
-    await expect(r).toContainText('MONO-SH-03');
+    await expect(r).toContainText(NEXT_SHIRT_SKU);
     await expect(r).toContainText('$72.00');
     await expect(r).toContainText('New');
     await expect(r.locator('[data-view-link]')).toHaveAttribute('href', '/product/?slug=sand-linen-shirt');
     await expect(page.locator('.toast a').first()).toHaveAttribute('href', '/product/?slug=sand-linen-shirt');
-    await expect(page.locator('tr[data-row]')).toHaveCount(13);
+    await expect(page.locator('tr[data-row]')).toHaveCount(N + 1);
     await expect(r.getByRole('button', { name: 'Edit Sand Linen Shirt' })).toBeFocused();
 
     const saved = await storedProduct(page, 'sand-linen-shirt');
@@ -233,9 +240,9 @@ test.describe('products', () => {
     await r.getByRole('button', { name: 'Delete Black Dress Belt' }).click();
     await confirmBox(page).getByRole('button', { name: 'Delete product' }).click();
     await expect(r).toHaveCount(0);
-    await expect(page.locator('.adm-count')).toHaveText('11 products');
+    await expect(page.locator('.adm-count')).toHaveText(`${N - 1} products`);
     const catalog = await stored(page, 'mono.catalog.v1');
-    expect(catalog.products).toHaveLength(11);
+    expect(catalog.products).toHaveLength(N - 1);
     expect(catalog.products.some((p) => p.slug === 'black-dress-belt')).toBe(false);
   });
 
@@ -243,7 +250,7 @@ test.describe('products', () => {
     await open(page, '/admin/products/');
     await page.locator('#adm-q').fill('MONO-WT');
     await expect(page.locator('tr[data-row]')).toHaveCount(2);
-    await expect(page.locator('.adm-count')).toHaveText('Showing 2 of 12 products');
+    await expect(page.locator('.adm-count')).toHaveText(`Showing 2 of ${N} products`);
     await page.locator('#adm-q').fill('');
     await page.locator('#adm-cat').selectOption('polos');
     await expect(page.locator('tr[data-row]')).toHaveCount(2);

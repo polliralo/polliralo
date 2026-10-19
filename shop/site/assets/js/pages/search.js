@@ -4,7 +4,7 @@
 
 import { onStore, getProducts } from '../lib/store.js';
 import { searchProducts } from '../lib/search.js';
-import { $, enhance, reducedMotion, withTransition } from '../lib/ui.js';
+import { $, enhance, withTransition } from '../lib/ui.js';
 import * as cv from '../lib/catalog-view.js';
 
 const root = $('[data-search-page]');
@@ -20,7 +20,6 @@ function init(root) {
   const empty = $('[data-search-empty]', root);
   const emptyTitle = $('[data-empty-title]', root);
   const emptyText = $('[data-empty-text]', root);
-  const ghost = $('[data-search-ghost]', root);
   const eyebrow = $('[data-search-eyebrow]', root);
   const grid = cv.createGrid(gridEl, { transition: withTransition });
   const defaults = { title: emptyTitle.textContent, text: emptyText.textContent };
@@ -41,22 +40,6 @@ function init(root) {
     if (url !== location.pathname + location.search + location.hash) history.replaceState(history.state, '', url);
   }
 
-  function setGhost(q) {
-    // The giant faint word that echoed the search was retired (ghost words
-    // are kept for the home hero only); nothing to do without it.
-    if (!ghost) return;
-    const raw = q ? q.slice(0, 14) : 'Search';
-    const word = raw.charAt(0).toUpperCase() + raw.slice(1);
-    if (ghost.dataset.word === word) return;
-    ghost.dataset.word = word;
-    ghost.style.setProperty('--w', String(Math.max(4, word.length)));
-    if (!reducedMotion()) {
-      ghost.classList.remove('is-swap');
-      void ghost.offsetWidth;
-      ghost.classList.add('is-swap');
-    }
-  }
-
   function run({ animate = true } = {}) {
     if (!ready) return;
     const q = input.value.trim();
@@ -64,7 +47,6 @@ function init(root) {
     updateUrl(q);
     if (q === lastQuery) return;
     lastQuery = q;
-    setGhost(q);
     const hits = q ? searchProducts(q) : [];
     grid.render(hits, {
       animate: animate && Boolean(q),

@@ -532,7 +532,7 @@ async function demoData(request) {
   products.find((p) => p.slug === NAVY.slug).hidden = true;
   const base = structuredClone(products.find((p) => p.slug === 'ivory-oxford-shirt'));
   products.push({
-    ...base, slug: SAND.slug, sku: 'MONO-SH-03', name: SAND.name, colour: { name: 'Sand', hex: '#C8B79A' },
+    ...base, slug: SAND.slug, sku: 'MONO-SH-90', name: SAND.name, colour: { name: 'Sand', hex: '#C8B79A' },
     group: null, completeTheLook: [], featured: false, newArrival: false, custom: true,
   });
   const order = {

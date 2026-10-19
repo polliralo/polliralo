@@ -17,6 +17,7 @@ function init(root) {
   const tools = $('[data-tools]', root);
   const gridEl = $('[data-grid]', root);
   const emptyEl = $('[data-empty]', root);
+  const tile = $('[data-tile]', root);
   const activeEl = $('[data-active]', root);
   const showing = $('[data-showing]', root);
   const drawer = $('#coll-drawer', root);
@@ -71,11 +72,19 @@ function init(root) {
         const n = list.length;
         gridEl.hidden = n === 0;
         emptyEl.hidden = n > 0;
+        setTile(n);
         showing.textContent = cv.showingText(n, products.length);
         showBtn.textContent = `Show ${cv.resultsLabel(n)}`;
         drawerStatus.textContent = drawer?.open ? `${cv.resultsLabel(n)} match` : '';
       },
     }).then(() => enhance(gridEl));
+  }
+
+  /** The editorial tile spans the empty slots of the last row (CSS reads these). */
+  function setTile(n) {
+    if (!tile) return;
+    tile.dataset.mod3 = String(n % 3);
+    tile.dataset.mod2 = String(n % 2);
   }
 
   function syncControls() {

@@ -124,7 +124,7 @@ function footer(categories) {
         <li><a href="/contact/">Contact</a></li>
         <li><a href="/cart/">Your bag</a></li>
       </ul></nav>
-      <nav class="footer-col" aria-labelledby="f-about"><h2 id="f-about">MONO</h2><ul>
+      <nav class="footer-col" aria-labelledby="f-about"><h2 id="f-about">The demo</h2><ul>
         <li><a href="/about/">About</a></li>
         <li><a href="/privacy/">Privacy</a></li>
         <li><a href="/admin/">Store admin (demo)</a></li>
@@ -134,7 +134,6 @@ function footer(categories) {
       <p>MONO is a fictional brand made as a portfolio demo. The products, prices and stock are not real, no payment is ever taken and no orders are delivered.</p>
       <p>&copy; ${year} MONO demo</p>
     </div>
-    <p class="footer-word" aria-hidden="true" data-word="Mono"></p>
   </div>
 </footer>`;
 }

@@ -52,7 +52,7 @@ html:not(.js) .co-page .co-loading { display: none; }
 @media (prefers-reduced-motion: no-preference) { .co-page .co-skel { animation: co-pulse 1.6s var(--ease-in-out) infinite; } }
 
 /* Empty bag (cart and checkout). */
-.co-page .co-empty-state { display: grid; justify-items: center; text-align: center; gap: 18px; padding-top: clamp(16px, 3vw, 40px); animation: co-fade var(--d-slow) var(--ease-out); }
+.co-page .co-empty-state { display: grid; justify-items: center; text-align: center; gap: 18px; padding-top: clamp(16px, 3vw, 40px); animation: co-fade var(--d-base) var(--ease-out); }
 .co-page .co-empty-title { font-family: var(--display); font-weight: var(--w-heading); font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem); line-height: 1.05; letter-spacing: var(--tracking-display); }
 .co-page .co-empty-title:focus, .co-page .co-empty-title:focus-visible { outline: none; }
 .co-page .co-empty-text { max-width: 44ch; }
@@ -61,7 +61,7 @@ html:not(.js) .co-page .co-loading { display: none; }
 /* ---------- Bag page ---------- */
 .co-cart .co-cart-grid {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 400px); gap: clamp(40px, 6vw, 104px); align-items: start;
-  animation: co-fade var(--d-slow) var(--ease-out);
+  animation: co-fade var(--d-base) var(--ease-out);
 }
 .co-cart .co-head { border-bottom: 0; padding-bottom: 0; }
 .co-cart .co-loading { min-height: 420px; }
@@ -179,7 +179,7 @@ html:not(.js) .co-page .co-loading { display: none; }
 
 html.js .co-checkout[data-state="loading"] .co-layout { visibility: hidden; }
 html:not(.js) .co-checkout .co-layout { display: none; }
-.co-checkout[data-state="ready"] .co-layout { animation: co-fade var(--d-slow) var(--ease-out); }
+.co-checkout[data-state="ready"] .co-layout { animation: co-fade var(--d-base) var(--ease-out); }
 
 .co-checkout .co-layout {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 420px); grid-template-areas: "form summary";
@@ -350,21 +350,16 @@ html.js .co-order[data-state="loading"] .co-order-head { visibility: hidden; }
 .co-order .co-next-list p { color: var(--muted); }
 .co-order .co-order-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: clamp(32px, 4vw, 56px); }
 
-.co-order .co-order-missing { display: grid; justify-items: center; text-align: center; gap: 28px; animation: co-fade var(--d-slow) var(--ease-out); }
+.co-order .co-order-missing { display: grid; justify-items: center; text-align: center; gap: 28px; animation: co-fade var(--d-base) var(--ease-out); }
 .co-order .co-order-missing-text { max-width: 52ch; color: var(--muted); font-size: var(--fs-md); }
 .co-order .co-order-missing .co-order-actions { justify-content: center; margin-top: 0; }
 .co-order[data-state="missing"] .co-order-head { border-bottom: 0; margin-bottom: 0; padding-bottom: 24px; }
 
+/* The tick is the one moment of motion: it confirms the order went through.
+   The words and the order details are there at once. */
 @media (prefers-reduced-motion: no-preference) {
-  .co-order[data-state="found"] .co-check-ring { animation: co-draw 1000ms var(--ease-out) both; }
-  .co-order[data-state="found"] .co-check-tick { animation: co-draw 620ms var(--ease-out) 420ms both; }
-  .co-order[data-state="found"] .co-order-head > :not(.co-check),
-  .co-order[data-state="missing"] .co-order-head > * { animation: co-rise var(--d-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * var(--stagger) + 120ms); }
-  .co-order .co-order-head > :nth-child(2) { --i: 0; }
-  .co-order .co-order-head > :nth-child(3) { --i: 1; }
-  .co-order .co-order-head > :nth-child(4) { --i: 2; }
-  .co-order .co-order-head > :nth-child(5) { --i: 3; }
-  .co-order[data-state="found"] .co-order-body { animation: co-rise var(--d-slower) var(--ease-expo) 280ms both; }
+  .co-order[data-state="found"] .co-check-ring { animation: co-draw var(--d-slower) var(--ease-out) both; }
+  .co-order[data-state="found"] .co-check-tick { animation: co-draw var(--d-slow) var(--ease-out) 240ms both; }
 }
 @keyframes co-draw { from { stroke-dashoffset: 1; } }
 

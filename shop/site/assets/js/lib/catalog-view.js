@@ -9,7 +9,7 @@
 // State is mirrored in the query string: lower-case keys, repeated keys for
 // several values, a stable key order, e.g. ?size=m&size=l&sort=price-asc.
 
-import { esc, money, productCard, stockInfo, icon } from './render.js';
+import { esc, money, productCard, stockInfo, icon, picture } from './render.js';
 
 export const FACET_IDS = ['category', 'size', 'colour', 'price', 'stock'];
 export const QUERY_KEYS = [...FACET_IDS, 'sort'];
@@ -37,6 +37,9 @@ export const stylesLabel = (n) => `${n} ${n === 1 ? 'style' : 'styles'}`;
 export const resultsLabel = (n) => `${n} ${n === 1 ? 'result' : 'results'}`;
 export const showingText = (shown, total) => `Showing ${shown} of ${total}`;
 export const pad2 = (n) => String(n).padStart(2, '0');
+
+/** Card image sizes for the listing grids: 3 columns from 1000px, 2 below. */
+export const LISTING_SIZES = '(min-width: 1440px) 420px, (min-width: 1000px) 30vw, 46vw';
 
 /* ----- Sizes ----- */
 
@@ -349,7 +352,7 @@ function dropdownHTML(facet, label, inner, { hidden = false, end = false, value 
  * "Filter and sort" button on phones), active filter chips, the grid and the
  * empty state. The drawer is built by drawerHTML().
  */
-export function listingHTML({ products, facets, state, counts, total, withCategory, eagerCount = 1, title = 'Products' }) {
+export function listingHTML({ products, facets, state, counts, total, withCategory, eagerCount = 1, title = 'Products', tile = null }) {
   const shown = products.length;
   const filterFacets = (withCategory ? ['category'] : []).concat(['size', 'colour', 'price']);
   const sortLabel = SORTS.find((s) => s.id === state.sort)?.label ?? 'Featured';
@@ -369,8 +372,9 @@ export function listingHTML({ products, facets, state, counts, total, withCatego
     + `</div></div>`
     + `<div class="wrap coll-active" data-active${active ? '' : ' hidden'}>${chipsHTML(activeChips(state, facets))}</div>`
     + `<div class="wrap coll-grid-wrap">`
-    + `<div class="grid-products coll-grid" data-grid data-stagger${shown ? '' : ' hidden'}>`
-    + products.map((p, i) => productCard(p, { eager: i < eagerCount })).join('')
+    + `<div class="grid-products coll-grid" data-grid${shown ? '' : ' hidden'}>`
+    + products.map((p, i) => productCard(p, { eager: i < eagerCount, sizes: LISTING_SIZES })).join('')
+    + (tile ? tileHTML(tile, shown) : '')
     + `</div>`
     + `<div class="empty coll-empty" data-empty${shown ? ' hidden' : ''}>`
     + `<h3>No pieces match these filters</h3>`
@@ -388,6 +392,27 @@ export function chipsHTML(chips) {
     + chips.map((c) => `<li><button class="coll-pill" type="button" data-remove="${c.facet}:${esc(c.value)}" aria-label="Remove filter: ${esc(c.label)}">`
       + `<span>${esc(c.label)}</span>${icon('close', { size: 13 })}</button></li>`).join('')
     + `</ul><button class="coll-clear" type="button" data-clear>Clear all</button>`;
+}
+
+/**
+ * The editorial tile that closes an incomplete last row. It is never a
+ * product (no price, no add): a real photo, one short line and a link to a
+ * real place. data-mod3 / data-mod2 hold the product count modulo 3 and 2;
+ * the CSS shows the tile only when the last row has empty slots and makes it
+ * span exactly those. pages/collection.js updates both after every filter.
+ * { image, alt, kicker, line, href, cta, wide, x } (wide: a 16:9 photo
+ * cropped to 4:5, x its horizontal focus such as '70%').
+ */
+export function tileHTML({ image, alt = '', kicker, line, href, cta, wide = false, x = '' }, count) {
+  // A 16:9 photo shown in a 4:5 frame is drawn about 2.2 times the frame width.
+  const sizes = wide ? '(min-width: 1440px) 940px, (min-width: 1000px) 67vw, 103vw' : LISTING_SIZES;
+  return `<div class="coll-tile" data-tile data-mod3="${count % 3}" data-mod2="${count % 2}" role="group" aria-labelledby="coll-tile-title">`
+    + `<div class="coll-tile-media"${x ? ` style="--x:${esc(x)}"` : ''}>${picture(image, { alt, sizes, className: 'coll-tile-pic' })}</div>`
+    + `<div class="coll-tile-body">`
+    + `<p class="coll-tile-kicker" id="coll-tile-title">${esc(kicker)}</p>`
+    + `<p class="coll-tile-line">${esc(line)}</p>`
+    + `<a class="link coll-tile-link" href="${esc(href)}">${esc(cta)}${icon('arrow', { size: 16 })}</a>`
+    + `</div></div>`;
 }
 
 /** Phone drawer with every filter and sort, and a "Show N results" button. */
@@ -409,15 +434,14 @@ export function drawerHTML({ facets, state, counts, shown, withCategory }) {
 }
 
 /** Category links with their counts (shop all index, and the phone row on category pages). */
-export function categoryNavHTML(categories, products, { current = null, includeAll = false, variant = 'row' } = {}) {
-  const items = categories.map((c, i) => ({
-    href: `/collections/${c.slug}/`, name: c.name, slug: c.slug, index: pad2(i + 1),
+export function categoryNavHTML(categories, products, { current = null, includeAll = false } = {}) {
+  const items = categories.map((c) => ({
+    href: `/collections/${c.slug}/`, name: c.name, slug: c.slug,
     count: products.filter((p) => p.category === c.slug).length,
   }));
-  if (includeAll) items.unshift({ href: '/collections/', name: 'All', slug: '', index: '00', count: products.length });
-  return `<nav class="coll-cats is-${variant}" aria-label="Categories"><ol role="list">`
+  if (includeAll) items.unshift({ href: '/collections/', name: 'All', slug: '', count: products.length });
+  return `<nav class="coll-cats" aria-label="Categories"><ol role="list">`
     + items.map((it) => `<li><a href="${it.href}"${it.slug === (current ?? '') && (it.slug || includeAll) ? ' aria-current="page"' : ''}>`
-      + `<span class="coll-cat-i tabular" aria-hidden="true">${it.index}</span>`
       + `<span class="coll-cat-name">${esc(it.name)}</span>`
       + `<span class="coll-cat-n tabular" data-cat-count="${it.slug || 'all'}"><span class="visually-hidden">, </span>${it.count}<span class="visually-hidden"> ${it.count === 1 ? 'style' : 'styles'}</span></span>`
       + `</a></li>`).join('')
@@ -436,16 +460,18 @@ const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)
 /**
  * Keeps one element per product so re-sorting and filtering move the existing
  * cards (no image reload, no flash) and only rebuilds a card whose data changed.
+ * The editorial tile ([data-tile]), if the grid has one, always stays last.
  * createGrid(grid, { seed: slug => seedProduct, cardOptions, glue: [elements kept on top],
  *                    transition: withTransition from lib/ui.js })
  *   .render(list, { animate, update }) -> Promise that resolves once the DOM
  *   is updated (update() runs inside the transition, after the old snapshot).
- * Cards that are on screen get a temporary view-transition-name so they glide
- * to their new places; the names are removed when the transition ends.
+ * Cards on screen get a temporary view-transition-name so they glide to their
+ * new places; the names are removed when the transition ends.
  */
 export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], transition = null } = {}) {
   const cache = new Map();
   const named = new Set();
+  const tile = grid.querySelector(':scope > [data-tile]');
   let running = 0;
   grid.querySelectorAll(':scope > .card').forEach((el) => {
     const p = seed ? seed(el.dataset.slug) : null;
@@ -457,44 +483,38 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], tra
     const hit = cache.get(p.slug);
     if (hit && hit.sig === sig) return { el: hit.el, fresh: false };
     const t = document.createElement('template');
-    t.innerHTML = productCard(p, { headingLevel: 3, ...cardOptions });
+    t.innerHTML = productCard(p, { headingLevel: 3, sizes: LISTING_SIZES, ...cardOptions });
     const el = t.content.firstElementChild;
     cache.set(p.slug, { el, sig });
     return { el, fresh: true };
   }
 
   function render(list, { animate = false, update = () => {} } = {}) {
-    const next = list.map(elementFor);
-    const els = next.map((x) => x.el);
-    const kids = [...grid.children];
+    const els = list.map((p) => elementFor(p).el);
+    const kids = [...grid.children].filter((el) => el !== tile);
     const same = els.length === kids.length && els.every((el, i) => kids[i] === el);
-    const reveal = () => els.forEach((el) => { if (!el.classList.contains('is-in') && inView(el)) el.classList.add('is-in'); });
     const commit = () => {
-      if (!same) grid.replaceChildren(...els);
+      if (!same) grid.replaceChildren(...els, ...(tile ? [tile] : []));
       update();
     };
     const canAnimate = animate && !same && typeof transition === 'function' && typeof document.startViewTransition === 'function'
       && !prefersReduced() && !document.querySelector('dialog[open]');
     if (!canAnimate) {
       commit();
-      reveal();
       return Promise.resolve();
     }
     const html = document.documentElement;
     const name = (el, n) => { el.style.viewTransitionName = n; named.add(el); };
+    const nameVisible = () => {
+      els.forEach((el) => { if (el.isConnected && inView(el)) name(el, vtName(el.dataset.slug)); });
+      if (tile && inView(tile)) name(tile, 'coll-tile');
+    };
     kids.forEach((el) => { if (inView(el)) name(el, vtName(el.dataset.slug)); });
+    if (tile && inView(tile)) name(tile, 'coll-tile');
     glue.forEach((el, i) => { if (el) name(el, `coll-glue-${i}`); });
     html.classList.add('coll-vt');
     const token = ++running;
-    const vt = transition(() => {
-      commit();
-      els.forEach((el) => {
-        if (inView(el)) {
-          el.classList.add('is-in');
-          name(el, vtName(el.dataset.slug));
-        }
-      });
-    });
+    const vt = transition(() => { commit(); nameVisible(); });
     const done = () => {
       // A newer transition (a quick second click) may already have named
       // the same cards: leave its names alone.
@@ -503,7 +523,7 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], tra
       named.clear();
       html.classList.remove('coll-vt');
     };
-    if (!vt) { done(); reveal(); return Promise.resolve(); } // ran without a transition
+    if (!vt) { done(); return Promise.resolve(); } // ran without a transition
     vt.finished.then(done, done);
     return vt.updateCallbackDone.catch(() => {});
   }

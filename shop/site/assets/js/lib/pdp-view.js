@@ -298,7 +298,7 @@ function deliveryHTML() {
     + SHIPPING_OPTIONS.map((o) => `<li><span class="pdp-ship-name">${esc(o.name)}</span><span class="muted">${esc(o.eta)}</span>`
       + `<span class="tabular">${money(o.price)}${o.freeOver != null ? `, free over ${money(o.freeOver)}` : ''}</span></li>`).join('')
     + `</ul>`
-    + `<p class="small muted">Demo rates. Nothing is delivered in this demo store.</p>`
+    + `<p class="small muted">Demo rates and times. Nothing is delivered in this demo store.</p>`
     + `<p><a class="text-link" href="/shipping-returns/">Shipping and returns</a></p>`
     + `</div></details>`;
 }
@@ -355,11 +355,15 @@ export function lookHTML(items) {
 export function moreHTML(p, category, items) {
   if (!items?.length) return '';
   const catName = category?.name ?? 'the shop';
+  // "More in Shirts" only when every card is a shirt; a rail topped up
+  // from other categories gets a heading that says so.
+  const pure = items.every((x) => x.category === p.category);
+  const title = pure ? `More in <em>${esc(catName)}</em>` : 'You may also <em>like</em>';
   return `<section class="pdp-more" aria-labelledby="pdp-more-title" data-pdp-more>`
     + `<div class="wrap">`
     + `<div class="rail-wrap" data-rail>`
     + `<div class="section-head pdp-more-head">`
-    + `<div><p class="eyebrow">Keep looking</p><h2 id="pdp-more-title">More in <em>${esc(catName)}</em></h2></div>`
+    + `<div><p class="eyebrow">Keep looking</p><h2 id="pdp-more-title">${title}</h2></div>`
     + `<div class="pdp-more-tools">`
     + (category ? `<a class="link" href="${categoryUrl(category.slug)}">Shop ${esc(catName)}</a>` : '')
     + `<div class="rail-nav"><button type="button" data-rail-prev aria-label="Previous products">${icon('left', { size: 18 })}</button>`

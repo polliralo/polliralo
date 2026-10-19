@@ -51,7 +51,6 @@
   position: relative; isolation: isolate; overflow: clip; display: grid; gap: 12px; justify-items: start;
   padding-block: 4px clamp(24px, 3vw, 36px); margin-bottom: clamp(24px, 3vw, 36px); border-bottom: 1px solid var(--line);
 }
-.adm-head .ghost-word { z-index: -1; right: -0.05em; bottom: -0.1em; font-size: clamp(4.5rem, 2rem + 7vw, 9rem); }
 .adm-head h1 { font-family: var(--display); font-weight: var(--w-heading); font-size: clamp(2.5rem, 1.7rem + 2.8vw, 4rem); line-height: 1.02; letter-spacing: var(--tracking-display); }
 .adm-head h1 em { font-style: normal; color: var(--accent-ink); }
 .adm-lede { color: var(--muted); max-width: 44ch; }
@@ -68,19 +67,12 @@ html:not(.js) .adm-loading { display: none; }
 @keyframes adm-load { 0% { transform: translateX(-100%) scaleX(.4); } 100% { transform: translateX(260%) scaleX(.4); } }
 .adm-load-error { display: grid; gap: 14px; justify-items: start; }
 
-/* First render: tiles and panels rise in once. */
+/* First render: the loaded view fades in once (loading to ready), with no
+   per-tile stagger, so the numbers are readable at once. */
 @media (prefers-reduced-motion: no-preference) {
-  html.motion .adm-enter .adm-metric,
-  html.motion .adm-enter .adm-panel,
-  html.motion .adm-enter .adm-toolbar,
-  html.motion .adm-enter .adm-table-wrap,
-  html.motion .adm-enter .adm-empty { animation: adm-rise var(--d-slow) var(--ease-out) both; }
-  html.motion .adm-enter .adm-metric:nth-child(2) { animation-delay: 60ms; }
-  html.motion .adm-enter .adm-metric:nth-child(3) { animation-delay: 120ms; }
-  html.motion .adm-enter .adm-metric:nth-child(4) { animation-delay: 180ms; }
-  html.motion .adm-enter .adm-metric:nth-child(n+5) { animation-delay: 240ms; }
-  html.motion .adm-enter .adm-panel, html.motion .adm-enter .adm-table-wrap { animation-delay: 160ms; }
+  html.motion .adm-enter { animation: adm-fade var(--d-base) var(--ease-out) both; }
 }
+@keyframes adm-fade { from { opacity: 0; } }
 @keyframes adm-rise { from { opacity: 0; transform: translateY(10px); } }
 
 /* ---------- Shared pieces ---------- */
@@ -284,15 +276,6 @@ html:not(.js) .adm-loading { display: none; }
 .adm-editor .field-error::before { content: ""; width: 5px; height: 5px; flex: none; border-radius: 50%; background: currentColor; }
 .adm-editor .input[readonly] { background: var(--stone); color: var(--muted); }
 
-/* Staggered sections when the drawer opens. */
-@media (prefers-reduced-motion: no-preference) {
-  .adm-editor[open] .adm-fs { animation: adm-rise var(--d-drawer) var(--ease-out) both; animation-delay: 120ms; }
-  .adm-editor[open] .adm-fs:nth-of-type(2) { animation-delay: 160ms; }
-  .adm-editor[open] .adm-fs:nth-of-type(3) { animation-delay: 200ms; }
-  .adm-editor[open] .adm-fs:nth-of-type(4) { animation-delay: 240ms; }
-  .adm-editor[open] .adm-fs:nth-of-type(n+5) { animation-delay: 280ms; }
-}
-
 .adm-errors { margin-bottom: 28px; padding: 16px 18px 18px; border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); border-left: 2px solid var(--danger); background: #F6E9E5; color: var(--danger); }
 .adm-errors:focus { outline: none; }
 .adm-errors:focus-visible { outline: 2px solid var(--danger); outline-offset: 3px; }
@@ -406,8 +389,7 @@ html:not(.js) .adm-loading { display: none; }
   .adm-banner { padding: 11px 14px; font-size: var(--fs-xs); }
   .adm-nav a { padding: 0 9px; font-size: 0.6875rem; letter-spacing: .12em; }
   .adm-nav-store .adm-nav-num { display: none; }
-  .adm-head { gap: 10px; padding-bottom: 54px; }
-  .adm-head .ghost-word { font-size: 4.5rem; bottom: -0.1em; }
+  .adm-head { gap: 10px; padding-bottom: 20px; }
   .adm-lede { font-size: var(--fs-sm); }
   .adm-metric { min-height: 128px; padding: 14px 14px 16px; gap: 8px; }
   .adm-metric dt { letter-spacing: .14em; }

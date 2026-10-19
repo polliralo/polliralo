@@ -513,9 +513,15 @@ dialog.is-closing::backdrop { animation: fade-out 220ms var(--ease-out) forwards
 .crumbs a { transition: color var(--d-fast); }
 @media (hover: hover) { .crumbs a:hover { color: var(--ink); } }
 .crumbs [aria-current] { color: var(--ink); }
+/* Phones: one line; the current page shortens with an ellipsis instead of wrapping. */
+@media (max-width: 760px) {
+  .crumbs ol { flex-wrap: nowrap; font-size: 0.75rem; white-space: nowrap; }
+  .crumbs li { flex: none; }
+  .crumbs li:last-child { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+}
 
 /* ---------- Footer ---------- */
-.site-footer { content-visibility: auto; contain-intrinsic-size: auto 720px; background: var(--ink); color: var(--night-text); padding-block: clamp(56px, 7vw, 96px) 28px; margin-top: auto; }
+.site-footer { content-visibility: auto; contain-intrinsic-size: auto 480px; background: var(--ink); color: var(--night-text); padding-block: clamp(56px, 7vw, 88px) 32px; margin-top: auto; }
 .site-footer a { color: inherit; }
 .footer-top { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; }
 .footer-brand .logo { color: var(--night-text); font-size: 1.5rem; }
@@ -526,8 +532,6 @@ dialog.is-closing::backdrop { animation: fade-out 220ms var(--ease-out) forwards
 @media (hover: hover) { .footer-col a:hover { background-size: 100% 1px; } }
 .footer-note { margin-top: clamp(40px, 5vw, 72px); padding-top: 24px; border-top: 1px solid rgba(237, 232, 223, .14); display: flex; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; font-size: var(--fs-xs); color: var(--night-muted); }
 .footer-note p { max-width: 70ch; }
-.footer-word::before { content: attr(data-word); }
-.footer-word { font-family: var(--display); font-weight: var(--w-medium); font-size: clamp(3.5rem, 1.5rem + 13vw, 13rem); line-height: .8; letter-spacing: .32em; margin-right: -.32em; text-transform: uppercase; color: rgba(237, 232, 223, .07); margin-top: 40px; user-select: none; white-space: nowrap; overflow: hidden; }
 @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
 
 /* ---------- Toasts and live region ---------- */

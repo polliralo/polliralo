@@ -5,192 +5,158 @@
 
 import { esc, money, picture, productUrl, productCard, icon, stockInfo, needsChoice } from '../lib/render.js';
 
-/* ----- Hero product slider ----- */
-
-// One slide per clothing product, olive polo first (owner decision).
-export const HERO_ORDER = [
-  'olive-pique-polo',
-  'ivory-oxford-shirt',
-  'charcoal-textured-tee',
-  'blue-stripe-shirt',
-  'ivory-heavyweight-tee',
-  'navy-pique-polo',
-];
-const CLOTHING = ['shirts', 't-shirts', 'polos'];
-const HERO_MAX = 8;
-
-// The giant faint word behind each cut-out: a word from the product itself.
-const GHOST_WORDS = {
-  'olive-pique-polo': 'Polo',
-  'ivory-oxford-shirt': 'Oxford',
-  'charcoal-textured-tee': 'Texture',
-  'blue-stripe-shirt': 'Stripe',
-  'ivory-heavyweight-tee': 'Crew',
-  'navy-pique-polo': 'Piqué',
-};
-
-const HERO_SIZES = '(min-width: 1180px) 44vw, (min-width: 760px) 58vw, 62vw';
-
 const slugId = (value) => String(value ?? '').replace(/[^a-z0-9_-]/gi, '-');
-const pad = (n) => String(n).padStart(2, '0');
+export const pad = (n) => String(n).padStart(2, '0');
 
-/** Visible clothing products in hero order (unknown products go last). */
-export function heroProducts(products) {
-  const rank = (p) => {
-    const i = HERO_ORDER.indexOf(p.slug);
-    return i === -1 ? HERO_ORDER.length : i;
-  };
-  return products
-    .filter((p) => p && !p.hidden && CLOTHING.includes(p.category))
-    .map((p, i) => ({ p, i }))
-    .sort((a, b) => rank(a.p) - rank(b.p) || a.i - b.i)
-    .map(({ p }) => p)
-    .slice(0, HERO_MAX);
+/* ----- Hero: three message slides ----- */
+
+// One message per slide. The text column is always on the left at the same
+// width and the call to action sits at the bottom of it, so it never moves.
+// Photos get their own panel on the right: words never sit on a photo.
+export const HERO_SLIDES = [
+  {
+    id: 'brand',
+    level: 1,
+    eyebrow: 'Modern menswear',
+    title: 'Less noise. <em>Better essentials.</em>',
+    line: 'Shirts, T-shirts and polos in calm colours, and the few accessories that finish them.',
+    cta: { label: 'Shop new arrivals', short: 'New arrivals', href: '/collections/?sort=new' },
+  },
+  {
+    id: 'uniform',
+    level: 2,
+    eyebrow: 'T-shirts',
+    title: 'The everyday <em>uniform.</em>',
+    line: 'Crew necks that keep their shape: one textured in charcoal, one heavy and plain in ivory.',
+    image: {
+      key: 'life-charcoal-tee-wardrobe',
+      alt: 'Man in the charcoal textured tee standing by an open wardrobe',
+      x: '50%', y: '22%',
+      // Cover crop: the panel is wider than this portrait photo on desktop.
+      sizes: '(min-width: 1040px) 62vw, (min-width: 760px) 56vw, 62vw',
+    },
+    cta: { label: 'Shop T-shirts', href: '/collections/t-shirts/' },
+  },
+  {
+    id: 'daylight',
+    level: 2,
+    eyebrow: 'Sunglasses',
+    title: 'Made for <em>daylight.</em>',
+    line: 'A strong black rectangle and a thin silver aviator.',
+    image: {
+      key: 'wide-sunglasses-rooftop',
+      alt: 'Man in black sunglasses and a stone overshirt on a city rooftop in daylight',
+      x: '74%', y: '40%',
+      // Cover crop of a wide photo: drawn wider than its panel.
+      sizes: '(min-width: 1040px) 94vw, (min-width: 760px) 130vw, 137vw',
+    },
+    cta: { label: 'Shop sunglasses', href: '/collections/sunglasses/' },
+  },
+];
+
+// Clothing whose front and back cut-outs stand on the brand slide, in order
+// of preference. Neither appears anywhere else on the home page; if the demo
+// admin hides one, the next is used.
+export const ART_CANDIDATES = ['navy-pique-polo', 'blue-stripe-shirt'];
+const CLOTHING = ['shirts', 't-shirts', 'polos'];
+const ART_FRONT_SIZES = '(min-width: 1040px) 42vw, 62vw';
+const ART_BACK_SIZES = '(min-width: 1040px) 27vw, 40vw';
+
+const cut = (p, view) => (p?.images ?? []).find((i) => i.kind === 'cutout' && i.view === view) ?? null;
+
+/** The product shown on the brand slide (visible, with a front cut-out). */
+export function brandArtProduct(products) {
+  const visible = products.filter((p) => p && !p.hidden && cut(p, 'Front'));
+  for (const slug of ART_CANDIDATES) {
+    const p = visible.find((x) => x.slug === slug);
+    if (p) return p;
+  }
+  return visible.find((p) => CLOTHING.includes(p.category)) ?? null;
 }
 
-export function ghostWord(p) {
-  if (GHOST_WORDS[p.slug]) return GHOST_WORDS[p.slug];
-  const words = String(p.name ?? '').trim().split(/\s+/);
-  return words[words.length - 1] || 'Mono';
+/** The brand slide's cut-outs: the front large, the back smaller beside it. */
+export function brandArtHTML(p) {
+  const front = cut(p, 'Front');
+  if (!front) return '';
+  const back = cut(p, 'Back');
+  return (back ? `<div class="home-art-back">${picture(back.key, { alt: back.alt ?? '', sizes: ART_BACK_SIZES })}</div>` : '')
+    + `<div class="home-art-front">${picture(front.key, { alt: front.alt ?? '', sizes: ART_FRONT_SIZES, priority: true })}</div>`;
 }
 
-function ghostClass(word) {
-  const n = [...word].length;
-  if (n <= 4) return '';
-  return n <= 6 ? ' is-mid' : ' is-long';
+function ctaHTML(cta) {
+  const label = cta.short
+    ? `<span class="home-cta-full">${esc(cta.label)}</span><span class="home-cta-short">${esc(cta.short)}</span>`
+    : esc(cta.label);
+  return `<a class="btn home-cta" href="${esc(cta.href)}"><span class="home-cta-label">${label}</span>${icon('arrow', { size: 16 })}</a>`;
 }
 
-/** Front, back and detail views (or the first three images). */
-export function heroViews(p) {
-  const imgs = p.images ?? [];
-  const picked = ['Front', 'Back', 'Detail'].map((v) => imgs.find((i) => i.view === v)).filter(Boolean);
-  return picked.length ? picked : imgs.slice(0, 3);
-}
-
-const layerKind = (kind) => (kind === 'cutout' ? 'is-cut' : 'is-photo');
-
-/** One main-image layer of a slide (also built by the thumbnail swap). */
-export function heroLayerHTML(view, { priority = false, current = true } = {}) {
-  return `<div class="home-layer ${layerKind(view.kind)}${current ? ' is-current' : ''}" data-key="${esc(view.key)}">`
-    + picture(view.key, { alt: view.alt ?? '', sizes: HERO_SIZES, priority, loading: priority ? 'eager' : 'lazy' })
+function panelHTML(slide, first, art) {
+  if (slide.image) {
+    const img = slide.image;
+    return `<div class="home-panel is-photo" style="--x:${esc(img.x ?? '50%')};--y:${esc(img.y ?? '50%')}">`
+      + `<div class="home-art">${picture(img.key, { alt: img.alt ?? '', sizes: img.sizes, priority: first })}</div>`
+      + `</div>`;
+  }
+  // The faint widely spaced MONO stands behind the clothing, never over it.
+  return `<div class="home-panel is-art">`
+    + `<span class="ghost-word home-ghost" data-word="Mono" aria-hidden="true"></span>`
+    + `<div class="home-art" data-art${art ? ` data-art-slug="${esc(art.slug)}"` : ''}>${brandArtHTML(art)}</div>`
     + `</div>`;
 }
 
-/** The picture for a view, for building layers in the browser. */
-export function heroPictureHTML(key, alt) {
-  return picture(key, { alt: alt ?? '', sizes: HERO_SIZES, loading: 'eager' });
-}
-
-function sizesHTML(p, id) {
-  const label = p.option?.label ?? 'Size';
-  return `<fieldset class="home-sizes" data-hero-sizes aria-describedby="${id}-msg">`
-    + `<legend class="home-sizes-legend">${esc(label)}</legend>`
-    + `<div class="home-sizes-list">`
-    + p.variants.map((v) => {
-      const out = !(Number(v.stock) > 0);
-      const vid = `${id}-${slugId(v.id)}`;
-      return `<input class="home-size-input" type="radio" name="${id}-size" id="${vid}" value="${esc(v.id)}"${out ? ' disabled' : ''}>`
-        + `<label class="home-size${out ? ' is-out' : ''}" for="${vid}">${esc(v.label)}${out ? '<span class="visually-hidden">, sold out</span>' : ''}</label>`;
-    }).join('')
+/** One slide: the message on the left, its picture panel on the right. */
+export function heroSlideHTML(slide, i, total, { art = null } = {}) {
+  const first = i === 0;
+  const h = `h${slide.level === 1 ? 1 : 2}`;
+  return `<div class="home-slide${first ? ' is-active' : ''}" id="hero-${esc(slide.id)}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" tabindex="-1" data-slide data-slide-id="${esc(slide.id)}"${first ? '' : ' inert'}>`
+    + `<div class="home-copy-col">`
+    + `<div class="home-copy">`
+    + `<p class="eyebrow home-eyebrow">${esc(slide.eyebrow)}</p>`
+    + `<${h} class="home-title">${slide.title}</${h}>`
+    + (slide.line ? `<p class="home-line">${esc(slide.line)}</p>` : '')
     + `</div>`
-    + `<a class="home-sizes-guide" href="/size-guide/">Size guide</a>`
-    + `</fieldset>`;
-}
-
-function thumbsHTML(p, views) {
-  return `<div class="home-thumbs" role="group" aria-label="Views of ${esc(p.name)}">`
-    + views.map((v, k) => `<button class="home-thumb ${layerKind(v.kind)}" type="button" aria-pressed="${k === 0}" data-view="${esc(v.key)}" data-kind="${esc(v.kind ?? 'photo')}" data-alt="${esc(v.alt ?? '')}">`
-      + picture(v.key, { alt: '', sizes: '96px' })
-      + `<span class="visually-hidden">${esc(v.view ?? `View ${k + 1}`)} view</span></button>`).join('')
+    + ctaHTML(slide.cta)
+    + `</div>`
+    + panelHTML(slide, first, art)
     + `</div>`;
-}
-
-/** One slide of the hero. */
-export function heroSlideHTML(p, i, total, { categoryName = '', first = false } = {}) {
-  const views = heroViews(p);
-  const main = views[0];
-  const stock = stockInfo(p);
-  const sized = needsChoice(p);
-  const id = `hero-${slugId(p.slug)}`;
-  const url = productUrl(p);
-  const word = ghostWord(p);
-  const eyebrow = [p.newArrival ? 'New in' : '', categoryName].filter(Boolean).join(' · ');
-  const addLabel = stock.inStock ? 'Add to bag' : 'Sold out';
-  return `<div class="home-slide${first ? ' is-active is-intro' : ''}" id="${id}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" tabindex="-1" data-slide data-slug="${esc(p.slug)}" data-accent="${esc(p.accent ?? '')}"${first ? '' : ' inert'}>`
-    + `<div class="home-stage">`
-    + `<span class="ghost-word home-ghost${ghostClass(word)}" data-word="${esc(word)}" aria-hidden="true"></span>`
-    + `<div class="home-frame" data-frame>${main ? heroLayerHTML(main, { priority: first }) : ''}</div>`
-    + `</div>`
-    + (sized && stock.inStock ? sizesHTML(p, id) : '')
-    + `<div class="home-details">`
-    + (eyebrow ? `<p class="eyebrow home-rise" style="--l:0">${esc(eyebrow)}</p>` : '')
-    + `<h2 class="home-name home-rise" style="--l:1">${esc(p.name)}</h2>`
-    + (p.summary ? `<p class="home-summary home-rise" style="--l:2">${esc(p.summary)}</p>` : '')
-    + `<p class="price home-price home-rise" style="--l:3"><span>${money(p.price)}</span><span class="tag">Demo price</span></p>`
-    + `<div class="home-actions home-rise" style="--l:4">`
-    + `<button class="btn home-add" type="button" data-hero-add aria-describedby="${id}-msg"${stock.inStock ? '' : ' disabled'}><span data-label="${addLabel}">${addLabel}</span></button>`
-    + `<a class="link home-view" href="${esc(url)}">View details<span class="visually-hidden">: ${esc(p.name)}</span></a>`
-    + `<a class="btn btn-sm home-shop" href="${esc(url)}">Shop now<span class="visually-hidden">: ${esc(p.name)}</span></a>`
-    + `</div>`
-    + `<p class="home-msg" id="${id}-msg" data-hero-msg aria-live="polite"></p>`
-    + `</div>`
-    + (views.length > 1 ? thumbsHTML(p, views) : '')
-    + `</div>`;
-}
-
-export function heroSlidesHTML(products, categories = []) {
-  const name = (slug) => categories.find((c) => c.slug === slug)?.name ?? '';
-  return products.map((p, i) => heroSlideHTML(p, i, products.length, { categoryName: name(p.category), first: i === 0 })).join('');
-}
-
-/** Counter, next name and accent for slide i. */
-export function heroBarState(products, i) {
-  const n = products.length;
-  const next = products[(i + 1) % n];
-  return {
-    current: pad(i + 1),
-    total: pad(n),
-    nextName: next?.name ?? '',
-    accent: products[i]?.accent ?? '#5C5F45',
-  };
 }
 
 const PAUSE_ICON = '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6.5" y="5" width="3.2" height="14"/><rect x="14.3" y="5" width="3.2" height="14"/></svg>';
-const PLAY_ICON = '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 4.8v14.4L19 12 7 4.8Z"/></svg>';
+const PLAY_ICON = '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7.5 4.8v14.4L19 12 7.5 4.8Z"/></svg>';
 export const toggleIcon = (playing) => (playing ? PAUSE_ICON : PLAY_ICON);
 
-/** The whole hero: brand headline, carousel and the accent bar. */
-export function heroHTML(products, categories = []) {
-  const bar = heroBarState(products, 0);
-  return `<div class="home-hero" data-hero style="--accent:${esc(bar.accent)}">`
-    + `<div class="wrap home-hero-wrap">`
-    + `<h1 class="home-hero-h1"><span class="home-hero-kicker">Modern menswear</span> <span class="home-hero-line">Less noise. <em>Better essentials.</em></span></h1>`
-    + `<section class="home-carousel" aria-roledescription="carousel" aria-label="Featured products" data-carousel>`
-    + `<div class="home-slides" data-slides>${heroSlidesHTML(products, categories)}</div>`
+/** The hero: stacked slides and one restrained control bar. */
+export function heroHTML(slides, { art = null } = {}) {
+  const n = slides.length;
+  return `<div class="home-hero" data-hero>`
+    + `<section class="home-carousel" aria-roledescription="carousel" aria-label="Highlights" data-carousel data-autoplay="off">`
+    + `<div class="home-slides" data-slides>${slides.map((s, i) => heroSlideHTML(s, i, n, { art })).join('')}</div>`
     + `<div class="home-bar" data-hero-bar>`
-    + `<div class="home-bar-main">`
-    + `<p class="home-bar-count"><span data-hero-current>${bar.current}</span><span class="home-bar-sep"> / </span><span data-hero-total>${bar.total}</span></p>`
-    + `<p class="home-bar-next"><span class="home-bar-next-label">Next<span class="visually-hidden">:</span></span> <span data-hero-next-name>${esc(bar.nextName)}</span></p>`
-    + `<span class="home-bar-progress" aria-hidden="true"><i data-hero-progress></i></span>`
-    + `<button class="home-bar-toggle" type="button" data-hero-toggle><span class="home-toggle-icon" data-hero-toggle-icon>${PAUSE_ICON}</span><span data-hero-toggle-text>Pause</span><span class="visually-hidden"> slideshow</span></button>`
-    + `</div>`
+    + `<p class="home-bar-count"><span data-hero-current>01</span> / <span data-hero-total>${pad(n)}</span></p>`
+    + `<div class="home-bar-progress" aria-hidden="true">${slides.map((s, i) => `<span class="home-seg${i === 0 ? ' is-current' : ''}"><i></i></span>`).join('')}</div>`
     + `<div class="home-bar-nav">`
-    + `<button class="home-bar-btn" type="button" data-hero-prev aria-label="Previous product">${icon('left', { size: 20 })}</button>`
-    + `<button class="home-bar-btn" type="button" data-hero-next aria-label="Next product">${icon('right', { size: 20 })}</button>`
+    + `<button class="home-bar-btn" type="button" data-hero-prev aria-label="Previous slide">${icon('left', { size: 18 })}</button>`
+    + `<button class="home-bar-btn home-bar-toggle" type="button" data-hero-toggle aria-label="Pause slideshow" title="Pause slideshow"><span class="home-toggle-icon" data-hero-toggle-icon>${PAUSE_ICON}</span></button>`
+    + `<button class="home-bar-btn" type="button" data-hero-next aria-label="Next slide">${icon('right', { size: 18 })}</button>`
     + `</div>`
     + `</div>`
     + `<p class="visually-hidden" aria-live="polite" aria-atomic="true" data-hero-live></p>`
     + `</section>`
-    + `</div>`
     + `</div>`;
 }
 
 /* ----- New arrivals ----- */
 
-const NEW_SIZES = '(min-width: 1180px) 23vw, (min-width: 760px) 31vw, 46vw';
+const NEW_SIZES = '(min-width: 1180px) 23vw, (min-width: 760px) 31vw, 62vw';
+const EDITORIAL = /^(life|wide)-/;
 export const newArrivals = (products) => products.filter((p) => p && !p.hidden && p.newArrival);
+
+// Lifestyle photos already appear once elsewhere on the home page (category
+// tiles, hero), so the cards here keep their cut-out hover views only.
+const homeCard = (p) => ({ ...p, images: (p.images ?? []).filter((img, i) => i === 0 || !EDITORIAL.test(img.key)) });
+
 export function newArrivalsHTML(products) {
-  return products.map((p) => productCard(p, { sizes: NEW_SIZES, headingLevel: 3, showNew: false })).join('');
+  return products.map((p) => productCard(homeCard(p), { sizes: NEW_SIZES, headingLevel: 3, showNew: false })).join('');
 }
 
 /* ----- Small product rows with an add control (look panel, watch panel) ----- */
@@ -260,7 +226,6 @@ export function lookTextHTML(look, i, total, active) {
 
 export function lookFigureHTML(look, active) {
   return `<div class="home-look-figure" data-look="${esc(look.id)}"${active ? '' : ' hidden'}>`
-    + `<span class="ghost-word home-look-ghost" data-word="${esc(look.name)}" aria-hidden="true"></span>`
     + picture(look.image.key, { alt: look.image.alt ?? '', sizes: LOOK_SIZES, className: 'home-look-pic' })
     + `</div>`;
 }
@@ -277,7 +242,11 @@ export function lookListHTML(look, products, active) {
 
 /* ----- Watches spotlight buy panel ----- */
 
-export function watchPanelHTML(watch, extras = [], alt = null) {
+/**
+ * watchPanelHTML(watch, extras, { alt, altQuestion }): name, price with the
+ * demo tag, add to bag, "Complete the look" rows and a link to the other dial.
+ */
+export function watchPanelHTML(watch, extras = [], { alt = null, altQuestion = '' } = {}) {
   if (!watch) {
     return `<div class="home-watch-gone"><p>This watch is no longer available.</p><a class="link" href="/collections/watches/">Shop watches</a></div>`;
   }
@@ -299,5 +268,5 @@ export function watchPanelHTML(watch, extras = [], alt = null) {
     + (extras.length
       ? `<div class="home-watch-ctl"><h3 class="home-panel-label">Complete the look</h3><ul class="home-items" role="list">${extras.map((p) => itemHTML(p, { prefix: 'watch' })).join('')}</ul></div>`
       : '')
-    + (alt ? `<p class="home-watch-alt">Prefer a white dial? <a class="text-link" href="${esc(productUrl(alt))}">See the ${esc(alt.name)}</a></p>` : '');
+    + (alt ? `<p class="home-watch-alt">${esc(altQuestion)} <a class="text-link" href="${esc(productUrl(alt))}">See the ${esc(alt.name)}</a></p>` : '');
 }

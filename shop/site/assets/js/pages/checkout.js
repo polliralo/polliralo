@@ -226,7 +226,7 @@ if (root) {
       const price = $(`[data-ship-price="${o.id}"]`, form);
       if (price) price.textContent = shippingPriceText(o.id, sub);
       const arrive = $(`[data-arrive="${o.id}"]`, form);
-      if (arrive) arrive.textContent = `Arrives ${arrivalText(o)} (estimate)`;
+      if (arrive) arrive.textContent = `Demo estimate: ${arrivalText(o)}`;
     });
     return t;
   }
