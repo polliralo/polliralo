@@ -90,6 +90,9 @@ const IMAGES = [
   photo('life-sunglasses-jacket', 'lifestyle/black-sunglasses-chore-jacket.png'),
   photo('life-accessories-flatlay', 'lifestyle/leather-wallet-belt-cardholder-flatlay.png'),
   photo('life-charcoal-tee-wardrobe', 'lifestyle/charcoal-tee-wardrobe.png'),
+  // The owner's full-length polo photos (October 2026), used as a pair in the hero.
+  photo('life-olive-polo-wall', 'lifestyle/olive-polo-green-wall.jpg'),
+  photo('life-cream-polo-walk', 'lifestyle/cream-knit-polo-terrace-walk.jpg'),
   // Wide.
   photo('wide-watch-desk', 'wide/black-dial-watch-desk.png', WIDE),
   photo('wide-accessories-table', 'wide/leather-wallet-belt-cardholder-table.png', WIDE),

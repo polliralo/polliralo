@@ -158,3 +158,21 @@ After the hero, the owner asked for white everywhere, every picture rounded, and
 - **Controls:** every `.btn` is a black pill in sentence case; outlined pills for secondary buttons, the collection filter triggers, the Shop the Look switch, the small add buttons and the size guide's jump links. Size boxes are filled pills like the reference. Product details are rounded boxes. The search field is a pill.
 - **Phones:** the product gallery keeps the page margins so its rounded corners show.
 - **Checked:** every page at 1440 and 390 px; the full test suite (485 passed, 5 skipped by design); html-validate; axe on ten pages on desktop and phone with no findings (one, the demo tag on the dark watch section, was fixed). Lighthouse after the refresh: home 99 on a phone (LCP 1.8 s, CLS 0) and 100 on desktop; the Cream Knit Polo page 99 and 100; accessibility and best practices 100 everywhere.
+
+## 8. Fuller hero (19 October 2026)
+
+The owner found the hero character too small and the hero too empty, then asked to keep their own polo photos and Look 01 in the hero and to give the characters a stylish background. Decisions: `design-references.md` ("Owner decisions, fuller hero").
+
+- **Six slides, best first,** each with one large picture in the same rounded panel. The order is: Look 02, the owner's two polo photos side by side, Look 01 in sunglasses, the blue stripe shirt, the charcoal tee, and the accessories table photo.
+- **Studio wall:** the models fill the panel's height in front of a warm sand wall with MONO set large in white behind them. The look photos are shown from the head to just above the knee.
+- **New originals:** `lifestyle/olive-polo-green-wall.jpg` and `lifestyle/cream-knit-polo-terrace-walk.jpg`, the owner's photos (525 and 474 px wide, so they are only shown at about that size).
+- **Phones:** a stacked hero (picture about 400 px tall at 390 px wide, then the words, a full-width pill and the control bar), 622 px tall at 390 px, with the categories still on the first screen.
+- **Matching:** the watch feature, the newsletter and the About page's dark section became rounded panels inside the page margins.
+- **Checked:** every slide at 1440 and 390 px. New tests cover:
+  - the six slides;
+  - the large characters: their own proportions, pinned to the top, centred, never cut at the head or sides;
+  - the studio wall word behind the brand character;
+  - the polo pair;
+  - the stacked phone hero.
+
+  The full test suite passes.

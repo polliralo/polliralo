@@ -32,52 +32,64 @@ const activeSlide = (page) => page.locator('[data-slide].is-active');
 const toggle = (page) => page.locator('[data-hero-toggle]');
 const keyOf = (src) => (src ?? '').split('/').pop().replace(/-\d+\.(jpg|webp|avif)$/, '');
 
+// The hero's six messages, best first (HERO_SLIDES in assets/js/pages/home-view.js).
+const SLIDES = [
+  { id: 'brand', title: 'Less noise. Better essentials.', href: '/collections/?sort=new' },
+  { id: 'polos', title: 'Weekends, with a collar.', link: 'Shop polos', href: '/collections/polos/' },
+  { id: 'daylight', title: 'Made for daylight.', link: 'Shop sunglasses', href: '/collections/sunglasses/' },
+  { id: 'shirts', title: 'Oxfords and a fine stripe.', link: 'Shop shirts', href: '/collections/shirts/' },
+  { id: 'uniform', title: 'The everyday uniform.', link: 'Shop T-shirts', href: '/collections/t-shirts/' },
+  { id: 'finish', title: 'Finish the outfit.', link: 'Shop accessories', href: '/collections/accessories/' },
+];
+const N = SLIDES.length;
+const pad2 = (n) => String(n).padStart(2, '0');
+const count = (i) => `${pad2(i)} / ${pad2(N)}`;
+
 test.describe('hero', () => {
-  test('three message slides, the h1 on the brand slide, the counter reads 01 / 03', async ({ page }) => {
+  test('six message slides, the h1 on the brand slide, the counter reads 01 / 06', async ({ page }) => {
     await openHome(page);
     const carousel = page.locator('[data-carousel]');
     await expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
     const slides = page.locator('[data-slide]');
-    await expect(slides).toHaveCount(3);
+    await expect(slides).toHaveCount(N);
     await expect(slides.first()).toHaveAttribute('aria-roledescription', 'slide');
-    await expect(slides.first()).toHaveAttribute('aria-label', '1 of 3');
-    await expect(slides.first().locator('h1')).toHaveText('Less noise. Better essentials.');
-    await expect(slides.nth(1).locator('h2')).toHaveText('The everyday uniform.');
-    await expect(slides.nth(2).locator('h2')).toHaveText('Made for daylight.');
+    await expect(slides.first()).toHaveAttribute('aria-label', `1 of ${N}`);
+    await expect(slides.first().locator('h1')).toHaveText(SLIDES[0].title);
+    for (let i = 1; i < N; i += 1) await expect(slides.nth(i).locator('h2')).toHaveText(SLIDES[i].title);
     await expect(page.locator('h1')).toHaveCount(1);
-    await expect(counter(page)).toHaveText('01 / 03');
-    expect(await slides.evaluateAll((els) => els.map((el) => el.inert))).toEqual([false, true, true]);
+    await expect(counter(page)).toHaveText(count(1));
+    expect(await slides.evaluateAll((els) => els.map((el) => el.inert))).toEqual(SLIDES.map((s, i) => i > 0));
     // The first picture is the LCP: eager and high priority.
     await expect(slides.first().locator('.home-character img')).toHaveAttribute('fetchpriority', 'high');
   });
 
-  test('next and previous change the slide and the counter', async ({ page }) => {
+  test('next and previous go through every slide and wrap around', async ({ page }) => {
     await openHome(page);
+    for (let i = 1; i < N; i += 1) {
+      await page.locator('[data-hero-next]').click();
+      await expect(counter(page)).toHaveText(count(i + 1));
+      await expect(activeSlide(page)).toHaveAttribute('data-slide-id', SLIDES[i].id);
+      await expect(activeSlide(page).getByRole('link', { name: SLIDES[i].link })).toHaveAttribute('href', SLIDES[i].href);
+      if (i === 1) await expect(page.locator('[data-hero-live]')).toHaveText(`2 of ${N}: ${SLIDES[1].title}`);
+    }
     await page.locator('[data-hero-next]').click();
-    await expect(counter(page)).toHaveText('02 / 03');
-    await expect(activeSlide(page)).toHaveAttribute('data-slide-id', 'uniform');
-    await expect(activeSlide(page).getByRole('link', { name: 'Shop T-shirts' })).toHaveAttribute('href', '/collections/t-shirts/');
-    await expect(page.locator('[data-hero-live]')).toHaveText('2 of 3: The everyday uniform.');
-    await page.locator('[data-hero-next]').click();
-    await expect(counter(page)).toHaveText('03 / 03');
-    await expect(activeSlide(page).getByRole('link', { name: 'Shop sunglasses' })).toHaveAttribute('href', '/collections/sunglasses/');
-    await page.locator('[data-hero-next]').click();
-    await expect(counter(page)).toHaveText('01 / 03');
+    await expect(counter(page)).toHaveText(count(1));
+    await expect(activeSlide(page).locator('.home-cta')).toHaveAttribute('href', SLIDES[0].href);
     await page.locator('[data-hero-prev]').click();
-    await expect(counter(page)).toHaveText('03 / 03');
+    await expect(counter(page)).toHaveText(count(N));
     expect(await page.locator('[data-slide]').evaluateAll((els) => els.filter((el) => !el.inert).length)).toBe(1);
   });
 
   test('the call to action keeps the same box on every slide', async ({ page }) => {
     await openHome(page);
     const boxes = [];
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < N; i += 1) {
       const cta = activeSlide(page).locator('.home-cta');
       await expect(cta).toBeVisible();
       boxes.push(await cta.boundingBox());
-      if (i < 2) {
+      if (i < N - 1) {
         await page.locator('[data-hero-next]').click();
-        await expect(counter(page)).toHaveText(`0${i + 2} / 03`);
+        await expect(counter(page)).toHaveText(count(i + 2));
       }
     }
     for (const box of boxes.slice(1)) {
@@ -87,12 +99,39 @@ test.describe('hero', () => {
 
   test('words never sit on a picture: the message column and the picture panel do not overlap', async ({ page }) => {
     await openHome(page);
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < N; i += 1) {
       const copy = await activeSlide(page).locator('.home-copy-col').boundingBox();
       const pic = await activeSlide(page).locator('.home-panel').boundingBox();
-      expect(copy.x + copy.width).toBeLessThanOrEqual(pic.x + 1);
+      // Beside it on wide screens, below it on phones.
+      const apart = copy.x + copy.width <= pic.x + 1 || copy.y >= pic.y + pic.height - 1;
+      expect(apart, SLIDES[i].id).toBe(true);
       await page.locator('[data-hero-next]').click();
-      await expect(counter(page)).toHaveText(`0${((i + 1) % 3) + 1} / 03`);
+      await expect(counter(page)).toHaveText(count(((i + 1) % N) + 1));
+    }
+  });
+
+  test('every character fills his panel at his own proportions, never cut at the head or the sides', async ({ page }) => {
+    // Layout only: no settle animation while measuring.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openHome(page);
+    for (let i = 0; i < N; i += 1) {
+      const m = await activeSlide(page).evaluate((el) => {
+        const img = el.querySelector('.home-character img');
+        if (!img) return null;
+        const p = el.querySelector('.home-panel').getBoundingClientRect();
+        const b = img.getBoundingClientRect();
+        return { ratio: b.width / b.height, top: b.top - p.top, left: b.left - p.left, right: p.right - b.right, h: b.height, ph: p.height, pw: p.width };
+      });
+      if (m) {
+        expect(Math.abs(m.ratio - 1122 / 1402), SLIDES[i].id).toBeLessThan(0.01);
+        // Pinned to the panel's top (the cut-outs carry their own headroom) and at least as tall as the panel.
+        expect(Math.abs(m.top), SLIDES[i].id).toBeLessThan(1);
+        expect(m.h, SLIDES[i].id).toBeGreaterThanOrEqual(m.ph - 1);
+        // Centred: the cut-outs' empty margins may overhang, the person never does.
+        expect(Math.abs(m.left - m.right), SLIDES[i].id).toBeLessThan(2);
+      }
+      await page.locator('[data-hero-next]').click();
+      await expect(counter(page)).toHaveText(count(((i + 1) % N) + 1));
     }
   });
 
@@ -100,9 +139,9 @@ test.describe('hero', () => {
     await openHome(page);
     await page.locator('[data-hero-next]').focus();
     await page.keyboard.press('ArrowRight');
-    await expect(counter(page)).toHaveText('02 / 03');
+    await expect(counter(page)).toHaveText(count(2));
     await page.keyboard.press('ArrowLeft');
-    await expect(counter(page)).toHaveText('01 / 03');
+    await expect(counter(page)).toHaveText(count(1));
   });
 
   test('a sideways swipe changes the slide; a short drag does not', async ({ page }) => {
@@ -113,10 +152,10 @@ test.describe('hero', () => {
     const init = { pointerType: 'touch', isPrimary: true, pointerId: 7, bubbles: true };
     await slides.dispatchEvent('pointerdown', { ...init, clientX: box.x + box.width * 0.7, clientY: y });
     await slides.dispatchEvent('pointerup', { ...init, clientX: box.x + box.width * 0.2, clientY: y + 4 });
-    await expect(counter(page)).toHaveText('02 / 03');
+    await expect(counter(page)).toHaveText(count(2));
     await slides.dispatchEvent('pointerdown', { ...init, clientX: 200, clientY: y });
     await slides.dispatchEvent('pointerup', { ...init, clientX: 180, clientY: y });
-    await expect(counter(page)).toHaveText('02 / 03');
+    await expect(counter(page)).toHaveText(count(2));
   });
 
   test('desktop: autoplay moves on after 8 seconds and the pause button stops it', async ({ page }, testInfo) => {
@@ -129,8 +168,8 @@ test.describe('hero', () => {
     await expect(toggle(page)).toHaveAttribute('aria-label', 'Pause slideshow');
     // Nothing moves before the interval is up.
     await page.waitForTimeout(5_000);
-    await expect(counter(page)).toHaveText('01 / 03');
-    await expect(counter(page)).toHaveText('02 / 03', { timeout: 6_000 });
+    await expect(counter(page)).toHaveText(count(1));
+    await expect(counter(page)).toHaveText(count(2), { timeout: 6_000 });
     // Autoplay moves are not announced (only manual ones are).
     await expect(page.locator('[data-hero-live]')).toHaveText('');
     await toggle(page).click();
@@ -138,7 +177,7 @@ test.describe('hero', () => {
     await expect(carousel).toHaveAttribute('data-playing', 'false');
     await page.mouse.move(5, 5);
     await page.waitForTimeout(9_000);
-    await expect(counter(page)).toHaveText('02 / 03');
+    await expect(counter(page)).toHaveText(count(2));
     await toggle(page).click();
     await expect(toggle(page)).toHaveAttribute('aria-label', 'Pause slideshow');
     await expect(carousel).toHaveAttribute('data-playing', 'true');
@@ -153,7 +192,7 @@ test.describe('hero', () => {
     await expect(page.locator('[data-hero-prev]')).toBeVisible();
     await expect(page.locator('[data-hero-next]')).toBeVisible();
     await page.waitForTimeout(9_000);
-    await expect(counter(page)).toHaveText('01 / 03');
+    await expect(counter(page)).toHaveText(count(1));
   });
 
   test('reduced motion: no autoplay, and moves happen without animation', async ({ page }) => {
@@ -163,9 +202,9 @@ test.describe('hero', () => {
     await expect(page.locator('[data-carousel]')).toHaveAttribute('data-autoplay', 'off');
     await expect(page.locator('[data-carousel]')).toHaveAttribute('data-playing', 'false');
     await page.waitForTimeout(9_000);
-    await expect(counter(page)).toHaveText('01 / 03');
+    await expect(counter(page)).toHaveText(count(1));
     await page.locator('[data-hero-next]').click();
-    await expect(counter(page)).toHaveText('02 / 03');
+    await expect(counter(page)).toHaveText(count(2));
     await expect(page.locator('[data-slide].is-entering, [data-slide].is-leaving')).toHaveCount(0);
   });
 
@@ -178,47 +217,79 @@ test.describe('hero', () => {
     expect(await hero.textContent()).not.toMatch(/\$\d/);
   });
 
-  test('the phone hero is 320 to 400px tall and the categories follow straight after', async ({ page }, testInfo) => {
+  test('the phone hero: the picture large on top, the words below, the categories right after', async ({ page }, testInfo) => {
     test.skip(!isPhone(testInfo), 'phone only');
     await openHome(page);
     const hero = await page.locator('[data-hero]').boundingBox();
-    expect(hero.height).toBeGreaterThanOrEqual(320);
-    expect(hero.height).toBeLessThanOrEqual(400);
+    expect(hero.height).toBeGreaterThanOrEqual(540);
+    expect(hero.height).toBeLessThanOrEqual(700);
+    const pic = await activeSlide(page).locator('.home-panel').boundingBox();
+    const copy = await activeSlide(page).locator('.home-copy-col').boundingBox();
+    expect(pic.height).toBeGreaterThanOrEqual(340);
+    expect(pic.y + pic.height).toBeLessThanOrEqual(copy.y + 1);
     const cats = await page.locator('.home-cats').boundingBox();
     expect(Math.abs(cats.y - (hero.y + hero.height))).toBeLessThan(2);
     expect(cats.y).toBeLessThan(page.viewportSize().height);
   });
 
-  test('the brand slide: the owner\'s character stands whole on a white stage, nothing over him', async ({ page }) => {
+  test('the brand slide: the owner\'s character, large, in front of the studio wall, nothing over him', async ({ page }) => {
     await openHome(page);
     const slide = page.locator('[data-slide-id="brand"]');
     await expect(slide.locator('.home-character img')).toHaveAttribute('src', /cut-look-02-/);
     await expect(page.locator('.ghost-word')).toHaveCount(0);
+    // MONO on the wall is decoration, behind him.
+    const word = slide.locator('.home-word');
+    await expect(word).toHaveAttribute('aria-hidden', 'true');
+    await expect(word).toHaveAttribute('data-word', 'Mono');
+    const z = await slide.evaluate((el) => [el.querySelector('.home-word'), el.querySelector('.home-character')].map((n) => Number(getComputedStyle(n).zIndex)));
+    expect(z[0]).toBeLessThan(z[1]);
     const m = await slide.evaluate((el) => {
       const panel = el.querySelector('.home-panel');
       const img = el.querySelector('.home-character img');
       const p = panel.getBoundingClientRect();
       const b = img.getBoundingClientRect();
       // The person inside the 1122 x 1402 cut-out (measured from
-      // media/cutouts/look-02.png): x 343 to 793, y 50 to 1363.
+      // media/cutouts/look-02.png): x 343 to 793, head at y 50, the
+      // aviators in his hand end near y 968.
       const person = {
         left: b.left + b.width * (343 / 1122), right: b.left + b.width * (793 / 1122),
-        top: b.top + b.height * (50 / 1402), bottom: b.top + b.height * (1363 / 1402),
+        head: b.top + b.height * (50 / 1402), glasses: b.top + b.height * (968 / 1402),
       };
       const bg = (node) => getComputedStyle(node).backgroundColor;
       return {
         hero: bg(document.querySelector('[data-hero]')),
+        panel: getComputedStyle(panel).backgroundImage,
         radius: parseFloat(getComputedStyle(panel).borderTopLeftRadius),
-        ratio: b.width / b.height,
-        inside: person.left >= p.left + 4 && person.right <= p.right - 4 && person.top >= p.top + 4 && person.bottom <= p.bottom - 4,
+        share: (person.glasses - person.head) / p.height,
+        inside: person.left >= p.left + 4 && person.right <= p.right - 4 && person.head >= p.top + 8 && person.glasses <= p.bottom - 4,
       };
     });
-    // A clean white ground, a gently rounded panel, his own proportions, nothing cropped.
+    // A white hero, a warm studio wall in a gently rounded panel, and the
+    // character large: head to hand fills most of the panel.
     expect(m.hero).toBe('rgb(255, 255, 255)');
+    expect(m.panel).toContain('gradient');
     expect(m.radius).toBeGreaterThanOrEqual(12);
     expect(m.radius).toBeLessThanOrEqual(24);
-    expect(Math.abs(m.ratio - 1122 / 1402)).toBeLessThan(0.01);
+    expect(m.share).toBeGreaterThan(0.8);
     expect(m.inside).toBe(true);
+  });
+
+  test('the polos slide: the owner\'s two photos side by side, each whole in height', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openHome(page);
+    await page.locator('[data-hero-next]').click();
+    await expect(activeSlide(page)).toHaveAttribute('data-slide-id', 'polos');
+    const items = activeSlide(page).locator('.home-pair-item');
+    await expect(items).toHaveCount(2);
+    await expect(items.nth(0).locator('img')).toHaveAttribute('src', /life-olive-polo-wall-/);
+    await expect(items.nth(1).locator('img')).toHaveAttribute('src', /life-cream-polo-walk-/);
+    const [a, b] = [await items.nth(0).boundingBox(), await items.nth(1).boundingBox()];
+    const panel = await activeSlide(page).locator('.home-panel').boundingBox();
+    expect(Math.abs(a.y - b.y)).toBeLessThan(1);
+    expect(Math.abs(a.height - b.height)).toBeLessThan(1);
+    expect(Math.abs(a.width - b.width)).toBeLessThan(1);
+    expect(a.x + a.width).toBeLessThan(b.x);
+    expect(Math.abs(a.height - panel.height)).toBeLessThan(1);
   });
 
   test('the call to action is a black pill', async ({ page }) => {
@@ -338,14 +409,10 @@ test.describe('page basics', () => {
     const srcs = await page.locator('main img').evaluateAll((imgs) => imgs.map((img) => img.getAttribute('src')));
     const editorial = srcs.map(keyOf).filter((k) => /^(life|wide|cut-look)-/.test(k));
     expect(editorial.length).toBeGreaterThan(5);
-    // The hero's character is the Look 02 photo. Shop the Look opens on
-    // Look 01 and shows Look 02 only once a shopper picks it.
-    const hero = keyOf(await page.locator('[data-slide-id="brand"] .home-character img').getAttribute('src'));
+    // The owner chose both look photos for the hero, so they also appear in
+    // Shop the Look, where their pieces are bought. Nothing else repeats.
     const repeated = editorial.filter((k, i) => editorial.indexOf(k) !== i);
-    expect(repeated.filter((k) => k !== hero)).toEqual([]);
-    const shown = page.locator('.home-look-figure:not([hidden]) img');
-    await expect(shown).toHaveCount(1);
-    expect(keyOf(await shown.getAttribute('src'))).not.toBe(hero);
+    expect(repeated.filter((k) => !k.startsWith('cut-look-'))).toEqual([]);
   });
 
   test('reveals only on editorial images, never on headings, cards or buttons', async ({ page }) => {
@@ -390,7 +457,7 @@ test.describe('page basics', () => {
     }, { version: seed.version, products });
     await page.reload();
     // The hero is editorial: its character and photos do not follow the catalogue.
-    await expect(page.locator('[data-slide]')).toHaveCount(3);
+    await expect(page.locator('[data-slide]')).toHaveCount(N);
     await expect(page.locator('[data-slide-id="brand"] .home-character img')).toHaveAttribute('src', /cut-look-02-/);
     await expect(page.locator('[data-hero] img[src*="navy-pique-polo"]')).toHaveCount(0);
     await expect(page.locator('.home-new .card')).toHaveCount(newCount(products));

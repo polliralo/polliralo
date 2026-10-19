@@ -39,11 +39,11 @@ approved previews in `docs/preview/*.jpg`. Research to follow:
   (the stock is demo data and the owner's research rules such lines out); the
   quantity stepper still stops at what is in stock.
 - The footer disclosure stays (it is in `layout.mjs`).
-- Words never sit on top of photos. Labels go under or beside images. No
-  giant ghost words on the site: the last one, behind the hero clothing, was
-  removed in the October 2026 hero refinement so nothing sits behind or over
-  the hero character. (Share cards from `npm run shop:og` still set a faint
-  word behind their cut-outs.)
+- Words never sit on top of photos. Labels go under or beside images. The
+  only giant word on the site is MONO on the home hero's studio wall, always
+  behind the models (`.home-word`, drawn from `data-word` and
+  `aria-hidden`). Share cards from `npm run shop:og` also set a faint word
+  behind their cut-outs.
 - Decorative giant words are written as
   `<span class="ghost-word" data-word="Polo" aria-hidden="true"></span>`: the
   text comes from a CSS pseudo-element, so screen readers and contrast checks

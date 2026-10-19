@@ -219,8 +219,8 @@ test.describe('2. admin edits reach the store', () => {
     // olive polo at the new price in the look panel.
     await ready(page, '/');
     const carousel = page.locator('[data-carousel]');
-    await expect(carousel.locator('[data-slide]')).toHaveCount(3);
-    await expect(carousel.locator('[data-hero-total]')).toHaveText('03');
+    await expect(carousel.locator('[data-slide]')).toHaveCount(6);
+    await expect(carousel.locator('[data-hero-total]')).toHaveText('06');
     await expect(carousel.locator('img[src*="navy-pique-polo"]')).toHaveCount(0);
     await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
     await expect(page.locator(`.home-look-list[data-look="look-01"] .home-item[data-slug="${OLIVE.slug}"] .home-item-price`)).toHaveText('$52');
@@ -261,7 +261,7 @@ test.describe('2. admin edits reach the store', () => {
     await expect(page.locator('[data-search-status]')).toHaveText(`${results(searchHits('navy').length)} for “navy”`);
     await expect(card(page, NAVY.slug)).toBeVisible();
     await ready(page, '/');
-    await expect(page.locator('[data-carousel] [data-slide]')).toHaveCount(3);
+    await expect(page.locator('[data-carousel] [data-slide]')).toHaveCount(6);
     await ready(page, '/cart/');
     await expect(bagLine(page, OLIVE.slug, 'M').locator('.line-price')).toHaveText('$48.00');
   });

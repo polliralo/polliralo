@@ -42,7 +42,11 @@
 .ct-wide-caption .ct-caption { margin-top: 0; }
 
 /* How this demo works (#demo) */
-.ct-demo { padding-block: var(--section); margin-top: clamp(24px, 4vw, 64px); }
+.ct-demo {
+  /* A dark rounded panel inside the page margins, like the home page's. */
+  margin: clamp(24px, 4vw, 64px) max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter))) var(--section);
+  border-radius: var(--r-lg); padding-block: clamp(48px, 6vw, 96px);
+}
 .ct-demo-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(40px, 7vw, 128px); align-items: start; }
 .ct-demo-intro .lede { margin-top: 20px; }
 .ct-facts { border-top: 1px solid rgba(237, 232, 223, .22); }

@@ -123,3 +123,21 @@ The owner asked first to refine only the home hero, from two interface reference
 4. **Buttons and size boxes from the product page reference.** Every button is a black pill in sentence case (outlined pills for secondary actions, filter triggers, the look switch and small add buttons). Size boxes are soft filled pills, the chosen one black, sold-out ones pale with a fine strike. Product details sit in rounded boxes. Inputs have 12 px corners and the search field is a pill.
 5. **Nothing behind or over the character.** The faint MONO word was removed, so the site has no ghost words now (the share cards still draw one).
 6. **Kept:** the three hero messages, Jost bold headings with the olive second line, the uppercase navigation and small labels, the layouts, the timings and the autoplay rules.
+
+## Owner decisions, fuller hero (19 October 2026)
+
+After the white refresh the owner found the hero character too small and the hero too empty. They asked for five or six hero images with the best first, larger characters, everything matching, and Claude's own judgement throughout. They then asked to keep their two polo photos and the Look 01 photo in the hero, and for a stylish background behind the characters instead of a plain box.
+
+1. **Six slides, best first:**
+   - the brand message with the owner's Look 02 model;
+   - polos, with the owner's two full-length polo photos (olive by a green wall, cream on a sunlit terrace) side by side;
+   - sunglasses, with the Look 01 model in black rectangular sunglasses;
+   - shirts (blue stripe shirt);
+   - T-shirts (charcoal textured tee);
+   - accessories (the wallet, belt and card holder on a wood table).
+
+   One message per slide, as before.
+2. **Large characters on a studio wall.** Every model fills the height of the hero's rounded panel and stands in front of a warm sand wall, lighter behind him, with MONO set large across it in white. The word is decoration, always behind him (drawn from `data-word`, hidden from screen readers); nothing is drawn over him. It is the hero's only large word, as in the first refinement round. The studio views are framed from the head to mid-thigh; the full-length look photos are shown from the head to just above the knee, with the hands and the aviators inside the frame. Proportions never change.
+3. **The look photos may repeat.** Both look photos now appear in the hero and in Shop the Look (where their pieces are bought), by the owner's choice. No other photo appears twice on the home page.
+4. **Phones:** the picture sits large above the words (about 400 px tall at 390 px wide), the call to action is a full-width pill below it, and the control bar closes the hero. The categories still start on the first screen.
+5. **Matching blocks:** the dark watch feature, the newsletter and the About page's dark section are now rounded panels inside the page margins, like every other picture block. The footer stays full width.

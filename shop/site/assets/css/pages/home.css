@@ -1,14 +1,14 @@
 /* MONO home page. Every selector is scoped with a home- prefix.
-   Sections: hero (three messages), categories, new arrivals, shop the look,
+   Sections: hero (six messages), categories, new arrivals, shop the look,
    the watch feature, brand note, newsletter.
    Breakpoints: 760px (phone), 1040px (header menu), 1180px (wide). */
 
 /* ======================================================================
    1. Hero: one message per slide, the words always in the same column.
-   The owner's direction (October 2026): white everywhere, the character
-   standing on white with only a faint shadow at his feet, the photos in one
-   gently rounded panel, and a black pill call to action. No tinted or grey
-   panels, and nothing drawn over the character.
+   The owner's direction (October 2026): a white hero, six slides with the
+   best first, large characters, every picture in the same rounded panel
+   (the soft surface of the product cards), and a black pill call to
+   action. Nothing is drawn over a character.
    ====================================================================== */
 
 .home-hero {
@@ -71,24 +71,38 @@
 .home-panel.is-photo .pic { width: 100%; height: 100%; }
 .home-panel.is-photo .pic img { object-position: var(--x, 50%) var(--y, 50%); }
 
-/* Brand slide: the character stands whole on white, the same white as the
-   page. Sizes follow the panel (container units), so he always fits from
-   head to shoes at his own proportions. */
+/* Character slides: the cut-out fills the panel's height, centred, so he
+   stands large in front of a warm studio wall (sand, lighter behind him)
+   with MONO set large across it, behind him. --crop is the share of the
+   cut-out's height inside the panel: 1 for the studio views (framed head to
+   mid-thigh), .74 for the full-length looks (cut just above the knee, with
+   the hands and anything held in them inside). The panel clips the rest;
+   his proportions never change. */
 .home-panel.is-stage {
-  --ch: 94cqh;                              /* the cut-out's box: 1122 x 1402 */
-  --cw: calc(var(--ch) * 1122 / 1402);
-  --feet: 3cqh;                             /* box bottom to the panel's bottom edge */
-  background: var(--hero-white);
+  background:
+    radial-gradient(70% 62% at 50% 42%, #F8F3EB 0%, rgba(248, 243, 235, 0) 72%),
+    linear-gradient(180deg, #EFE6D9 0%, #E7DAC7 60%, #DDCCB4 100%);
 }
-.home-character { inset: auto auto var(--feet) 50%; width: var(--cw); height: var(--ch); translate: -50% 0; }
+.home-panel.is-stage.is-full { --crop: .74; }
+.home-word {
+  position: absolute; z-index: 0; left: 50%; top: 10cqh; translate: -50% 0;
+  font-family: var(--display); font-weight: var(--w-medium); font-size: min(21cqw, 30cqh); line-height: .8;
+  letter-spacing: .3em; text-indent: .3em; text-transform: uppercase; white-space: nowrap;
+  color: rgba(255, 255, 255, .82); pointer-events: none; user-select: none;
+}
+.home-word::before { content: attr(data-word); }
+.home-character {
+  inset: 0 auto auto 50%; width: auto; height: calc(100cqh / var(--crop, 1));
+  aspect-ratio: 1122 / 1402; translate: -50% 0; transform-origin: 50% 30%;
+}
 .home-character .pic { width: 100%; height: 100%; }
-/* A faint contact shadow where the shoes meet the floor (3.4% above the
-   bottom of the cut-out's box). */
-.home-floor {
-  position: absolute; z-index: 0; left: 50%; bottom: calc(var(--feet) + var(--ch) * .034 - 1.1cqh);
-  width: calc(var(--cw) * .42); height: 2.2cqh; translate: -50% 0; border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(46 48 34 / .20), rgb(46 48 34 / 0));
-}
+
+/* A pair: two portrait photos side by side on white, each rounded. */
+.home-panel.is-pair { background: var(--hero-white); }
+.home-panel.is-pair .home-art { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 1vw, 14px); }
+.home-pair-item { position: relative; min-width: 0; overflow: hidden; border-radius: var(--r-lg); background: var(--canvas); isolation: isolate; }
+.home-pair-item .pic { width: 100%; height: 100%; }
+.home-pair-item .pic img { object-position: var(--x, 50%) var(--y, 50%); }
 
 /* Control bar: counter, a thin segmented progress line, previous, pause, next. */
 .home-bar {
@@ -139,23 +153,27 @@
   .home-line { font-size: var(--fs-base); }
 }
 
-/* ----- Hero: phone (compact, its own composition) ----- */
+/* ----- Hero: phone (its own composition: the picture large on top, the
+   words and the call to action below it, the control bar last). The words'
+   box has a fixed height, so the call to action never moves. ----- */
 @media (max-width: 759px) {
-  .home-hero { --slides-h: clamp(300px, 86vw, 344px); --bar-h: 48px; }
-  .home-carousel { height: calc(var(--slides-h) + var(--bar-h)); }
+  .home-hero {
+    --stage-h: min(440px, calc((100vw - 2 * var(--gutter)) * 1.08));
+    --copy-h: 164px; --bar-h: 52px;
+  }
+  .home-carousel { height: calc(12px + var(--stage-h) + var(--copy-h) + var(--bar-h)); }
   .home-slides { bottom: var(--bar-h); }
-  .home-slide { grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr); }
-  .home-copy-col { padding: 20px 14px 14px var(--gutter); }
-  .home-copy { padding-bottom: 18px; }
-  .home-eyebrow { margin-bottom: 10px; font-size: 0.625rem; gap: 8px; }
+  .home-slide { grid-template-columns: minmax(0, 1fr); grid-template-rows: calc(12px + var(--stage-h)) var(--copy-h); }
+  .home-panel { grid-row: 1; margin: 12px var(--gutter) 0; }
+  .home-copy-col { grid-row: 2; padding: 16px var(--gutter) 0; }
+  .home-copy { padding-bottom: 14px; }
+  .home-eyebrow { margin-bottom: 8px; font-size: 0.625rem; gap: 8px; }
   .home-eyebrow::before { width: 14px; }
-  .home-title { font-size: clamp(1.5rem, 0.9rem + 3vw, 1.875rem); line-height: 1.02; }
+  .home-title { font-size: clamp(1.5rem, 1rem + 2.6vw, 1.875rem); line-height: 1.04; }
   .home-line { display: none; }
-  .home-cta { width: 100%; min-height: 50px; padding-inline: 18px 16px; font-size: 0.875rem; }
+  .home-cta { width: 100%; min-height: 50px; padding-inline: 22px 20px; }
   .home-cta-full { display: none; }
   .home-cta-short { display: inline; }
-  .home-panel { margin: 12px var(--gutter) 2px 0; }
-  .home-panel.is-stage { --ch: 94cqh; --feet: 3cqh; }
   .home-bar {
     left: 0; right: 0; bottom: 0; width: auto; gap: 14px;
     padding: 0 var(--gutter);
@@ -326,7 +344,12 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
    ====================================================================== */
 /* No content-visibility here: skipping the render hid this section's dark
    ground from contrast checks (light words read as if on the ivory page). */
-.home-watch { padding-block: var(--section); }
+.home-watch {
+  /* One dark rounded panel inside the page margins, like every other
+     picture block; it lines up with the content edges at any width. */
+  margin-inline: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+  border-radius: var(--r-lg); padding-block: clamp(48px, 6vw, 96px);
+}
 .home-watch-grid {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
   gap: clamp(32px, 4.5vw, 72px); align-items: center;
@@ -363,7 +386,7 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
   .home-watch-story .home-watch-details { grid-column: 2; grid-row: 1 / span 4; margin-top: 0; }
 }
 @media (max-width: 759px) {
-  .home-watch { padding-block: 48px; }
+  .home-watch { padding-block: 36px; }
   .home-watch-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .home-watch-story { display: block; }
   .home-watch-story .home-watch-details { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; margin: 20px 0 22px; }
@@ -385,7 +408,11 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 /* ======================================================================
    7. Newsletter (demo)
    ====================================================================== */
-.home-news { padding-block: clamp(48px, 6vw, 96px); background: var(--stone); content-visibility: auto; contain-intrinsic-size: auto 340px; }
+.home-news {
+  margin: 0 max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter))) var(--section);
+  border-radius: var(--r-lg); padding-block: clamp(40px, 5vw, 80px); background: var(--stone);
+  content-visibility: auto; contain-intrinsic-size: auto 340px;
+}
 .home-news-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 28px 64px; }
 .home-news-copy h2 { font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-h2); line-height: 1.05; letter-spacing: var(--tracking-display); }
 .home-news-copy p { margin-top: 12px; max-width: 42ch; color: var(--muted); }

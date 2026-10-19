@@ -45,6 +45,10 @@ Prices, sizes, fabric content and stock are not known yet and must come from the
 | Leather belt, brushed steel buckle | Black | `still-life/black-leather-belt.png` | same two photos | |
 | Card holder | Black | `still-life/black-card-holder.png` | same two photos | |
 
+### The owner's polo photos (October 2026)
+
+Two full-length lifestyle photos the owner supplied for the home hero, kept exactly as sent: `lifestyle/olive-polo-green-wall.jpg` (olive polo and charcoal trousers by an olive-green wall, 525 × 1086) and `lifestyle/cream-knit-polo-terrace-walk.jpg` (cream knit polo and navy trousers on a sunlit terrace, 474 × 1086). They are small, so the site never shows them wider than that; a larger copy of each would sharpen the hero on big screens.
+
 ### Round 3 (October 2026)
 
 The owner generated ten photos from the shot list (`shop/docs/photo-shotlist.md`, #18 to #27): the navy crew tee and the cream knit polo (front, back and close-up each, on the same grey backdrop and model as the other studio shots), the navy-dial watch, the round tortoiseshell sunglasses and the black card holder (still lifes), and a back view of the light blue Oxford (`studio/blue-oxford-shirt-back.png`). Nine are on the site. The Oxford back view is kept here but not used: the model's hair is black and tightly curled, while the man in the library photo (the shirt's front view) has dark brown hair worn in loose waves, so the two views would not read as the same person.

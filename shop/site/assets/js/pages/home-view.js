@@ -8,12 +8,24 @@ import { esc, money, picture, productUrl, productCard, icon, stockInfo, needsCho
 const slugId = (value) => String(value ?? '').replace(/[^a-z0-9_-]/gi, '-');
 export const pad = (n) => String(n).padStart(2, '0');
 
-/* ----- Hero: three message slides ----- */
+/* ----- Hero: six message slides ----- */
 
-// One message per slide. The text column is always on the left at the same
-// width and the call to action sits at the bottom of it, so it never moves.
-// Every picture stands in the same rounded panel on the right: words never
-// sit on a picture.
+// One message per slide, best first. The text column is always on the left
+// at the same width and the call to action sits at the bottom of it, so it
+// never moves. Every picture fills the same rounded panel on the right (on
+// phones, above the words): words never sit on a picture.
+//
+// Characters are cut-outs shown large on the panel's soft surface, filling
+// its height. The studio views are framed from the head to mid-thigh; the
+// owner's two look photos are full length, so `full` shows them from the
+// head to just above the knee (the panel clips the rest). A `pair` puts two
+// portrait photos side by side in the panel.
+const HERO_CUT_SIZES = '(min-width: 1040px) 40vw, (min-width: 760px) 62vw, 82vw';
+const HERO_LOOK_SIZES = '(min-width: 1040px) 54vw, (min-width: 760px) 84vw, 112vw';
+const HERO_PAIR_SIZES = '(min-width: 1040px) 27vw, (min-width: 760px) 30vw, 48vw';
+// Cover crops of the wide photos: drawn wider than their panel.
+const HERO_WIDE_SIZES = '(min-width: 1040px) 88vw, (min-width: 760px) 138vw, 180vw';
+
 export const HERO_SLIDES = [
   {
     id: 'brand',
@@ -22,29 +34,25 @@ export const HERO_SLIDES = [
     title: 'Less noise. <em>Better essentials.</em>',
     line: 'Shirts, T-shirts and polos in calm colours, and the few accessories that finish them.',
     // The owner's character (October 2026): the transparent cut-out of
-    // looks/look-02.png, shown whole at its own proportions. Look 02, so the
-    // Look 01 photo that Shop the Look opens on is not repeated.
+    // looks/look-02.png at its own proportions.
     character: {
-      key: 'cut-look-02',
+      key: 'cut-look-02', full: true, sizes: HERO_LOOK_SIZES,
       alt: 'Model in an ivory Oxford shirt, charcoal trousers and black belt, holding silver aviator sunglasses',
-      sizes: '(min-width: 1040px) 38vw, (min-width: 760px) 52vw, 62vw',
     },
     cta: { label: 'Shop new arrivals', short: 'New arrivals', href: '/collections/?sort=new' },
   },
   {
-    id: 'uniform',
+    id: 'polos',
     level: 2,
-    eyebrow: 'T-shirts',
-    title: 'The everyday <em>uniform.</em>',
-    line: 'Crew necks that keep their shape: textured charcoal, heavy ivory and plain navy.',
-    image: {
-      key: 'life-charcoal-tee-wardrobe',
-      alt: 'Man in the charcoal textured tee standing by an open wardrobe',
-      x: '50%', y: '22%',
-      // Cover crop: the panel is wider than this portrait photo on desktop.
-      sizes: '(min-width: 1040px) 62vw, (min-width: 760px) 56vw, 62vw',
-    },
-    cta: { label: 'Shop T-shirts', href: '/collections/t-shirts/' },
+    eyebrow: 'Polos',
+    title: 'Weekends, <em>with a collar.</em>',
+    line: 'Piqué polos in olive and navy, and an open-textured knit polo in cream.',
+    // The owner's two full-length polo photos, side by side.
+    pair: [
+      { key: 'life-olive-polo-wall', x: '50%', y: '28%', alt: 'Man in an olive polo and charcoal trousers by an olive-green wall in the sun' },
+      { key: 'life-cream-polo-walk', x: '50%', y: '24%', alt: 'Man in a cream knit polo and navy trousers walking along a sunlit terrace' },
+    ],
+    cta: { label: 'Shop polos', href: '/collections/polos/' },
   },
   {
     id: 'daylight',
@@ -52,14 +60,42 @@ export const HERO_SLIDES = [
     eyebrow: 'Sunglasses',
     title: 'Made for <em>daylight.</em>',
     line: 'A strong black rectangle, a thin silver aviator and a round tortoiseshell.',
-    image: {
-      key: 'wide-sunglasses-rooftop',
-      alt: 'Man in black sunglasses and a stone overshirt on a city rooftop in daylight',
-      x: '74%', y: '40%',
-      // Cover crop of a wide photo: drawn wider than its panel.
-      sizes: '(min-width: 1040px) 94vw, (min-width: 760px) 130vw, 137vw',
+    // The owner's Look 01 photo: black rectangular sunglasses with the olive polo.
+    character: {
+      key: 'cut-look-01', full: true, sizes: HERO_LOOK_SIZES,
+      alt: 'Model in an olive polo, stone trousers, white sneakers, black sunglasses and a black-dial watch',
     },
     cta: { label: 'Shop sunglasses', href: '/collections/sunglasses/' },
+  },
+  {
+    id: 'shirts',
+    level: 2,
+    eyebrow: 'Shirts',
+    title: 'Oxfords and a <em>fine stripe.</em>',
+    line: 'Button-down Oxfords in ivory and light blue, and fine blue and white stripes with a point collar.',
+    character: { key: 'cut-blue-stripe-shirt-front', sizes: HERO_CUT_SIZES, alt: 'Model in the blue stripe shirt' },
+    cta: { label: 'Shop shirts', href: '/collections/shirts/' },
+  },
+  {
+    id: 'uniform',
+    level: 2,
+    eyebrow: 'T-shirts',
+    title: 'The everyday <em>uniform.</em>',
+    line: 'Crew necks that keep their shape: textured charcoal, heavy ivory and plain navy.',
+    character: { key: 'cut-charcoal-textured-tee-front', sizes: HERO_CUT_SIZES, alt: 'Model in the charcoal textured tee' },
+    cta: { label: 'Shop T-shirts', href: '/collections/t-shirts/' },
+  },
+  {
+    id: 'finish',
+    level: 2,
+    eyebrow: 'Accessories',
+    title: 'Finish the <em>outfit.</em>',
+    line: 'A brown bifold wallet, a black dress belt and a slim black card holder.',
+    image: {
+      key: 'wide-accessories-table', x: '52%', y: '50%', sizes: HERO_WIDE_SIZES,
+      alt: 'Black dress belt, black card holder and brown bifold wallet on a dark wood table in window light',
+    },
+    cta: { label: 'Shop accessories', href: '/collections/accessories/' },
   },
 ];
 
@@ -71,17 +107,25 @@ function ctaHTML(cta) {
 }
 
 function panelHTML(slide, first) {
+  if (slide.pair) {
+    return `<div class="home-panel is-pair">`
+      + `<div class="home-art">${slide.pair.map((img, i) => `<div class="home-pair-item" style="--x:${esc(img.x ?? '50%')};--y:${esc(img.y ?? '50%')}">`
+        + picture(img.key, { alt: img.alt ?? '', sizes: HERO_PAIR_SIZES, priority: first && i === 0 })
+        + `</div>`).join('')}</div>`
+      + `</div>`;
+  }
   if (slide.image) {
     const img = slide.image;
     return `<div class="home-panel is-photo" style="--x:${esc(img.x ?? '50%')};--y:${esc(img.y ?? '50%')}">`
       + `<div class="home-art">${picture(img.key, { alt: img.alt ?? '', sizes: img.sizes, priority: first })}</div>`
       + `</div>`;
   }
-  // The character stands whole on a white stage with a soft lime glow and a
-  // faint shadow at his feet. Nothing is drawn over him.
+  // The character stands large in front of a warm studio wall with the
+  // brand name across it. The word is decoration (drawn from data-word, so
+  // it is not read out) and always sits behind him; nothing is drawn over him.
   const c = slide.character;
-  return `<div class="home-panel is-stage">`
-    + `<span class="home-floor" aria-hidden="true"></span>`
+  return `<div class="home-panel is-stage${c.full ? ' is-full' : ''}">`
+    + `<span class="home-word" data-word="Mono" aria-hidden="true"></span>`
     + `<div class="home-art home-character">${picture(c.key, { alt: c.alt ?? '', sizes: c.sizes, priority: first })}</div>`
     + `</div>`;
 }
