@@ -137,3 +137,24 @@ The five reference videos, as numbered in the brief:
 - **Light Blue Oxford Shirt:** it has a front view and the library photo only. The generated back view (#27) was not used because the model's hair does not match; `photo-shotlist.md` says how to generate it again.
 - **Page-to-page photo morph:** the morph from a card into the product page works in Chrome, Edge and Safari 18.2 and newer. In automated headless Chrome it does not always run when going forward, so the page simply loads. That is a fallback, not an error.
 - **Before launch with real products:** set `LIVE_ADDRESS` or `SITE_URL`. A real store also needs a server: sign-in for the admin, a database, server-side checks of prices and stock, and a payment provider. This demo keeps everything in the visitor's browser.
+
+## 6. Hero refinement (19 October 2026)
+
+The owner asked to refine only the home hero, from two interface references and four photos of the shop's own models. The decisions are in `design-references.md` ("Owner decisions, hero refinement").
+
+- **Character:** the transparent cut-out of `looks/look-02.png`, shown whole at its own proportions. The two PNGs the owner sent are the same files as the look photos already in the repository, and neither is transparent, so the existing cut-out of that exact file is used. Look 02 was chosen because Shop the Look opens on Look 01, so no photo shows twice, and because its dark trousers anchor the figure on white.
+- **Cut-out quality:** inspected at 2x on the new white ground. rembg had stored the edge colours multiplied by the mask, which drew a thin dark outline around the shirt, and it had lost the thin wire frame of the aviators in his hand, so the lenses floated. Both were rebuilt from the untouched original (see `media/originals/CATALOG.md`). Shop the Look and the product pages that use the same photo get the cleaner version too.
+- **Ground and panel:** a white hero with the character on plain white and a faint shadow at his feet. A first version had a soft lime glow behind him; the owner asked for no green, so it was removed. The T-shirt and sunglasses photos sit in one panel with 20 px corners (16 on phones) in the same place on every slide. The faint MONO word behind the clothing is gone, so nothing sits behind or over him.
+- **Call to action:** a black pill in sentence case with an arrow (56 px on desktop, 50 px on phones), the same box on every slide. Previous and next are round outlined buttons.
+- **Phones:** the same two-column layout, 383 px tall at 390 px wide and 348 px at 320 px, with the whole figure in the panel. At 360 px and below the eyebrow drops its short rule so "Modern menswear" stays on one line.
+- **Checked:** captures of every slide at 1440, 1280, 1024, 768, 430, 390, 360 and 320 px with no sideways scroll, no overlap and no console errors. New tests check the white ground, the panel's corners, the character's proportions, that he is whole inside the panel, the black pill, and that the picture panel never overlaps the words on any slide.
+
+## 7. White refresh (19 October 2026)
+
+After the hero, the owner asked for white everywhere, every picture rounded, and the buttons and size boxes of their product page reference. Decisions: `design-references.md` ("Owner decisions, hero refinement and white refresh").
+
+- **Colour tokens:** the page, header, panels and dialogs are white; one soft warm surface (#F3F2EE) behind product pictures and in the newsletter band; size boxes on #F2F1ED; outlines in #DAD6CF; buttons and chosen sizes in #111110. The watch feature and the footer stay dark.
+- **Shapes:** shape tokens in `base.css` (20, 16, 12 and 8 px, smaller on phones, and pills). Every picture frame on the storefront and in the admin is rounded, and so are panels, notices, dialogs, inputs and toasts.
+- **Controls:** every `.btn` is a black pill in sentence case; outlined pills for secondary buttons, the collection filter triggers, the Shop the Look switch, the small add buttons and the size guide's jump links. Size boxes are filled pills like the reference. Product details are rounded boxes. The search field is a pill.
+- **Phones:** the product gallery keeps the page margins so its rounded corners show.
+- **Checked:** every page at 1440 and 390 px; the full test suite (485 passed, 5 skipped by design); html-validate; axe on ten pages on desktop and phone with no findings (one, the demo tag on the dark watch section, was fixed). Lighthouse after the refresh: home 99 on a phone (LCP 1.8 s, CLS 0) and 100 on desktop; the Cream Knit Polo page 99 and 100; accessibility and best practices 100 everywhere.

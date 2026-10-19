@@ -12,7 +12,8 @@ export const pad = (n) => String(n).padStart(2, '0');
 
 // One message per slide. The text column is always on the left at the same
 // width and the call to action sits at the bottom of it, so it never moves.
-// Photos get their own panel on the right: words never sit on a photo.
+// Every picture stands in the same rounded panel on the right: words never
+// sit on a picture.
 export const HERO_SLIDES = [
   {
     id: 'brand',
@@ -20,6 +21,14 @@ export const HERO_SLIDES = [
     eyebrow: 'Modern menswear',
     title: 'Less noise. <em>Better essentials.</em>',
     line: 'Shirts, T-shirts and polos in calm colours, and the few accessories that finish them.',
+    // The owner's character (October 2026): the transparent cut-out of
+    // looks/look-02.png, shown whole at its own proportions. Look 02, so the
+    // Look 01 photo that Shop the Look opens on is not repeated.
+    character: {
+      key: 'cut-look-02',
+      alt: 'Model in an ivory Oxford shirt, charcoal trousers and black belt, holding silver aviator sunglasses',
+      sizes: '(min-width: 1040px) 38vw, (min-width: 760px) 52vw, 62vw',
+    },
     cta: { label: 'Shop new arrivals', short: 'New arrivals', href: '/collections/?sort=new' },
   },
   {
@@ -54,35 +63,6 @@ export const HERO_SLIDES = [
   },
 ];
 
-// Clothing whose front and back cut-outs stand on the brand slide, in order
-// of preference. Neither appears anywhere else on the home page; if the demo
-// admin hides one, the next is used.
-export const ART_CANDIDATES = ['navy-pique-polo', 'blue-stripe-shirt'];
-const CLOTHING = ['shirts', 't-shirts', 'polos'];
-const ART_FRONT_SIZES = '(min-width: 1040px) 42vw, 62vw';
-const ART_BACK_SIZES = '(min-width: 1040px) 27vw, 40vw';
-
-const cut = (p, view) => (p?.images ?? []).find((i) => i.kind === 'cutout' && i.view === view) ?? null;
-
-/** The product shown on the brand slide (visible, with a front cut-out). */
-export function brandArtProduct(products) {
-  const visible = products.filter((p) => p && !p.hidden && cut(p, 'Front'));
-  for (const slug of ART_CANDIDATES) {
-    const p = visible.find((x) => x.slug === slug);
-    if (p) return p;
-  }
-  return visible.find((p) => CLOTHING.includes(p.category)) ?? null;
-}
-
-/** The brand slide's cut-outs: the front large, the back smaller beside it. */
-export function brandArtHTML(p) {
-  const front = cut(p, 'Front');
-  if (!front) return '';
-  const back = cut(p, 'Back');
-  return (back ? `<div class="home-art-back">${picture(back.key, { alt: back.alt ?? '', sizes: ART_BACK_SIZES })}</div>` : '')
-    + `<div class="home-art-front">${picture(front.key, { alt: front.alt ?? '', sizes: ART_FRONT_SIZES, priority: true })}</div>`;
-}
-
 function ctaHTML(cta) {
   const label = cta.short
     ? `<span class="home-cta-full">${esc(cta.label)}</span><span class="home-cta-short">${esc(cta.short)}</span>`
@@ -90,22 +70,24 @@ function ctaHTML(cta) {
   return `<a class="btn home-cta" href="${esc(cta.href)}"><span class="home-cta-label">${label}</span>${icon('arrow', { size: 16 })}</a>`;
 }
 
-function panelHTML(slide, first, art) {
+function panelHTML(slide, first) {
   if (slide.image) {
     const img = slide.image;
     return `<div class="home-panel is-photo" style="--x:${esc(img.x ?? '50%')};--y:${esc(img.y ?? '50%')}">`
       + `<div class="home-art">${picture(img.key, { alt: img.alt ?? '', sizes: img.sizes, priority: first })}</div>`
       + `</div>`;
   }
-  // The faint widely spaced MONO stands behind the clothing, never over it.
-  return `<div class="home-panel is-art">`
-    + `<span class="ghost-word home-ghost" data-word="Mono" aria-hidden="true"></span>`
-    + `<div class="home-art" data-art${art ? ` data-art-slug="${esc(art.slug)}"` : ''}>${brandArtHTML(art)}</div>`
+  // The character stands whole on a white stage with a soft lime glow and a
+  // faint shadow at his feet. Nothing is drawn over him.
+  const c = slide.character;
+  return `<div class="home-panel is-stage">`
+    + `<span class="home-floor" aria-hidden="true"></span>`
+    + `<div class="home-art home-character">${picture(c.key, { alt: c.alt ?? '', sizes: c.sizes, priority: first })}</div>`
     + `</div>`;
 }
 
 /** One slide: the message on the left, its picture panel on the right. */
-export function heroSlideHTML(slide, i, total, { art = null } = {}) {
+export function heroSlideHTML(slide, i, total) {
   const first = i === 0;
   const h = `h${slide.level === 1 ? 1 : 2}`;
   return `<div class="home-slide${first ? ' is-active is-intro' : ''}" id="hero-${esc(slide.id)}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" tabindex="-1" data-slide data-slide-id="${esc(slide.id)}"${first ? '' : ' inert'}>`
@@ -117,7 +99,7 @@ export function heroSlideHTML(slide, i, total, { art = null } = {}) {
     + `</div>`
     + ctaHTML(slide.cta)
     + `</div>`
-    + panelHTML(slide, first, art)
+    + panelHTML(slide, first)
     + `</div>`;
 }
 
@@ -126,11 +108,11 @@ const PLAY_ICON = '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24" widt
 export const toggleIcon = (playing) => (playing ? PAUSE_ICON : PLAY_ICON);
 
 /** The hero: stacked slides and one restrained control bar. */
-export function heroHTML(slides, { art = null } = {}) {
+export function heroHTML(slides) {
   const n = slides.length;
   return `<div class="home-hero" data-hero>`
     + `<section class="home-carousel" aria-roledescription="carousel" aria-label="Highlights" data-carousel data-autoplay="off">`
-    + `<div class="home-slides" data-slides>${slides.map((s, i) => heroSlideHTML(s, i, n, { art })).join('')}</div>`
+    + `<div class="home-slides" data-slides>${slides.map((s, i) => heroSlideHTML(s, i, n)).join('')}</div>`
     + `<div class="home-bar" data-hero-bar>`
     + `<p class="home-bar-count"><span data-hero-current>01</span> / <span data-hero-total>${pad(n)}</span></p>`
     + `<div class="home-bar-progress" aria-hidden="true">${slides.map((s, i) => `<span class="home-seg${i === 0 ? ' is-current' : ''}"><i></i></span>`).join('')}</div>`

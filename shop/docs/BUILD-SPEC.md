@@ -39,10 +39,11 @@ approved previews in `docs/preview/*.jpg`. Research to follow:
   (the stock is demo data and the owner's research rules such lines out); the
   quantity stepper still stops at what is in stock.
 - The footer disclosure stays (it is in `layout.mjs`).
-- Words never sit on top of photos. Labels go under or beside images. A giant
-  ghost word may sit *behind* cut-outs on the plain canvas, and only in the
-  home hero's brand slide: never on the product page, never over a product,
-  never repeating a word that is already set large nearby.
+- Words never sit on top of photos. Labels go under or beside images. No
+  giant ghost words on the site: the last one, behind the hero clothing, was
+  removed in the October 2026 hero refinement so nothing sits behind or over
+  the hero character. (Share cards from `npm run shop:og` still set a faint
+  word behind their cut-outs.)
 - Decorative giant words are written as
   `<span class="ghost-word" data-word="Polo" aria-hidden="true"></span>`: the
   text comes from a CSS pseudo-element, so screen readers and contrast checks
@@ -167,8 +168,13 @@ then goes to `/order-confirmation/?order=<id>` (no personal data in the URL).
 
 ## 4. Visual system
 
-Tokens are at the top of `base.css` (ivory page, canvas behind cut-outs,
-ghost word colour, ink, muted, line, olive accent, night sections). Use the
+Tokens are at the top of `base.css`. Since the owner's white refresh
+(October 2026): a white page (`--ivory` keeps its name and is white), one
+soft warm surface behind pictures (`--canvas`), `--fill` for size boxes,
+`--control` for input and outline borders, `--black` for buttons and chosen
+sizes, plus ink, muted, line, the olive accent and the night sections; shape
+tokens `--r-lg` 20px, `--r-md` 16px, `--r-sm` 12px, `--r-xs` 8px (16, 14
+and 10px on phones) and `--r-pill`. Use the
 tokens; do not introduce new colours except a product's own `accent`/`colour.hex`
 from the data (set as `--accent` / `--dot` / `--sw` inline custom properties,
 which the validator allows).
@@ -180,14 +186,19 @@ product page title 600 (`--w-heading`), product names on cards 500
 (`--w-medium`), body 400 (`--w-text`); display sizes use
 `--tracking-display`. An `em` inside a heading is set in the olive accent
 (`--accent-ink`), never italic. Small capitals labels: `.eyebrow`, `.label`.
-Square corners. No shadows except toasts. No icon rows, no decorative
-doodles.
+Every picture frame and panel is rounded with the shape tokens (pictures
+20px large, 16px cards and tiles, 12px thumbnails, inputs and notices).
+No shadows except toasts and the filter dropdowns. No icon rows, no
+decorative doodles.
 
-Buttons: `.btn` is the charcoal primary, 48px tall (52px on phones), with
-hover, focus-visible, pressed (1px down), disabled, busy
-(`aria-busy="true"` shows a spinner) and done states; `.btn-ghost` is the
-outlined secondary, `.link` / `.text-link` are text links. One style per
-role on every page.
+Buttons, after the owner's product page reference: `.btn` is a black pill
+in sentence case, 50px tall (52px on phones), with hover, focus-visible,
+pressed (1px down), disabled, busy (`aria-busy="true"` shows a spinner) and
+done states; `.btn-ghost` is the outlined pill, `.link` / `.text-link` are
+text links. Size boxes (`.chip`) are soft filled pills: the chosen one
+black, sold-out ones pale with a fine strike. Filter triggers, look
+switches and small add buttons are outlined pills. One style per role on
+every page.
 
 Shared components in `base.css` (use them, do not restyle them globally):
 `.wrap .section .section-tight .display .eyebrow .label .lede .muted .small
@@ -206,7 +217,8 @@ Page CSS must be scoped: prefix every selector with your page's root class
 scroll ever.
 
 Images: always `r.picture(key, {...})` with correct `sizes`. Cut-outs (keys
-`cut-*`) have alpha and sit on `--canvas`; give their frame `aspect-ratio: 4 / 5`
+`cut-*`) have alpha and sit on `--canvas` (the home hero's character stands
+on plain white); give their frame `aspect-ratio: 4 / 5`
 (the media is 1122x1402). Photos are 4:5 except `wide-*` (16:9). Every image
 below the first screen is lazy. The LCP image of a page uses
 `priority: true` and is never faded or hidden at first paint. One image per

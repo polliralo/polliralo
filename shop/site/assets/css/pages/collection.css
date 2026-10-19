@@ -69,12 +69,15 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 .coll .coll-tools-in { display: flex; align-items: center; gap: 12px 28px; min-height: 60px; }
 
 .coll .coll-open {
-  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding-right: 4px;
-  font-size: 0.75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 18px;
+  border: 1px solid var(--control); border-radius: var(--r-pill);
+  font-size: 0.875rem; font-weight: 500;
+  transition: border-color var(--d-fast);
 }
+@media (hover: hover) { .coll .coll-open:hover { border-color: var(--ink); } }
 .coll .coll-badge {
   display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px;
-  background: var(--ink); color: var(--ivory); font-size: 0.6875rem; letter-spacing: 0;
+  background: var(--black); color: #FFFFFF; font-size: 0.6875rem; letter-spacing: 0;
 }
 .coll .coll-showing {
   margin-left: auto; font-size: 0.6875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); white-space: nowrap;
@@ -82,11 +85,11 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 .coll .coll-open { white-space: nowrap; }
 @media (max-width: 379px) {
   .coll .coll-tools-in { gap: 8px 12px; }
-  .coll .coll-open { gap: 8px; letter-spacing: .1em; }
+  .coll .coll-open { gap: 8px; padding-inline: 14px; }
   .coll .coll-showing { letter-spacing: .06em; }
 }
 
-.coll .coll-filters { display: none; align-items: center; gap: 4px 30px; flex-wrap: wrap; }
+.coll .coll-filters { display: none; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
 .coll .coll-dd-end { display: none; }
 
 @media (min-width: 1040px) {
@@ -95,24 +98,22 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
   .coll .coll-dd-end { display: block; }
 }
 
-/* Dropdown buttons */
+/* Dropdown buttons: outlined pills, the open one outlined in ink. */
 .coll .coll-dd { position: relative; }
 .coll .coll-dd-btn {
-  display: inline-flex; align-items: center; gap: 9px; height: 44px;
-  font-size: 0.75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 16px 0 18px;
+  border: 1px solid var(--control); border-radius: var(--r-pill);
+  font-size: 0.875rem; font-weight: 500;
+  transition: border-color var(--d-fast), background-color var(--d-fast);
 }
-.coll .coll-dd-label { position: relative; padding-block: 4px; }
-.coll .coll-dd-label::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor;
-  transform: scaleX(0); transform-origin: right; transition: transform var(--d-slow) var(--ease-expo);
-}
-@media (hover: hover) { .coll .coll-dd-btn:hover .coll-dd-label::after { transform: scaleX(1); transform-origin: left; } }
-.coll .coll-dd-btn[aria-expanded="true"] .coll-dd-label::after { transform: scaleX(1); }
+@media (hover: hover) { .coll .coll-dd-btn:hover { border-color: var(--ink); } }
+.coll .coll-dd-btn[aria-expanded="true"] { border-color: var(--ink); }
+.coll .coll-dd-label { position: relative; }
 .coll .coll-dd-n:not(:empty) {
   display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
-  background: var(--ink); color: var(--ivory); font-size: 0.625rem; letter-spacing: 0;
+  background: var(--black); color: #FFFFFF; font-size: 0.625rem; letter-spacing: 0;
 }
-.coll .coll-dd-value { color: var(--muted); letter-spacing: .12em; }
+.coll .coll-dd-value { color: var(--muted); }
 .coll .coll-chev { flex: none; transition: transform var(--d-base) var(--ease-out); }
 .coll .coll-dd-btn[aria-expanded="true"] .coll-chev { transform: rotate(180deg); }
 
@@ -120,7 +121,8 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 .coll .coll-dd-panel {
   position: absolute; top: calc(100% + 8px); left: -24px; z-index: 5;
   width: max-content; min-width: 260px; max-width: min(520px, calc(100vw - 32px));
-  padding: 22px 24px; background: var(--paper); border: 1px solid var(--line);
+  padding: 22px 24px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
+  box-shadow: 0 18px 40px rgba(20, 20, 18, .08);
 }
 .coll .coll-dd-end .coll-dd-panel, .coll .coll-dd-panel.is-flip { left: auto; right: -24px; }
 .coll .coll-dd-colour { width: 480px; }
@@ -148,12 +150,12 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 /* Square checkbox and round radio, drawn with CSS. */
 .coll .coll-check input, .coll .coll-radio input {
   appearance: none; -webkit-appearance: none; flex: none; margin: 0;
-  width: 18px; height: 18px; border: 1px solid var(--faint); background: transparent;
+  width: 18px; height: 18px; border: 1px solid var(--faint); border-radius: 5px; background: transparent;
   transition: background-color var(--d-fast), border-color var(--d-fast);
 }
 .coll .coll-radio input { border-radius: 50%; }
 .coll .coll-check input:checked {
-  background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5F2EC' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 14px no-repeat;
+  background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 14px no-repeat;
   border-color: var(--ink);
 }
 .coll .coll-radio input:checked { border-color: var(--ink); background: radial-gradient(circle, var(--ink) 0 4px, transparent 4.5px); }
@@ -175,23 +177,23 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 .coll .coll-sub { margin-bottom: 10px; font-size: 0.625rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
 .coll .coll-sizes { display: flex; flex-wrap: wrap; gap: 8px; }
 .coll .coll-size { cursor: pointer; }
-.coll .coll-size:has(input:checked) { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+.coll .coll-size:has(input:checked) { background: var(--black); color: #FFFFFF; border-color: var(--black); }
 .coll .coll-size:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px; }
-.coll .coll-size:has(input:disabled) { color: var(--faint); cursor: not-allowed; }
+.coll .coll-size:has(input:disabled) { background: #F8F7F5; color: var(--faint); cursor: not-allowed; }
 .coll .coll-size:has(input:disabled)::after {
-  content: ""; position: absolute; inset: 50% 8px auto; height: 1px; background: currentColor; transform: rotate(-24deg);
+  content: ""; position: absolute; inset: 50% 14px auto; height: 1px; background: currentColor; opacity: .7; transform: rotate(-20deg);
 }
 
 /* In stock only, inline in the bar */
-.coll .coll-stock .coll-opt { min-height: 44px; font-size: 0.75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500; }
+.coll .coll-stock .coll-opt { min-height: 44px; padding-inline: 8px; font-size: 0.875rem; font-weight: 500; }
 .coll .coll-stock .coll-n { display: none; }
 
 /* ----- Active filter chips ----- */
 .coll .coll-active { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding-top: 18px; }
 .coll .coll-pills { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
 .coll .coll-pill {
-  display: inline-flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 12px 0 14px;
-  border: 1px solid #CFC7BB; background: var(--paper); font-size: var(--fs-xs); letter-spacing: .06em;
+  display: inline-flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 12px 0 16px;
+  border: 1px solid var(--control); border-radius: var(--r-pill); background: var(--paper); font-size: var(--fs-sm);
   transition: border-color var(--d-fast), background-color var(--d-fast);
 }
 .coll .coll-pill .icon { color: var(--muted); transition: transform var(--d-base) var(--ease-out); }
@@ -200,7 +202,7 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
   .coll .coll-pill:hover .icon { transform: rotate(90deg); color: var(--ink); }
 }
 .coll .coll-clear {
-  min-height: 36px; font-size: 0.6875rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  min-height: 36px; font-size: var(--fs-sm); font-weight: 500;
   text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -234,11 +236,11 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
    add. */
 .coll .coll-tile {
   display: none; position: relative; align-self: start; gap: clamp(12px, 1.4vw, 20px);
-  padding: clamp(12px, 1.6vw, 24px); background: var(--paper); border: 1px solid var(--line);
+  padding: clamp(12px, 1.6vw, 24px); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg);
   grid-template-rows: auto auto;
 }
 .coll .coll-tile[data-mod2="1"] { display: grid; }
-.coll .coll-tile-media { aspect-ratio: 4 / 3; min-height: 0; overflow: hidden; background: var(--canvas); }
+.coll .coll-tile-media { aspect-ratio: 4 / 3; min-height: 0; overflow: hidden; border-radius: var(--r-md); background: var(--canvas); isolation: isolate; }
 .coll .coll-tile-media .pic { height: 100%; }
 .coll .coll-tile-media img { object-position: var(--x, 50%) var(--y, 50%); transition: transform var(--d-slow) var(--ease-out); }
 .coll .coll-tile-body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -265,7 +267,7 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 /* The whole panel is one link target (the words stay the link's name). */
 .coll .coll-tile-link::after { content: ""; position: absolute; inset: 0; }
 @media (hover: hover) and (pointer: fine) {
-  .coll .coll-tile:hover { border-color: #CFC7BB; }
+  .coll .coll-tile:hover { border-color: var(--control); }
   .coll .coll-tile:hover .coll-tile-media img { transform: scale(1.02); }
 }
 @media (max-width: 759px) {
@@ -294,7 +296,7 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 .coll .coll-more-list::-webkit-scrollbar { display: none; }
 .coll .coll-more-list > li { scroll-snap-align: start; }
 .coll .coll-more-card { display: grid; gap: 12px; }
-.coll .coll-more-frame { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
+.coll .coll-more-frame { display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-md); background: var(--canvas); isolation: isolate; }
 .coll .coll-more-frame .pic { height: 100%; }
 .coll .coll-more-frame img { transition: transform var(--d-slow) var(--ease-out); }
 .coll .coll-more-name {
@@ -359,16 +361,17 @@ html.coll-vt::view-transition-new(coll-glue-0) { animation: none; }
 
 .srch .srch-form {
   display: flex; align-items: center; gap: 14px; margin-top: clamp(14px, 2vw, 28px);
-  padding-block: 8px; border-bottom: 1px solid var(--ink); background: color-mix(in srgb, var(--ivory) 70%, transparent);
+  padding: 6px 6px 6px 22px; border: 1px solid var(--control); border-radius: var(--r-pill); background: var(--paper);
+  transition: border-color var(--d-fast);
 }
 .srch .srch-form > .icon { flex: none; color: var(--muted); }
 .srch .srch-input {
   flex: 1; min-width: 0; border: 0; background: none; padding: 4px 0; border-radius: 0;
-  font-family: var(--display); font-weight: var(--w-medium); font-size: clamp(1.25rem, 0.95rem + 1.5vw, 2.125rem); line-height: 1.2;
+  font-family: var(--display); font-weight: var(--w-medium); font-size: clamp(1.125rem, 0.95rem + 0.9vw, 1.625rem); line-height: 1.2;
 }
 .srch .srch-input::placeholder { color: #9A9285; }
 .srch .srch-input:focus { outline: none; }
-.srch .srch-form:focus-within { border-bottom-color: var(--olive); box-shadow: 0 1px 0 var(--olive); }
+.srch .srch-form:focus-within { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
 .srch .srch-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 .srch .srch-clear { display: inline-grid; place-items: center; width: 44px; height: 44px; flex: none; color: var(--muted); border-radius: 50%; }
 @media (hover: hover) { .srch .srch-clear:hover { color: var(--ink); background: rgba(28, 28, 26, .06); } }
@@ -386,7 +389,7 @@ html.coll-vt::view-transition-new(coll-glue-0) { animation: none; }
 @media (min-width: 760px) { .srch .srch-cats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 18px; } }
 @media (min-width: 1040px) { .srch .srch-cats { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(14px, 1.4vw, 22px); } }
 .srch .srch-cat { display: grid; gap: 12px; }
-.srch .srch-cat-frame { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
+.srch .srch-cat-frame { display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-md); background: var(--canvas); isolation: isolate; }
 .srch .srch-cat-frame .pic { height: 100%; }
 .srch .srch-cat-frame img { transition: transform var(--d-slow) var(--ease-out); }
 .srch .srch-cat-name {

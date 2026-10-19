@@ -48,7 +48,7 @@ test.describe('hero', () => {
     await expect(counter(page)).toHaveText('01 / 03');
     expect(await slides.evaluateAll((els) => els.map((el) => el.inert))).toEqual([false, true, true]);
     // The first picture is the LCP: eager and high priority.
-    await expect(slides.first().locator('.home-art-front img')).toHaveAttribute('fetchpriority', 'high');
+    await expect(slides.first().locator('.home-character img')).toHaveAttribute('fetchpriority', 'high');
   });
 
   test('next and previous change the slide and the counter', async ({ page }) => {
@@ -85,16 +85,14 @@ test.describe('hero', () => {
     }
   });
 
-  test('words never sit on a photo: the message column and the photo panel do not overlap', async ({ page }) => {
+  test('words never sit on a picture: the message column and the picture panel do not overlap', async ({ page }) => {
     await openHome(page);
     for (let i = 0; i < 3; i += 1) {
-      const panel = activeSlide(page).locator('.home-panel');
-      if (await panel.evaluate((el) => el.classList.contains('is-photo'))) {
-        const copy = await activeSlide(page).locator('.home-copy-col').boundingBox();
-        const pic = await panel.boundingBox();
-        expect(copy.x + copy.width).toBeLessThanOrEqual(pic.x + 1);
-      }
+      const copy = await activeSlide(page).locator('.home-copy-col').boundingBox();
+      const pic = await activeSlide(page).locator('.home-panel').boundingBox();
+      expect(copy.x + copy.width).toBeLessThanOrEqual(pic.x + 1);
       await page.locator('[data-hero-next]').click();
+      await expect(counter(page)).toHaveText(`0${((i + 1) % 3) + 1} / 03`);
     }
   });
 
@@ -191,19 +189,49 @@ test.describe('hero', () => {
     expect(cats.y).toBeLessThan(page.viewportSize().height);
   });
 
-  test('the faint MONO word lives only on the brand slide', async ({ page }) => {
+  test('the brand slide: the owner\'s character stands whole on a white stage, nothing over him', async ({ page }) => {
     await openHome(page);
-    const ghosts = page.locator('.ghost-word');
-    await expect(ghosts).toHaveCount(1);
-    await expect(page.locator('[data-slide-id="brand"] .ghost-word')).toHaveCount(1);
-    await expect(ghosts).toHaveAttribute('aria-hidden', 'true');
-    // Behind the clothing, never over it.
-    const z = await page.evaluate(() => {
-      const g = document.querySelector('.ghost-word');
-      const art = document.querySelector('[data-slide-id="brand"] .home-art');
-      return [Number(getComputedStyle(g).zIndex), Number(getComputedStyle(art).zIndex)];
+    const slide = page.locator('[data-slide-id="brand"]');
+    await expect(slide.locator('.home-character img')).toHaveAttribute('src', /cut-look-02-/);
+    await expect(page.locator('.ghost-word')).toHaveCount(0);
+    const m = await slide.evaluate((el) => {
+      const panel = el.querySelector('.home-panel');
+      const img = el.querySelector('.home-character img');
+      const p = panel.getBoundingClientRect();
+      const b = img.getBoundingClientRect();
+      // The person inside the 1122 x 1402 cut-out (measured from
+      // media/cutouts/look-02.png): x 343 to 793, y 50 to 1363.
+      const person = {
+        left: b.left + b.width * (343 / 1122), right: b.left + b.width * (793 / 1122),
+        top: b.top + b.height * (50 / 1402), bottom: b.top + b.height * (1363 / 1402),
+      };
+      const bg = (node) => getComputedStyle(node).backgroundColor;
+      return {
+        hero: bg(document.querySelector('[data-hero]')),
+        radius: parseFloat(getComputedStyle(panel).borderTopLeftRadius),
+        ratio: b.width / b.height,
+        inside: person.left >= p.left + 4 && person.right <= p.right - 4 && person.top >= p.top + 4 && person.bottom <= p.bottom - 4,
+      };
     });
-    expect(z[0]).toBeLessThan(z[1]);
+    // A clean white ground, a gently rounded panel, his own proportions, nothing cropped.
+    expect(m.hero).toBe('rgb(255, 255, 255)');
+    expect(m.radius).toBeGreaterThanOrEqual(12);
+    expect(m.radius).toBeLessThanOrEqual(24);
+    expect(Math.abs(m.ratio - 1122 / 1402)).toBeLessThan(0.01);
+    expect(m.inside).toBe(true);
+  });
+
+  test('the call to action is a black pill', async ({ page }) => {
+    await openHome(page);
+    const cta = activeSlide(page).locator('.home-cta');
+    const s = await cta.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { bg: cs.backgroundColor, color: cs.color, radius: parseFloat(cs.borderTopLeftRadius), height: el.getBoundingClientRect().height };
+    });
+    expect(s.bg).toBe('rgb(17, 17, 16)');
+    expect(s.color).toBe('rgb(255, 255, 255)');
+    expect(s.radius).toBeGreaterThanOrEqual(s.height / 2);
+    expect(s.height).toBeGreaterThanOrEqual(48);
   });
 });
 
@@ -310,8 +338,14 @@ test.describe('page basics', () => {
     const srcs = await page.locator('main img').evaluateAll((imgs) => imgs.map((img) => img.getAttribute('src')));
     const editorial = srcs.map(keyOf).filter((k) => /^(life|wide|cut-look)-/.test(k));
     expect(editorial.length).toBeGreaterThan(5);
+    // The hero's character is the Look 02 photo. Shop the Look opens on
+    // Look 01 and shows Look 02 only once a shopper picks it.
+    const hero = keyOf(await page.locator('[data-slide-id="brand"] .home-character img').getAttribute('src'));
     const repeated = editorial.filter((k, i) => editorial.indexOf(k) !== i);
-    expect(repeated).toEqual([]);
+    expect(repeated.filter((k) => k !== hero)).toEqual([]);
+    const shown = page.locator('.home-look-figure:not([hidden]) img');
+    await expect(shown).toHaveCount(1);
+    expect(keyOf(await shown.getAttribute('src'))).not.toBe(hero);
   });
 
   test('reveals only on editorial images, never on headings, cards or buttons', async ({ page }) => {
@@ -341,7 +375,7 @@ test.describe('page basics', () => {
     expect(problems).toEqual([]);
   });
 
-  test('admin edits in this browser reach the hero art, new arrivals and panels', async ({ page }) => {
+  test('admin edits in this browser reach new arrivals and panels; the hero keeps its pictures', async ({ page }) => {
     await page.goto('/');
     const seed = await page.evaluate(() => fetch('/assets/data/store.json').then((r) => r.json()));
     const hide = ['navy-pique-polo', 'black-rectangular-sunglasses', 'tortoiseshell-round-sunglasses'];
@@ -355,10 +389,10 @@ test.describe('page basics', () => {
       localStorage.setItem('mono.catalog.v1', JSON.stringify({ version, products: list, savedAt: new Date().toISOString() }));
     }, { version: seed.version, products });
     await page.reload();
-    // The brand slide no longer shows the hidden navy polo.
-    await expect(page.locator('[data-art]')).toHaveAttribute('data-art-slug', 'blue-stripe-shirt');
-    await expect(page.locator('[data-hero] img[src*="navy-pique-polo"]')).toHaveCount(0);
+    // The hero is editorial: its character and photos do not follow the catalogue.
     await expect(page.locator('[data-slide]')).toHaveCount(3);
+    await expect(page.locator('[data-slide-id="brand"] .home-character img')).toHaveAttribute('src', /cut-look-02-/);
+    await expect(page.locator('[data-hero] img[src*="navy-pique-polo"]')).toHaveCount(0);
     await expect(page.locator('.home-new .card')).toHaveCount(newCount(products));
     await expect(page.locator('.home-new .card[data-slug="tortoiseshell-round-sunglasses"]')).toHaveCount(0);
     await expect(page.locator('.home-new .card[data-slug="cream-knit-polo"] .card-price')).toHaveText('$54');

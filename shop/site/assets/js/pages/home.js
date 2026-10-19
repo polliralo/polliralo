@@ -8,7 +8,7 @@ import { addToBag } from '../lib/actions.js';
 import { $, $$, reducedMotion, announce, enhance, withTransition } from '../lib/ui.js';
 import { initRails } from '../lib/rail.js';
 import {
-  pad, toggleIcon, brandArtProduct, brandArtHTML,
+  pad, toggleIcon,
   newArrivals, newArrivalsHTML, lookProducts, lookListHTML, watchPanelHTML,
 } from './home-view.js';
 
@@ -384,8 +384,6 @@ function watchSelection(get) {
 function initSigs() {
   // The server markup was built from the seed catalogue.
   const slugs = (sel, root) => $$(sel, root).map((el) => el.dataset.slug);
-  const art = $('[data-art]', carousel ?? document);
-  if (art) sigs.art = sigOf([art.dataset.artSlug ? seedProduct(art.dataset.artSlug) : null]);
   const newList = $('[data-new-list]');
   if (newList) sigs.new = sigOf(slugs('.card[data-slug]', newList).map(seedProduct));
   if (lookSection) {
@@ -395,19 +393,6 @@ function initSigs() {
   }
   const s = watchSelection(seedProduct);
   sigs.watch = sigOf([s.watch, ...s.extras, s.other]);
-}
-
-function renderArt() {
-  const art = $('[data-art]', carousel ?? document);
-  if (!art) return;
-  const product = brandArtProduct(getProducts());
-  const sig = sigOf([product]);
-  if (sig === sigs.art) return;
-  sigs.art = sig;
-  art.innerHTML = brandArtHTML(product);
-  if (product) art.dataset.artSlug = product.slug;
-  else delete art.dataset.artSlug;
-  enhance(art);
 }
 
 function renderNew() {
@@ -457,7 +442,6 @@ function sync() {
   if (!Object.keys(sigs).length) initSigs();
   if (!isEdited() && !hydrated) return;
   hydrated = true;
-  renderArt();
   renderNew();
   renderLooks();
   renderWatch();

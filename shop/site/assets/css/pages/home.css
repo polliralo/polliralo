@@ -4,18 +4,24 @@
    Breakpoints: 760px (phone), 1040px (header menu), 1180px (wide). */
 
 /* ======================================================================
-   1. Hero: one message per slide, the words always in the same column
+   1. Hero: one message per slide, the words always in the same column.
+   The owner's direction (October 2026): white everywhere, the character
+   standing on white with only a faint shadow at his feet, the photos in one
+   gently rounded panel, and a black pill call to action. No tinted or grey
+   panels, and nothing drawn over the character.
    ====================================================================== */
 
 .home-hero {
   --hero-h: clamp(540px, calc(100svh - var(--header-h) - var(--announce-h) - 40px), 760px);
   --text-w: clamp(360px, 34vw, 500px);      /* message column: same on every slide */
   --copy-gap: clamp(28px, 3.2vw, 56px);     /* column to picture panel */
+  --stage-inset: clamp(12px, 1.6vw, 24px);  /* panel to the hero's top and bottom edges */
   --bar-h: 48px;
-  --bar-gap: clamp(18px, 3vh, 30px);        /* control bar to the hero's bottom edge */
+  --bar-gap: var(--stage-inset);            /* the control bar ends level with the panel */
   --cta-gap: clamp(24px, 3.6vh, 40px);      /* call to action to the control bar */
+  --hero-white: #FFFFFF;
   position: relative;
-  background: var(--canvas);
+  background: var(--hero-white);
   overflow: clip;
 }
 .home-carousel { position: relative; max-width: var(--max); height: var(--hero-h); margin-inline: auto; }
@@ -38,34 +44,50 @@
   position: relative; z-index: 1; display: grid; grid-template-rows: minmax(0, 1fr) auto; min-width: 0;
   padding: clamp(28px, 5vh, 56px) var(--copy-gap) calc(var(--bar-gap) + var(--bar-h) + var(--cta-gap)) var(--gutter);
 }
-.home-copy { align-self: end; min-width: 0; padding-bottom: clamp(24px, 3.4vh, 36px); }
+.home-copy { align-self: end; min-width: 0; padding-bottom: clamp(26px, 3.6vh, 38px); }
 .home-eyebrow { margin-bottom: 20px; }
 .home-title {
   font-family: var(--display); font-weight: var(--w-hero); font-size: min(var(--fs-hero), 4.75rem);
   line-height: .98; letter-spacing: var(--tracking-display);
 }
-.home-line { max-width: 34ch; margin-top: 20px; font-size: var(--fs-md); line-height: 1.6; color: var(--muted); }
-.home-cta { width: 264px; max-width: 100%; justify-content: space-between; padding-inline: 24px 20px; }
+.home-line { max-width: 34ch; margin-top: 22px; font-size: var(--fs-md); line-height: 1.6; color: var(--muted); }
+
+/* The call to action: the shared black pill, a little larger here. The box
+   is the same on every slide. */
+.home-cta { width: 272px; max-width: 100%; min-height: 56px; justify-content: space-between; padding-inline: 28px 24px; }
+.home-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .home-cta-short { display: none; }
 
-/* The picture panel: opaque, so an incoming slide fully covers the old one. */
-.home-panel { position: relative; min-width: 0; overflow: hidden; background: var(--canvas); container-type: size; }
+/* The picture panel: one rounded box in the same place on every slide,
+   opaque, so an incoming slide fully covers the old one. */
+.home-panel {
+  position: relative; min-width: 0; overflow: hidden; isolation: isolate;
+  margin: var(--stage-inset) var(--gutter) var(--stage-inset) 0;
+  border-radius: var(--r-lg);
+  background: var(--canvas);
+  container-type: size;
+}
 .home-art { position: absolute; inset: 0; z-index: 1; transform-origin: 50% 100%; }
 .home-panel.is-photo .pic { width: 100%; height: 100%; }
 .home-panel.is-photo .pic img { object-position: var(--x, 50%) var(--y, 50%); }
 
-/* Brand slide: one product at two scales, standing on the canvas floor.
-   Sizes follow the panel (container units), so the pair always fits. */
-.home-panel.is-art { --fh: min(100cqh, 86cqw); }
-.home-panel.is-art .home-art { display: flex; align-items: flex-end; justify-content: flex-end; padding-right: 5cqw; }
-.home-art-back, .home-art-front { flex: none; aspect-ratio: 4 / 5; }
-.home-art-back { height: calc(var(--fh) * .62); }
-/* The cut-outs have clear margins: overlap the boxes, not the clothing. */
-.home-art-front { height: var(--fh); margin-left: calc(var(--fh) * -.21); }
-.home-art .pic { width: 100%; height: 100%; }
-.home-ghost {
-  z-index: 0; top: 9cqh; left: 50%; translate: -50% 0;
-  font-size: min(19cqw, 13.5rem); letter-spacing: .34em; text-indent: .34em; text-transform: uppercase;
+/* Brand slide: the character stands whole on white, the same white as the
+   page. Sizes follow the panel (container units), so he always fits from
+   head to shoes at his own proportions. */
+.home-panel.is-stage {
+  --ch: 94cqh;                              /* the cut-out's box: 1122 x 1402 */
+  --cw: calc(var(--ch) * 1122 / 1402);
+  --feet: 3cqh;                             /* box bottom to the panel's bottom edge */
+  background: var(--hero-white);
+}
+.home-character { inset: auto auto var(--feet) 50%; width: var(--cw); height: var(--ch); translate: -50% 0; }
+.home-character .pic { width: 100%; height: 100%; }
+/* A faint contact shadow where the shoes meet the floor (3.4% above the
+   bottom of the cut-out's box). */
+.home-floor {
+  position: absolute; z-index: 0; left: 50%; bottom: calc(var(--feet) + var(--ch) * .034 - 1.1cqh);
+  width: calc(var(--cw) * .42); height: 2.2cqh; translate: -50% 0; border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(46 48 34 / .20), rgb(46 48 34 / 0));
 }
 
 /* Control bar: counter, a thin segmented progress line, previous, pause, next. */
@@ -76,16 +98,17 @@
 }
 .home-bar-count { flex: none; font-size: 0.8125rem; font-weight: var(--w-medium); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
 .home-bar-progress { flex: 1; min-width: 40px; display: flex; gap: 4px; }
-.home-seg { flex: 1; height: 2px; overflow: hidden; background: rgba(28, 28, 26, .14); }
+.home-seg { flex: 1; height: 2px; overflow: hidden; border-radius: 2px; background: rgba(28, 28, 26, .12); }
 .home-seg i { display: block; height: 100%; background: var(--ink); transform: scaleX(0); transform-origin: 0 50%; }
 .home-seg.is-done i { transform: scaleX(1); }
 .home-carousel:not([data-playing="true"]) .home-seg.is-current i { transform: scaleX(1); }
-.home-bar-nav { flex: none; display: flex; align-items: center; gap: 2px; margin-right: -10px; }
+.home-bar-nav { flex: none; display: flex; align-items: center; gap: 8px; }
 .home-bar-btn {
   display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--ink);
-  transition: background-color var(--d-fast) var(--ease-standard);
+  border: 1px solid rgba(28, 28, 26, .14);
+  transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard);
 }
-@media (hover: hover) { .home-bar-btn:hover { background: rgba(28, 28, 26, .07); } }
+@media (hover: hover) { .home-bar-btn:hover { background: rgba(28, 28, 26, .05); border-color: rgba(28, 28, 26, .32); } }
 .home-toggle-icon { display: inline-grid; place-items: center; width: 16px; height: 16px; }
 /* No autoplay (phones, tablets, reduced motion): no pause button either. */
 .home-carousel[data-autoplay="off"] .home-bar-toggle { display: none; }
@@ -114,39 +137,33 @@
   .home-hero { --hero-h: clamp(500px, calc(100svh - var(--header-h) - var(--announce-h) - 40px), 620px); --text-w: 40vw; }
   .home-title { font-size: clamp(2.375rem, 1.2rem + 3.6vw, 3.375rem); }
   .home-line { font-size: var(--fs-base); }
-  .home-art-back { display: none; }
-  .home-panel.is-art { --fh: 100cqh; }
-  .home-panel.is-art .home-art { justify-content: center; padding-right: 0; }
-  .home-art-front { margin-left: 0; }
 }
 
 /* ----- Hero: phone (compact, its own composition) ----- */
 @media (max-width: 759px) {
-  .home-hero { --slides-h: clamp(276px, 78vw, 312px); --bar-h: 48px; }
+  .home-hero { --slides-h: clamp(300px, 86vw, 344px); --bar-h: 48px; }
   .home-carousel { height: calc(var(--slides-h) + var(--bar-h)); }
   .home-slides { bottom: var(--bar-h); }
-  .home-slide { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
-  .home-copy-col { padding: 20px 14px 18px var(--gutter); }
-  .home-copy { padding-bottom: 16px; }
+  .home-slide { grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr); }
+  .home-copy-col { padding: 20px 14px 14px var(--gutter); }
+  .home-copy { padding-bottom: 18px; }
   .home-eyebrow { margin-bottom: 10px; font-size: 0.625rem; gap: 8px; }
   .home-eyebrow::before { width: 14px; }
   .home-title { font-size: clamp(1.5rem, 0.9rem + 3vw, 1.875rem); line-height: 1.02; }
   .home-line { display: none; }
-  .home-cta { width: 100%; padding-inline: 14px 12px; font-size: 0.75rem; letter-spacing: .06em; }
+  .home-cta { width: 100%; min-height: 50px; padding-inline: 18px 16px; font-size: 0.875rem; }
   .home-cta-full { display: none; }
   .home-cta-short { display: inline; }
-  .home-art-back { display: none; }
-  .home-panel.is-art .home-art { justify-content: center; padding-right: 0; }
-  .home-panel.is-art { --fh: 100cqh; }
-  .home-art-front { margin-left: 0; }
-  .home-ghost { top: 7cqh; font-size: 30cqw; letter-spacing: .2em; text-indent: .2em; }
+  .home-panel { margin: 12px var(--gutter) 2px 0; }
+  .home-panel.is-stage { --ch: 94cqh; --feet: 3cqh; }
   .home-bar {
     left: 0; right: 0; bottom: 0; width: auto; gap: 14px;
-    padding: 0 calc(var(--gutter) - 10px) 0 var(--gutter);
-    border-top: 1px solid rgba(28, 28, 26, .08);
+    padding: 0 var(--gutter);
   }
+  .home-bar-btn { width: 40px; height: 40px; }
 }
 @media (max-width: 360px) {
+  .home-eyebrow::before { display: none; }   /* keeps "Modern menswear" on one line */
   .home-cta .icon { display: none; }
   .home-cta { justify-content: center; }
 }
@@ -163,7 +180,7 @@
 .home-cats { padding-block: clamp(56px, 7vw, 104px) clamp(8px, 1.5vw, 24px); }
 .home-cats-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 20px); list-style: none; padding: 0; }
 .home-cat-link { display: grid; }
-.home-cat-media { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
+.home-cat-media { display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-md); background: var(--canvas); isolation: isolate; }
 .home-cat-media .pic { height: 100%; transition: transform 600ms var(--ease-out); }
 /* The photo fades in without rising, so it never slides over its label. */
 html.js.motion .home-cat-media[data-reveal] { transform: none; }
@@ -228,19 +245,19 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 .home-look-switch { display: flex; flex-wrap: wrap; gap: 10px; min-width: 0; margin: 28px 0 0; padding: 0; border: 0; }
 .home-look-radio { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
 .home-look-option {
-  display: inline-grid; place-items: center; min-height: 44px; padding: 0 18px; border: 1px solid #CFC7BB; cursor: pointer;
-  font-size: 0.75rem; font-weight: var(--w-heading); letter-spacing: .1em; text-transform: uppercase;
+  display: inline-grid; place-items: center; min-height: 44px; padding: 0 20px; border: 1px solid var(--control); border-radius: var(--r-pill); cursor: pointer;
+  font-size: 0.875rem; font-weight: var(--w-medium);
   transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard), color var(--d-fast) var(--ease-standard);
 }
 @media (hover: hover) { .home-look-option:hover { border-color: var(--ink); } }
-.home-look-radio:checked + .home-look-option { background: var(--ink); border-color: var(--ink); color: var(--ivory); }
+.home-look-radio:checked + .home-look-option { background: var(--black); border-color: var(--black); color: #FFFFFF; }
 .home-look-radio:focus-visible + .home-look-option { outline: 2px solid var(--focus); outline-offset: 3px; }
 
-.home-look-stage { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
+.home-look-stage { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: var(--canvas); isolation: isolate; }
 .home-look-figure { position: absolute; inset: 0; }
 .home-look-pic { position: absolute; inset: 5% 0 0; z-index: 1; }
 
-.home-look-panel { padding: 4px 24px 8px; border: 1px solid var(--line); background: var(--paper); }
+.home-look-panel { padding: 4px 24px 8px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper); }
 .home-panel-label {
   display: flex; justify-content: space-between; gap: 12px; padding: 18px 0 14px; border-bottom: 1px solid var(--line);
   font-family: var(--sans); font-size: 0.75rem; font-weight: var(--w-heading); letter-spacing: .1em; text-transform: uppercase;
@@ -251,7 +268,7 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 .home-items { list-style: none; padding: 0; }
 .home-item { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
 .home-item:last-child { border-bottom: 0; }
-.home-item-media { display: block; width: 72px; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
+.home-item-media { display: block; width: 72px; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-sm); background: var(--canvas); }
 .home-item-media .pic { height: 100%; }
 .home-item-media.is-cut .pic img { transform: scale(1.45); transform-origin: 50% 12%; }
 .home-item-name { font-size: 0.9375rem; font-weight: var(--w-medium); line-height: 1.35; }
@@ -260,16 +277,16 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 .home-item-sub { margin-top: 2px; font-size: var(--fs-xs); color: var(--muted); }
 .home-item-price { margin-top: 4px; font-size: var(--fs-sm); font-weight: var(--w-medium); font-variant-numeric: tabular-nums; }
 .home-item-add {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 92px; min-height: 44px; padding: 0 14px;
-  border: 1px solid #CFC7BB; font-size: 0.75rem; font-weight: var(--w-heading); letter-spacing: .1em; text-transform: uppercase;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 92px; min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--control); border-radius: var(--r-pill); font-size: 0.875rem; font-weight: var(--w-medium);
   transition: background-color var(--d-fast) var(--ease-standard), border-color var(--d-fast) var(--ease-standard), color var(--d-fast) var(--ease-standard);
 }
 .home-item-add .icon { transition: transform var(--d-base) var(--ease-out); }
 @media (hover: hover) { .home-item-add:hover { border-color: var(--ink); } }
-.home-item-add[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); color: var(--ivory); }
+.home-item-add[aria-expanded="true"] { background: var(--black); border-color: var(--black); color: #FFFFFF; }
 .home-item-add[aria-expanded="true"] .icon { transform: rotate(45deg); }
 .home-item-add.is-added { background: var(--olive); border-color: var(--olive); color: var(--olive-ink); }
-.home-item-out { font-size: 0.75rem; font-weight: var(--w-medium); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.home-item-out { font-size: 0.875rem; font-weight: var(--w-medium); color: var(--muted); }
 .home-item-sizes { grid-column: 2 / -1; padding-bottom: 4px; }
 .home-item-sizes-label { margin-bottom: 8px; font-size: 0.6875rem; font-weight: var(--w-medium); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .home-item-sizes .chips { gap: 6px; }
@@ -318,7 +335,7 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 .home-watch-text { margin-top: 22px; max-width: 40ch; line-height: 1.75; color: var(--night-muted); }
 .home-watch-details { margin: 28px 0 32px; padding: 0; list-style: none; border-top: 1px solid rgba(237, 232, 223, .14); }
 .home-watch-details li { padding: 11px 0; border-bottom: 1px solid rgba(237, 232, 223, .14); font-size: var(--fs-sm); }
-.home-watch-photo { aspect-ratio: 4 / 5; overflow: hidden; background: var(--night-2); }
+.home-watch-photo { aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: var(--night-2); isolation: isolate; }
 .home-watch-photo .pic { height: 100%; }
 .home-watch-name { font-family: var(--sans); font-weight: var(--w-heading); font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; }
 .home-watch-price { margin-top: 10px; font-size: 1.125rem; font-weight: var(--w-medium); }
@@ -373,8 +390,8 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 .home-news-copy h2 { font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-h2); line-height: 1.05; letter-spacing: var(--tracking-display); }
 .home-news-copy p { margin-top: 12px; max-width: 42ch; color: var(--muted); }
 .home-news-label { display: block; margin-bottom: 8px; font-size: var(--fs-sm); font-weight: var(--w-medium); }
-.home-news-row { display: flex; }
-.home-news-row .input { flex: 1; min-width: 0; min-height: 52px; }
+.home-news-row { display: flex; gap: 8px; }
+.home-news-row .input { flex: 1; min-width: 0; min-height: 52px; border-radius: var(--r-pill); padding-inline: 22px; }
 .home-news-row .btn { flex: none; min-height: 52px; }
 .home-news-note { margin-top: 10px; font-size: var(--fs-xs); color: var(--muted); }
 .home-news-msg { min-height: 1.5em; margin-top: 6px; font-size: var(--fs-sm); color: var(--success); }

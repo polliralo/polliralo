@@ -8,7 +8,7 @@
 
 import { website, organization } from '../partials/seo.mjs';
 import {
-  HERO_SLIDES, heroHTML, brandArtProduct, newArrivals, newArrivalsHTML,
+  HERO_SLIDES, heroHTML, newArrivals, newArrivalsHTML,
   lookProducts, lookTextHTML, lookFigureHTML, lookListHTML, watchPanelHTML,
 } from '../../../site/assets/js/pages/home-view.js';
 
@@ -30,7 +30,7 @@ export default function render(ctx) {
   const visible = ctx.products.filter((p) => !p.hidden);
 
   /* 1. Hero */
-  const hero = heroHTML(HERO_SLIDES, { art: brandArtProduct(visible) });
+  const hero = heroHTML(HERO_SLIDES);
 
   /* 2. Shop by category (the photo reveals, the words do not) */
   const cats = `<section class="home-cats" aria-labelledby="home-cats-title">

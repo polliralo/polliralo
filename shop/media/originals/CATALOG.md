@@ -11,6 +11,8 @@ Four kinds of photo:
 
 Cut-outs: the studio photos (front and back views), the two looks and the library photo of the light blue Oxford also exist with the background removed (transparent PNG, same size) in `shop/media/cutouts/`, made with rembg's `birefnet-portrait` model so every model can stand on one canvas. They are derived files; the originals here stay untouched.
 
+Refined cut-out: `cutouts/look-02.png` (the home hero's character) was rebuilt from its original in October 2026. rembg had stored the edge colours multiplied by the mask, which drew a dark outline on light grounds, and it had dropped the thin wire frame of the aviators in his hand. The edge colours now come from the original with the grey backdrop's share removed, and the frame was restored from the original where it differs from the backdrop. Nothing else changed.
+
 Retouched copies: `shop/media/retouched/` holds cleaned copies of generated photos where something had to go. So far only `tortoiseshell-round-sunglasses.png`: the generator drew tiny pseudo-letters on the left temple plate and a few light specks on the left lens. The plate was softened to plain metal and the specks were filled in; nothing else changed. The original stays here untouched.
 
 Prices, sizes, fabric content and stock are not known yet and must come from the client. Nothing here should be invented on the site.
