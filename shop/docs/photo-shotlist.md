@@ -1,6 +1,6 @@
 # MONO photo shot list
 
-Owner-facing version with every prompt filled in, reference thumbnails, copy buttons and done ticks: https://claude.ai/artifact/2Vh7M2vsNhRzaGX4zL2c4V (shots are numbered #1 to #17 in the order below).
+Owner-facing version with every prompt filled in, reference thumbnails, copy buttons and done ticks: https://claude.ai/artifact/2Vh7M2vsNhRzaGX4zL2c4V (round 3 is at the top as #18 to #27; the first 17 shots, all done, are folded away below it).
 
 The new photos the chosen design needs (see `design-references.md`), in priority order, each with the reference photo to upload and a prompt to paste. The owner generates them in any image tool that accepts reference photos (in Higgsfield, FLUX 3 and GPT Image 2.5 both do; the Gemini and ChatGPT apps do too).
 
@@ -110,55 +110,97 @@ Higgsfield note (19 October 2026): on the free Higgsfield plan no image model ru
 
 When the photos below arrive, Claude adds them to `media/originals/` and `CATALOG.md`, then to `scripts/media.mjs` and `src/data/catalog.json` (with a demo price), and runs `npm run shop:media`, `npm run shop:og` and `npm run shop:check`. The same rules as above apply: upload the reference photos named, portrait 4:5, check every result, send them in the chat and say which item each one is.
 
-| # | Category | New product | Files to send (save under these names) | Upload as reference |
+| # | Category | Photo | Save as | Upload as reference, in this order |
 | --- | --- | --- | --- | --- |
-| 18 | T-shirts | Navy crew-neck T-shirt | `studio/navy-crew-tee.png`, `studio/navy-crew-tee-back.png`, `studio/navy-crew-tee-closeup.png` | `studio/ivory-heavy-tee.png` |
-| 19 | Polos | Cream knitted polo | `studio/cream-knit-polo.png`, `studio/cream-knit-polo-back.png`, `studio/cream-knit-polo-closeup.png` | `studio/olive-pique-polo.png`, then `wide/cream-knit-polo-and-blue-shirt-walk.png` |
-| 20 | Watches | Steel watch, navy dial, black leather strap | `still-life/steel-watch-navy-dial-black-strap.png` | `still-life/steel-watch-black-dial-brown-strap.png` |
-| 21 | Sunglasses | Tortoiseshell round sunglasses | `still-life/tortoiseshell-round-sunglasses.png` | `still-life/black-rectangular-sunglasses.png` |
-| 22 | Accessories | Black leather card holder (already in the group shots) | `still-life/black-card-holder.png` | `lifestyle/leather-wallet-belt-cardholder-flatlay.png`, then `still-life/brown-bifold-wallet.png` |
-| 23 | Shirts (optional) | Back view of the Light Blue Oxford Shirt | `studio/blue-oxford-shirt-back.png` | `lifestyle/blue-oxford-shirt-library.png` |
+| 18 | T-shirts | Navy crew-neck T-shirt, front | `studio/navy-crew-tee.png` | `studio/ivory-heavy-tee.png` |
+| 19 | T-shirts | Navy crew-neck T-shirt, back | `studio/navy-crew-tee-back.png` | your #18 photo, then `studio/ivory-heavy-tee-back.png` |
+| 20 | T-shirts | Navy crew-neck T-shirt, close-up | `studio/navy-crew-tee-closeup.png` | your #18 photo, then `studio/ivory-heavy-tee-closeup.png` |
+| 21 | Polos | Cream knitted polo, front | `studio/cream-knit-polo.png` | `studio/olive-pique-polo.png`, then `wide/cream-knit-polo-and-blue-shirt-walk.png` |
+| 22 | Polos | Cream knitted polo, back | `studio/cream-knit-polo-back.png` | your #21 photo, then `studio/olive-pique-polo-back.png` |
+| 23 | Polos | Cream knitted polo, close-up | `studio/cream-knit-polo-closeup.png` | your #21 photo, then `studio/olive-pique-polo-closeup.png` |
+| 24 | Watches | Steel watch, navy dial, black leather strap | `still-life/steel-watch-navy-dial-black-strap.png` | `still-life/steel-watch-black-dial-brown-strap.png` |
+| 25 | Sunglasses | Tortoiseshell round sunglasses | `still-life/tortoiseshell-round-sunglasses.png` | `still-life/black-rectangular-sunglasses.png` |
+| 26 | Accessories | Black leather card holder (already in the group shots) | `still-life/black-card-holder.png` | `lifestyle/leather-wallet-belt-cardholder-flatlay.png`, then `still-life/brown-bifold-wallet.png` |
+| 27 | Shirts (optional) | Light Blue Oxford Shirt, back | `studio/blue-oxford-shirt-back.png` | `lifestyle/blue-oxford-shirt-library.png`, then `studio/ivory-oxford-shirt-back.png` |
 
-### 18. Navy crew-neck T-shirt (3 photos)
+Make the front views first: #19 and #20 use your #18 as the first reference, #22 and #23 use your #21.
 
-Front:
+### 18. Navy crew-neck T-shirt, front
 
-```
-Use the uploaded photo as the exact reference for the man, the trousers, the pose, the plain grey studio background, the soft even light and the framing from head to mid-thigh. Change only the T-shirt: he now wears a plain navy crew-neck T-shirt in a smooth mid-weight jersey, the same relaxed straight fit and length as the T-shirt in the reference, short sleeves ending above the elbow, a neat ribbed crew neckline. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering, no prints on the T-shirt.
-```
-
-Back view: upload the new front photo and use the prompt of item 1 with `[GARMENT]` = navy crew-neck T-shirt. Close-up: upload the new front photo and use the prompt of item 4 with `[DETAIL]` = the ribbed crew neckline and the smooth jersey.
-
-### 19. Cream knitted polo (3 photos)
-
-Front:
+Upload: `studio/ivory-heavy-tee.png`.
 
 ```
-Use the first uploaded photo as the exact reference for the man, the trousers, the pose, the plain grey studio background, the soft even light and the framing from head to mid-thigh. Change only the polo: he now wears the cream knitted polo from the second photo, copied exactly: the same cream colour, the same fine open-textured knit, the same soft knitted collar and short three-button placket, short sleeves and a straight hem. Same relaxed fit as the polo in the first photo. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
+Use the uploaded photo as the exact reference for the man, his face, hair and skin, the dark charcoal trousers, the pose with his left hand in his pocket, the plain grey studio background, the soft even light and the framing from head to mid-thigh. Change only the T-shirt: he now wears a plain navy blue crew-neck T-shirt in a smooth mid-weight jersey, with the same relaxed straight fit and length as the T-shirt in the reference, short sleeves ending above the elbow and a neat ribbed crew neckline. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering, no prints on the T-shirt.
 ```
 
-Back view and close-up: as item 18, with `[GARMENT]` = cream knitted polo and `[DETAIL]` = the soft knitted collar, the three-button placket and the open-textured knit.
+### 19. Navy crew-neck T-shirt, back
 
-### 20. Steel watch, navy dial (1 photo)
-
-```
-Use the uploaded photo as the exact reference for the surface, the background, the light, the camera angle and the size of the watch in the frame. Replace the watch with a different dress watch: a polished round steel case of the same size, a deep navy sunburst dial with thin silver baton hour markers and two slim silver hands, no seconds hand and no date, on a plain black leather strap with a steel pin buckle. Photorealistic product still life, portrait 4:5. No text, no logos, no lettering and no brand name on the dial.
-```
-
-### 21. Tortoiseshell round sunglasses (1 photo)
+Upload: your #18 photo, then `studio/ivory-heavy-tee-back.png`.
 
 ```
-Use the uploaded photo as the exact reference for the matte charcoal surface, the dark gradient background, the soft overhead light, the camera angle and the size of the sunglasses in the frame. Replace the sunglasses with round acetate sunglasses in a warm brown tortoiseshell pattern, dark green-grey lenses and slim silver hinges, placed the same way with the arms open. A gentle reflection under the frame. Photorealistic product still life, portrait 4:5. No text, no logos, no lettering anywhere.
+Use the first uploaded photo for the man and the navy T-shirt, and the second photo for the pose, the camera angle, the plain grey studio background, the light and the framing. Show the same young man from behind, standing relaxed with his back to the camera, head turned very slightly to one side, arms loose by his sides, exactly like the pose in the second photo, so the whole back of the navy crew-neck T-shirt is visible. Keep the navy colour, fabric, fit and length of the T-shirt from the first photo, and the same dark charcoal trousers. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering, no prints.
 ```
 
-### 22. Black leather card holder (1 photo)
+### 20. Navy crew-neck T-shirt, close-up
+
+Upload: your #18 photo, then `studio/ivory-heavy-tee-closeup.png`.
 
 ```
-Use the black leather card holder from the first uploaded photo as the exact reference for the product: same black smooth leather, same edge stitching, same slim shape with card slots. Show it alone, lying slightly angled on the warm dark walnut wood surface of the second photo, lit by the same soft diagonal window light with a gentle shadow, at the same scale and camera angle as the wallet in the second photo. Photorealistic product still life, portrait 4:5. No text, no logos, no lettering, no cards with writing.
+Use the first uploaded photo for the man and the navy T-shirt, and the second photo for the crop, the camera angle and the light. A close-up detail photo of the same navy crew-neck T-shirt on the same young man, cropped like the second photo from just below the nose to the middle of the chest, showing the ribbed crew neckline and the smooth jersey in sharp focus. Same navy colour, same soft studio light, same plain grey background. Photorealistic e-commerce detail photo, portrait 4:5. No text, no logos, no lettering, no prints.
 ```
 
-### 23. Light Blue Oxford Shirt, back view (optional, 1 photo)
+### 21. Cream knitted polo, front
+
+Upload: `studio/olive-pique-polo.png`, then `wide/cream-knit-polo-and-blue-shirt-walk.png`.
 
 ```
-Use the uploaded photo as the exact reference for the man, the light blue button-down Oxford shirt and the navy trousers. Show him in a plain grey studio, soft even light, framed from head to mid-thigh, standing relaxed with his back to the camera, head turned very slightly to one side, arms loose by his sides, so the whole back of the shirt is visible. Same shirt colour, Oxford weave and fit. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
+Use the first uploaded photo as the exact reference for the man, his face, hair and skin, the pose, the plain grey studio background, the soft even light and the framing from head to mid-thigh. Change only his clothes: he now wears the cream knitted polo from the second photo (worn there by the man on the right with navy trousers), copied exactly: the same cream colour, the same fine open-textured knit, the same soft knitted collar and short three-button placket, short sleeves and a straight hem, with the same relaxed fit as the polo in the first photo. He also wears dark navy tailored trousers instead of the light trousers. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
+```
+
+### 22. Cream knitted polo, back
+
+Upload: your #21 photo, then `studio/olive-pique-polo-back.png`.
+
+```
+Use the first uploaded photo for the man, the cream knitted polo and the navy trousers, and the second photo for the pose, the camera angle, the plain grey studio background, the light and the framing. Show the same young man from behind, standing relaxed with his back to the camera, head turned very slightly to one side, arms loose by his sides, exactly like the pose in the second photo, so the whole back of the cream knitted polo is visible. Keep the cream colour, the open-textured knit, the collar and the fit from the first photo, and the same navy trousers. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
+```
+
+### 23. Cream knitted polo, close-up
+
+Upload: your #21 photo, then `studio/olive-pique-polo-closeup.png`.
+
+```
+Use the first uploaded photo for the man and the cream knitted polo, and the second photo for the crop, the camera angle and the light. A close-up detail photo of the same cream knitted polo on the same young man, cropped like the second photo from just below the nose to the middle of the chest, showing the soft knitted collar, the three-button placket and the open-textured knit in sharp focus. Same cream colour, same soft studio light, same plain grey background. Photorealistic e-commerce detail photo, portrait 4:5. No text, no logos, no lettering anywhere.
+```
+
+### 24. Steel watch, navy dial, black leather strap
+
+Upload: `still-life/steel-watch-black-dial-brown-strap.png`.
+
+```
+Use the uploaded photo as the exact reference for the dark stone surface, the background, the light, the camera angle and the size and position of the watch in the frame. Replace the watch with a different dress watch: a polished round steel case of the same size, a deep navy sunburst dial with thin silver baton hour markers and two slim silver hands, no seconds hand and no date, on a plain black leather strap with a steel pin buckle. Photorealistic product still life, portrait 4:5. No text, no logos, no lettering and no brand name on the dial.
+```
+
+### 25. Tortoiseshell round sunglasses
+
+Upload: `still-life/black-rectangular-sunglasses.png`.
+
+```
+Use the uploaded photo as the exact reference for the matte charcoal surface, the dark gradient background, the soft overhead light, the camera angle and the size and position of the sunglasses in the frame. Replace the sunglasses with round acetate sunglasses in a warm brown tortoiseshell pattern, with dark green-grey lenses and slim silver hinges, placed the same way with the arms open. A gentle reflection under the frame. Photorealistic product still life, portrait 4:5. No text, no logos, no lettering anywhere.
+```
+
+### 26. Black leather card holder (already in the group shots)
+
+Upload: `lifestyle/leather-wallet-belt-cardholder-flatlay.png`, then `still-life/brown-bifold-wallet.png`.
+
+```
+Use the black leather card holder from the first uploaded photo as the exact reference for the product: the same smooth black leather, the same edge stitching and the same slim shape with card slots. Show it alone, lying slightly angled on the warm dark walnut wood surface of the second photo, lit by the same soft diagonal window light with a gentle shadow, at the same scale and camera angle as the wallet in the second photo. Photorealistic product still life, portrait 4:5. No text, no logos, no lettering, no cards with writing.
+```
+
+### 27. Light Blue Oxford Shirt, back
+
+Upload: `lifestyle/blue-oxford-shirt-library.png`, then `studio/ivory-oxford-shirt-back.png`.
+
+```
+Use the first uploaded photo for the man, the light blue button-down Oxford shirt and the navy trousers, and the second photo for the pose, the camera angle, the plain grey studio background, the light and the framing. Show the same man from behind, standing relaxed with his back to the camera, head turned very slightly to one side, arms loose by his sides, exactly like the pose in the second photo, so the whole back of the light blue Oxford shirt is visible. Keep the shirt's colour, Oxford weave and fit, and the same navy trousers. Photorealistic e-commerce studio photo, portrait 4:5. No text, no logos, no lettering anywhere.
 ```
