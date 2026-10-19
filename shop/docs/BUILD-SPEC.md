@@ -5,7 +5,7 @@ shared foundation and the page templates. Paths are relative to `shop/`.
 
 ## 1. What MONO is
 
-A fictional premium menswear shop, built as a portfolio demo: 12 products in
+A fictional premium menswear shop, built as a portfolio demo: 13 products in
 6 categories, a working bag, a validated demo checkout (no real payment), demo
 order history and a demo admin, all in the visitor's browser (localStorage).
 Static HTML pre-rendered by Node, enhanced by vanilla ES modules. No
@@ -39,8 +39,10 @@ approved previews in `docs/preview/*.jpg`. Research to follow:
   (the stock is demo data and the owner's research rules such lines out); the
   quantity stepper still stops at what is in stock.
 - The footer disclosure stays (it is in `layout.mjs`).
-- Words never sit on top of photos. Labels go under or beside images. The giant
-  ghost word may sit *behind* a cut-out on the plain canvas.
+- Words never sit on top of photos. Labels go under or beside images. A giant
+  ghost word may sit *behind* cut-outs on the plain canvas, and only in the
+  home hero's brand slide: never on the product page, never over a product,
+  never repeating a word that is already set large nearby.
 - Decorative giant words are written as
   `<span class="ghost-word" data-word="Polo" aria-hidden="true"></span>`: the
   text comes from a CSS pseudo-element, so screen readers and contrast checks
@@ -171,10 +173,21 @@ tokens; do not introduce new colours except a product's own `accent`/`colour.hex
 from the data (set as `--accent` / `--dot` / `--sw` inline custom properties,
 which the validator allows).
 
-Type: Bodoni Moda (`--serif`) for display words and section titles; Jost
-(`--sans`) for everything else. Product names in Jost 500. Small capitals
-labels: `.eyebrow`, `.label`. Square corners. No shadows except toasts. No
-icon rows, no decorative doodles.
+Type: Jost only, sans-led (refinement round, October 2026; Bodoni Moda was
+retired). `--display` is the family for display roles and `--serif` survives
+only as an alias of it. Weights: hero 700 (`--w-hero`), headings and the
+product page title 600 (`--w-heading`), product names on cards 500
+(`--w-medium`), body 400 (`--w-text`); display sizes use
+`--tracking-display`. An `em` inside a heading is set in the olive accent
+(`--accent-ink`), never italic. Small capitals labels: `.eyebrow`, `.label`.
+Square corners. No shadows except toasts. No icon rows, no decorative
+doodles.
+
+Buttons: `.btn` is the charcoal primary, 48px tall (52px on phones), with
+hover, focus-visible, pressed (1px down), disabled, busy
+(`aria-busy="true"` shows a spinner) and done states; `.btn-ghost` is the
+outlined secondary, `.link` / `.text-link` are text links. One style per
+role on every page.
 
 Shared components in `base.css` (use them, do not restyle them globally):
 `.wrap .section .section-tight .display .eyebrow .label .lede .muted .small
@@ -200,17 +213,22 @@ below the first screen is lazy. The LCP image of a page uses
 
 ## 5. Motion (from docs/research/motion.md)
 
+- Motion is there only when it explains a state change, an image transition
+  or an interaction. Product cards, headings, text blocks and buttons do not
+  animate in. Shopping is never slowed down: nothing delays navigation or
+  input.
 - Curves and durations: use the tokens (`--ease-out`, `--ease-expo`,
   `--ease-in-out`, `--ease-curtain`, `--ease-in`, `--ease-standard`,
-  `--ease-settle`; `--d-fast` 200, `--d-base` 320, `--d-drawer` 480,
-  `--d-slow` 700, `--d-slower` 1100, `--stagger` 60ms).
+  `--ease-settle`; `--d-fast` 160 for buttons and small hovers, `--d-base`
+  240 for minor changes, `--d-drawer` 300 for drawers and dialogs,
+  `--d-slow` 450 for reveals, `--d-slower` 600 for the home hero cross-fade,
+  `--stagger` 50ms). No parallax, no bounce.
 - Animate only `transform`, `opacity` (and `clip-path` for one-shot reveals).
   Never `transition: all`. Never animate width, height, top, left or margins.
-- Scroll reveals: add `data-reveal` (rise and fade), `data-reveal="clip"`
-  (curtain wipe, at most once per page), `data-reveal="lines"` with
-  `<span class="ln"><span>…</span></span>` per line. Put `data-stagger` on a
-  parent to stagger its children (capped at 5). `enhance(root)` wires
-  injected markup.
+- Scroll reveals are for editorial images only: `data-reveal` (rise and
+  fade) or `data-reveal="clip"` (curtain wipe, at most once per page). Put
+  `data-stagger` on a parent to stagger its children (capped at 4).
+  `enhance(root)` wires injected markup.
 - Cross-page morph: the product card image (`[data-vt-media]`) morphs into the
   product page's `#pdp-media` and back. Only the product page owns
   `#pdp-media`. Do not set `view-transition-name` anywhere else except inside
@@ -221,7 +239,9 @@ below the first screen is lazy. The LCP image of a page uses
   2 seconds with a fixed min-width; `addToBag` does the rest.
 - Reduced motion: everything is visible and usable with
   `prefers-reduced-motion: reduce`, with JS off, and before the store loads.
-  Check `reducedMotion()` at call time. No autoplay under reduced motion.
+  Check `reducedMotion()` at call time. The home hero is the only thing
+  that moves by itself: on wide screens with a pointer only, never on
+  phones and never under reduced motion, always with a Pause button.
 - Nothing blocks input. No scroll listeners for effects (use
   IntersectionObserver). `content-visibility: auto` only below the fold.
 

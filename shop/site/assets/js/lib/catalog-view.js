@@ -400,19 +400,22 @@ export function chipsHTML(chips) {
  * real place. data-mod3 / data-mod2 hold the product count modulo 3 and 2;
  * the CSS shows the tile only when the last row has empty slots and makes it
  * span exactly those. pages/collection.js updates both after every filter.
- * { image, alt, kicker, line, href, cta, wide, x } (wide: a 16:9 photo
- * cropped to 4:5, x its horizontal focus such as '70%').
+ * { image, alt, kicker, line, href, cta, wide, x, y } (wide: a 16:9 photo;
+ * x / y: the crop's focus, such as '70%').
  */
-export function tileHTML({ image, alt = '', kicker, line, href, cta, wide = false, x = '' }, count) {
-  // A 16:9 photo shown in a 4:5 frame is drawn about 2.2 times the frame width.
-  const sizes = wide ? '(min-width: 1440px) 940px, (min-width: 1000px) 67vw, 103vw' : LISTING_SIZES;
+export function tileHTML({ image, alt = '', kicker, line, href, cta, wide = false, x = '', y = '' }, count) {
+  // The photo sits inside the panel, at most about a column wide; a 16:9
+  // photo cropped to a taller frame is drawn wider than its box.
+  const sizes = wide ? '(min-width: 1440px) 760px, (min-width: 1000px) 54vw, 80vw' : '(min-width: 1440px) 400px, (min-width: 1000px) 28vw, 42vw';
+  const focus = [x && `--x:${esc(x)}`, y && `--y:${esc(y)}`].filter(Boolean).join(';');
   return `<div class="coll-tile" data-tile data-mod3="${count % 3}" data-mod2="${count % 2}" role="group" aria-labelledby="coll-tile-title">`
-    + `<div class="coll-tile-media"${x ? ` style="--x:${esc(x)}"` : ''}>${picture(image, { alt, sizes, className: 'coll-tile-pic' })}</div>`
     + `<div class="coll-tile-body">`
     + `<p class="coll-tile-kicker" id="coll-tile-title">${esc(kicker)}</p>`
     + `<p class="coll-tile-line">${esc(line)}</p>`
     + `<a class="link coll-tile-link" href="${esc(href)}">${esc(cta)}${icon('arrow', { size: 16 })}</a>`
-    + `</div></div>`;
+    + `</div>`
+    + `<div class="coll-tile-media"${focus ? ` style="${focus}"` : ''}>${picture(image, { alt, sizes, className: 'coll-tile-pic' })}</div>`
+    + `</div>`;
 }
 
 /** Phone drawer with every filter and sort, and a "Show N results" button. */

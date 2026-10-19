@@ -1,16 +1,20 @@
-// Home page: product slider hero, categories, new arrivals, shop the look,
-// watches spotlight, sunglasses and accessories, brand note and newsletter.
+// Home page: three-message hero, categories, new arrivals, shop the look,
+// the watch feature, a short brand note and the demo newsletter.
 // Markup builders shared with the browser live in assets/js/pages/home-view.js.
+//
+// Photo rule: no editorial photo appears twice on this page. Category tiles
+// keep their category photos; the hero, the watch feature and the cards use
+// pictures that are not shown anywhere else here.
 
 import { website, organization } from '../partials/seo.mjs';
 import {
-  heroProducts, heroHTML, newArrivals, newArrivalsHTML,
+  HERO_SLIDES, heroHTML, brandArtProduct, newArrivals, newArrivalsHTML,
   lookProducts, lookTextHTML, lookFigureHTML, lookListHTML, watchPanelHTML,
 } from '../../../site/assets/js/pages/home-view.js';
 
 // A short line under each category photo, from the catalogue facts.
 const CATEGORY_LINES = {
-  shirts: 'An ivory Oxford and a fine blue stripe.',
+  shirts: 'Two Oxfords and a fine blue stripe.',
   't-shirts': 'Textured charcoal and heavy ivory.',
   polos: 'Piqué knit in olive and navy.',
   watches: 'Two hands and a quiet dial.',
@@ -18,7 +22,7 @@ const CATEGORY_LINES = {
   accessories: 'A bifold wallet and a dress belt.',
 };
 
-const CAT_SIZES = '(min-width: 1180px) 15vw, (min-width: 760px) 30vw, 62vw';
+const CAT_SIZES = '(min-width: 1180px) 15vw, (min-width: 760px) 30vw, 44vw';
 
 export default function render(ctx) {
   const { r, categories, looks } = ctx;
@@ -26,9 +30,9 @@ export default function render(ctx) {
   const visible = ctx.products.filter((p) => !p.hidden);
 
   /* 1. Hero */
-  const hero = heroHTML(heroProducts(visible), categories);
+  const hero = heroHTML(HERO_SLIDES, { art: brandArtProduct(visible) });
 
-  /* 2. Shop by category */
+  /* 2. Shop by category (the photo reveals, the words do not) */
   const cats = `<section class="home-cats" aria-labelledby="home-cats-title">
   <div class="wrap">
     <div class="section-head home-head">
@@ -36,9 +40,9 @@ export default function render(ctx) {
       <a class="link" href="/collections/">View all</a>
     </div>
     <ul class="home-cats-list" role="list" data-stagger>
-      ${categories.map((c) => `<li class="home-cat" data-reveal>
+      ${categories.map((c) => `<li class="home-cat">
         <a class="home-cat-link" href="${r.categoryUrl(c.slug)}">
-          <span class="home-cat-media">${picture(c.image.key, { alt: '', sizes: CAT_SIZES })}</span>
+          <span class="home-cat-media" data-reveal>${picture(c.image.key, { alt: '', sizes: CAT_SIZES })}</span>
           <span class="home-cat-label">${esc(c.name)}${icon('arrow', { size: 16 })}</span>
           <span class="home-cat-line">${esc(CATEGORY_LINES[c.slug] ?? c.description)}</span>
         </a>
@@ -47,9 +51,9 @@ export default function render(ctx) {
   </div>
 </section>`;
 
-  /* 3. New arrivals */
+  /* 3. New arrivals (a snap rail on every screen size) */
   const fresh = newArrivals(visible);
-  const arrivals = `<section class="home-new section" aria-labelledby="home-new-title" data-new-section${fresh.length ? '' : ' hidden'}>
+  const arrivals = `<section class="home-new section" id="new-arrivals" aria-labelledby="home-new-title" data-new-section${fresh.length ? '' : ' hidden'}>
   <div class="wrap">
     <div class="rail-wrap" data-rail>
       <div class="section-head home-head">
@@ -58,7 +62,7 @@ export default function render(ctx) {
           <span class="label muted">Demo prices</span>
         </div>
         <div class="home-head-tools">
-          <a class="link" href="/collections/">Shop all</a>
+          <a class="link" href="/collections/?sort=new">Shop all</a>
           <div class="rail-nav">
             <button type="button" data-rail-prev aria-label="Previous new arrivals">${icon('left', { size: 18 })}</button>
             <button type="button" data-rail-next aria-label="More new arrivals">${icon('right', { size: 18 })}</button>
@@ -93,66 +97,36 @@ export default function render(ctx) {
   </div>
 </section>` : '';
 
-  /* 5. Watches spotlight */
-  const watch = ctx.getProduct('black-dial-watch');
+  /* 5. The watch feature: the white dial, so no wrist photo repeats the
+        watches category tile. */
+  const watch = ctx.getProduct('white-dial-watch');
   const extras = ['brown-bifold-wallet', 'black-dress-belt'].map(ctx.getProduct).filter((p) => p && !p.hidden);
-  const white = ctx.getProduct('white-dial-watch');
+  const other = ctx.getProduct('black-dial-watch');
+  const watchImage = watch?.images.find((i) => i.key === 'watch-white-dial') ?? watch?.images[0];
   const watches = watch ? `<section class="home-watch on-night" aria-labelledby="home-watch-title">
   <div class="wrap home-watch-grid">
     <div class="home-watch-story">
       <p class="eyebrow">Watches</p>
-      <h2 id="home-watch-title">Black dial, <em>brown strap</em></h2>
+      <h2 id="home-watch-title">White dial, <em>link bracelet</em></h2>
       <p class="home-watch-text">${esc(watch.description)}</p>
       <ul class="home-watch-details" role="list">${watch.details.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>
       <a class="link" href="/collections/watches/">Shop watches</a>
     </div>
-    <div class="home-watch-photo" data-reveal>${picture('life-watch-wrist', { alt: ctx.getCategory('watches')?.image.alt ?? '', sizes: '(min-width: 1040px) 34vw, (min-width: 760px) 50vw, 92vw' })}</div>
-    <div class="home-watch-buy" data-watch-panel>${watchPanelHTML(watch, extras, white && !white.hidden ? white : null)}</div>
+    <div class="home-watch-photo" data-reveal>${watchImage ? picture(watchImage.key, { alt: watchImage.alt ?? '', sizes: '(min-width: 1040px) 34vw, (min-width: 760px) 50vw, 92vw' }) : ''}</div>
+    <div class="home-watch-buy" data-watch-panel>${watchPanelHTML(watch.hidden ? null : watch, extras, { alt: other && !other.hidden ? other : null, altQuestion: 'Prefer a black dial?' })}</div>
   </div>
 </section>` : '';
 
-  /* 6. Sunglasses and accessories */
-  const sun = ctx.getCategory('sunglasses');
-  const acc = ctx.getCategory('accessories');
-  const edit = `<section class="home-edit section" aria-labelledby="home-edit-title">
-  <div class="wrap">
-    <div class="section-head home-head">
-      <h2 id="home-edit-title">Finish the <em>outfit</em></h2>
-      <p>Sunglasses for the bright days, and two leather pieces that go with everything above.</p>
-    </div>
-    <div class="home-edit-grid">
-      <article class="home-edit-block home-edit-sun" data-reveal>
-        <div class="home-edit-media">${picture('life-sunglasses-linen', { alt: sun?.image.alt ?? '', sizes: '(min-width: 760px) 40vw, 92vw' })}</div>
-        <div class="home-edit-caption">
-          <p class="eyebrow">Sunglasses</p>
-          <h3>A strong line in <em>bright light</em></h3>
-          <p>${esc(sun?.description ?? '')}</p>
-          <a class="link" href="/collections/sunglasses/">Shop sunglasses</a>
-        </div>
-      </article>
-      <article class="home-edit-block home-edit-acc">
-        <div class="home-edit-media home-curtain" data-curtain>${picture('wide-accessories-table', { alt: 'Brown bifold wallet and black dress belt on a dark wood table, beside a black card holder', sizes: '(min-width: 760px) 50vw, 92vw' })}</div>
-        <div class="home-edit-caption" data-reveal>
-          <p class="eyebrow">Accessories</p>
-          <h3>Leather, <em>kept simple</em></h3>
-          <p>${esc(acc?.description ?? '')}</p>
-          <a class="link" href="/collections/accessories/">Shop accessories</a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>`;
-
-  /* 7. Brand note */
+  /* 6. Brand note */
   const note = `<section class="home-note section" aria-labelledby="home-note-title">
   <div class="wrap home-note-inner">
     <h2 id="home-note-title" class="eyebrow">A note on MONO</h2>
-    <p class="home-note-text" data-reveal>MONO is a small, fictional label. It exists to show how a calm menswear shop could look and work, <em>from the first shirt to a demo checkout.</em></p>
+    <p class="home-note-text">MONO is a small, fictional label. It exists to show how a calm menswear shop could look and work, <em>from the first shirt to a demo checkout.</em></p>
     <a class="link" href="/about/">About MONO</a>
   </div>
 </section>`;
 
-  /* 8. Newsletter (demo) */
+  /* 7. Newsletter (demo) */
   const news = `<section class="home-news" aria-labelledby="home-news-title">
   <div class="wrap home-news-inner">
     <div class="home-news-copy">
@@ -175,12 +149,14 @@ export default function render(ctx) {
     title: 'MONO | Modern Menswear Essentials',
     fullTitle: 'MONO | Modern Menswear Essentials',
     description: 'Shirts, T-shirts, polos, watches, sunglasses and accessories with quiet, considered design. MONO is a fictional menswear demo store.',
-    content: [hero, cats, arrivals, shopLook, watches, edit, note, news].join('\n'),
+    content: [hero, cats, arrivals, shopLook, watches, note, news].join('\n'),
     css: ['home'],
     js: ['home'],
     jsonld: [website(), organization()],
     ogImage: '/assets/img/og/default.jpg',
     ogImageAlt: 'MONO, modern menswear essentials: a fictional demo store',
+    // The hero headline is set in Jost 700, which the layout does not preload.
+    preload: ['<link rel="preload" href="/assets/fonts/jost-700.woff2" as="font" type="font/woff2" crossorigin>'],
     bodyClass: 'page-home',
   };
 }

@@ -1,137 +1,57 @@
 /* MONO listing pages: shop all (/collections/), the six category pages and
    search (/search/). Every selector is scoped to .coll / .srch (or the
    html.coll-vt class that exists only during a grid view transition).
-   Breakpoints: 760px (phone), 1040px (header menu), 1180px (wide). */
+   Breakpoints: 760px (phone), 1000px (3-column grid), 1040px (header menu). */
 
 /* ====================================================================
-   Head: breadcrumbs, giant faint word, heading, lede, count, photo
+   Head: breadcrumbs, title, one-line description, count
    ==================================================================== */
 
-.coll .coll-head { padding-top: clamp(16px, 2.6vw, 40px); padding-bottom: clamp(24px, 3vw, 44px); }
-.coll .coll-head .crumbs { margin-bottom: clamp(18px, 2.6vw, 32px); }
-
-.coll .coll-head-grid {
-  --side: 32%;
-  --gap: 20px;
-  position: relative; isolation: isolate; container-type: inline-size;
-  display: grid; align-items: end;
-  grid-template-columns: minmax(0, 1fr) var(--side);
-  grid-template-rows: 1fr auto auto auto;
-  grid-template-areas: "eyebrow side" "title side" "lede lede" "total total";
-  column-gap: var(--gap);
+.coll .coll-head { padding-block: clamp(12px, 2vw, 28px) clamp(14px, 2vw, 26px); }
+.coll .coll-head .crumbs { margin-bottom: clamp(8px, 1.2vw, 16px); }
+.coll .coll-head-grid { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "lede" "total"; }
+.coll .coll-head .coll-title {
+  grid-area: title; margin: 0;
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem); line-height: 1.04; overflow-wrap: break-word;
 }
-.coll .coll-head-grid > :not(.coll-ghost) { position: relative; z-index: 1; }
-.coll .coll-eyebrow { grid-area: eyebrow; align-self: end; }
-.coll .coll-eyebrow .tabular { color: var(--ink); letter-spacing: .14em; }
-.coll .coll-title {
-  grid-area: title; margin-top: 12px;
-  font-size: clamp(2.125rem, 1.4rem + 3.4vw, 4.25rem); overflow-wrap: break-word;
-}
-.coll .coll-lede { grid-area: lede; margin-top: 18px; max-width: 48ch; font-size: var(--fs-base); }
-.coll .coll-total { grid-area: total; margin-top: 18px; color: var(--muted); }
-.coll .coll-photo, .coll .coll-cats.is-index { grid-area: side; }
-
-/* The giant word fits its column: font size from the column width and the
-   word's length (--w, set inline). It is anchored to the eyebrow's row so its
-   foot always meets the heading. It may pass behind the photo on phones,
-   never in front of it. */
-.coll .coll-ghost {
-  grid-area: eyebrow; top: auto; bottom: -0.3em; left: -0.05em;
-  font-size: min(var(--fs-ghost), calc(100cqi / (var(--w, 6) * 0.6)));
-}
-
-.coll .coll-photo { align-self: stretch; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
-.coll .coll-photo .pic { height: 100%; }
-
-/* Shop all: no photo; the category index sits beside the words on wide
-   screens and under them as a row on smaller ones. */
-.coll-all .coll-head-grid {
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto;
-  grid-template-areas: "eyebrow" "title" "lede" "total" "side";
-  padding-top: clamp(36px, 7vw, 84px);
-}
+.coll .coll-lede { grid-area: lede; margin-top: 6px; max-width: none; font-size: 0.9375rem; line-height: 1.5; }
+.coll .coll-total { grid-area: total; margin-top: 8px; color: var(--muted); white-space: nowrap; }
 
 @media (min-width: 760px) {
   .coll .coll-head-grid {
-    --side: clamp(220px, 22vw, 300px);
-    --gap: clamp(40px, 7vw, 120px);
-    grid-template-areas: "eyebrow side" "title side" "lede side" "total side";
+    grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title total" "lede total";
+    column-gap: 40px; align-items: end;
   }
-  .coll:not(.coll-all) .coll-ghost {
-    font-size: min(var(--fs-ghost), calc((100cqi - var(--side) - var(--gap)) / (var(--w, 6) * 0.6)));
-  }
-  .coll .coll-lede { font-size: var(--fs-md); }
-  .coll .coll-total { margin-top: 26px; }
-}
-@media (min-width: 1040px) {
-  .coll-all .coll-head-grid {
-    --side: clamp(280px, 27vw, 380px);
-    grid-template-columns: minmax(0, 1fr) var(--side);
-    grid-template-rows: 1fr auto auto auto;
-    grid-template-areas: "eyebrow side" "title side" "lede side" "total side";
-    padding-top: 8px;
-  }
-  .coll-all .coll-ghost {
-    font-size: min(var(--fs-ghost), calc((100cqi - var(--side) - var(--gap)) / (var(--w, 6) * 0.6)));
-  }
+  .coll .coll-lede { margin-top: 8px; font-size: var(--fs-base); }
+  .coll .coll-total { margin: 0 0 4px; }
 }
 
-/* ----- Category links: a scrolling row (phones, tablets) or an index ----- */
-.coll .coll-cats ol { list-style: none; padding: 0; margin: 0; }
-.coll .coll-cats a { font-size: 0.75rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
-.coll .coll-cat-n { color: var(--muted); letter-spacing: .04em; }
-
-.coll .coll-cats-wrap { margin-top: -12px; padding-bottom: 6px; }
-@media (min-width: 1040px) { .coll .coll-cats-wrap { display: none; } }
-
-.coll .coll-cats.is-row ol,
-.coll-all .coll-cats.is-index ol {
-  display: flex; gap: 28px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+/* ----- Category links: one quiet scrolling row ----- */
+.coll .coll-cats ol {
+  display: flex; gap: 26px; list-style: none; margin: 0; padding: 0;
+  overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
   margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
 }
-.coll .coll-cats.is-row ol::-webkit-scrollbar,
-.coll-all .coll-cats.is-index ol::-webkit-scrollbar { display: none; }
-.coll .coll-cats.is-row a,
-.coll-all .coll-cats.is-index a {
-  position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 46px; white-space: nowrap; color: var(--muted);
+.coll .coll-cats ol::-webkit-scrollbar { display: none; }
+.coll .coll-cats a {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap;
+  font-size: 0.75rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; color: var(--muted);
   transition: color var(--d-fast);
 }
-.coll .coll-cats.is-row a::after,
-.coll-all .coll-cats.is-index a::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--ink);
-  transform: scaleX(0); transform-origin: right; transition: transform var(--d-slow) var(--ease-expo);
+.coll .coll-cats a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 1px; background: var(--ink);
+  transform: scaleX(0); transform-origin: left; transition: transform var(--d-base) var(--ease-out);
 }
 .coll .coll-cats a[aria-current="page"] { color: var(--ink); }
-.coll .coll-cats.is-row a[aria-current="page"]::after { transform: scaleX(1); }
-.coll .coll-cats.is-row .coll-cat-i,
-.coll-all .coll-cats.is-index .coll-cat-i { display: none; }
-.coll .coll-cats.is-row .coll-cat-n,
-.coll-all .coll-cats.is-index .coll-cat-n { font-size: 0.625rem; transform: translateY(-5px); }
+.coll .coll-cats a[aria-current="page"]::after { transform: scaleX(1); }
+.coll .coll-cat-n { font-size: 0.625rem; letter-spacing: .04em; color: var(--muted); transform: translateY(-4px); }
 @media (hover: hover) {
-  .coll .coll-cats.is-row a:hover, .coll-all .coll-cats.is-index a:hover { color: var(--ink); }
-  .coll .coll-cats.is-row a:hover::after, .coll-all .coll-cats.is-index a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .coll .coll-cats a:hover { color: var(--ink); }
+  .coll .coll-cats a:hover::after { transform: scaleX(1); }
 }
-.coll-all .coll-cats.is-index { margin-top: 20px; margin-bottom: -18px; }
-
-@media (min-width: 1040px) {
-  .coll-all .coll-cats.is-index { margin: 0; align-self: end; }
-  .coll-all .coll-cats.is-index ol {
-    display: grid; gap: 0; overflow: visible; margin: 0; padding: 0;
-    border-top: 1px solid var(--line); border-bottom: 0;
-  }
-  .coll-all .coll-cats.is-index li { border-bottom: 1px solid var(--line); }
-  .coll-all .coll-cats.is-index a {
-    display: grid; grid-template-columns: 44px 1fr auto; align-items: center; min-height: 50px; color: var(--ink);
-  }
-  .coll-all .coll-cats.is-index a::after { bottom: -1px; }
-  .coll-all .coll-cats.is-index .coll-cat-i { display: block; color: var(--faint); letter-spacing: .08em; }
-  .coll-all .coll-cats.is-index .coll-cat-name { transition: transform var(--d-base) var(--ease-out); }
-  .coll-all .coll-cats.is-index .coll-cat-n { font-size: 0.75rem; transform: none; }
-  @media (hover: hover) {
-    .coll-all .coll-cats.is-index a:hover .coll-cat-name { transform: translateX(6px); }
-  }
-}
+.coll .coll-cats-wrap { padding-bottom: 4px; }
+/* On category pages the header nav carries the categories from 1040px up. */
+@media (min-width: 1040px) { .coll:not(.coll-all) .coll-cats-wrap { display: none; } }
 
 /* ====================================================================
    Tools bar: filters, count, sort (sticky under the header)
@@ -158,6 +78,12 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 }
 .coll .coll-showing {
   margin-left: auto; font-size: 0.6875rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); white-space: nowrap;
+}
+.coll .coll-open { white-space: nowrap; }
+@media (max-width: 379px) {
+  .coll .coll-tools-in { gap: 8px 12px; }
+  .coll .coll-open { gap: 8px; letter-spacing: .1em; }
+  .coll .coll-showing { letter-spacing: .06em; }
 }
 
 .coll .coll-filters { display: none; align-items: center; gap: 4px 30px; flex-wrap: wrap; }
@@ -285,11 +211,69 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 }
 
 /* ====================================================================
-   Grid, empty state, keep browsing
+   Grid (3 columns from 1000px, 2 below), editorial tile, empty state
    ==================================================================== */
 
-.coll .coll-grid-wrap { padding-top: clamp(24px, 3vw, 44px); padding-bottom: var(--section); }
+.coll .coll-grid-wrap { padding-top: clamp(20px, 2.6vw, 36px); padding-bottom: var(--section); }
 .coll .coll-results:has(+ .coll-more) .coll-grid-wrap { padding-bottom: clamp(48px, 6vw, 88px); }
+
+/* Larger, calmer cards than the shared 4-column grid. */
+.coll .coll-grid, .srch .srch-grid {
+  --col-gap: clamp(12px, 1.8vw, 28px);
+  grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap);
+}
+@media (min-width: 1000px) {
+  .coll .coll-grid, .srch .srch-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* The tile closes an incomplete last row: data-mod2 / data-mod3 hold the
+   product count modulo the column count (set by the template and by
+   pages/collection.js after every filter). It spans exactly the empty slots
+   and is hidden when the row is full. It is never styled like a product: a
+   bordered paper panel, words first, the photo set inside it, no price, no
+   add. */
+.coll .coll-tile {
+  display: none; position: relative; align-self: start; gap: clamp(12px, 1.4vw, 20px);
+  padding: clamp(12px, 1.6vw, 24px); background: var(--paper); border: 1px solid var(--line);
+  grid-template-rows: auto auto;
+}
+.coll .coll-tile[data-mod2="1"] { display: grid; }
+.coll .coll-tile-media { aspect-ratio: 4 / 3; min-height: 0; overflow: hidden; background: var(--canvas); }
+.coll .coll-tile-media .pic { height: 100%; }
+.coll .coll-tile-media img { object-position: var(--x, 50%) var(--y, 50%); transition: transform var(--d-slow) var(--ease-out); }
+.coll .coll-tile-body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.coll .coll-tile-kicker { font-size: 0.6875rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; color: var(--muted); }
+.coll .coll-tile-line {
+  font-family: var(--display); font-weight: var(--w-heading); font-size: 1.25rem; line-height: 1.25;
+  letter-spacing: -0.01em; text-wrap: balance;
+}
+@media (min-width: 1000px) {
+  .coll .coll-tile[data-mod2="1"] { display: none; }
+  /* One empty slot: the panel matches a card frame (4:5), words over the photo's frame. */
+  .coll .coll-tile[data-mod3="2"] { display: grid; aspect-ratio: 4 / 5; grid-template-rows: auto minmax(0, 1fr); }
+  .coll .coll-tile[data-mod3="2"] .coll-tile-media { aspect-ratio: auto; }
+  /* Two empty slots: words beside a 4:5 photo. */
+  .coll .coll-tile[data-mod3="1"] {
+    display: grid; grid-column: span 2; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto;
+    column-gap: clamp(20px, 2.4vw, 36px);
+  }
+  .coll .coll-tile[data-mod3="1"] .coll-tile-body { justify-content: space-between; padding-block: 4px; }
+  .coll .coll-tile[data-mod3="1"] .coll-tile-line { font-size: var(--fs-xl); max-width: 18ch; margin-top: auto; }
+  .coll .coll-tile[data-mod3="1"] .coll-tile-media { aspect-ratio: 4 / 5; }
+}
+.coll .coll-tile-link { margin-top: 2px; }
+/* The whole panel is one link target (the words stay the link's name). */
+.coll .coll-tile-link::after { content: ""; position: absolute; inset: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .coll .coll-tile:hover { border-color: #CFC7BB; }
+  .coll .coll-tile:hover .coll-tile-media img { transform: scale(1.02); }
+}
+@media (max-width: 759px) {
+  .coll .coll-tile-body { gap: 8px; }
+  .coll .coll-tile-line { font-size: 0.9375rem; line-height: 1.3; }
+  .coll .coll-tile-link { font-size: 0.875rem; }
+}
+
 .coll .coll-empty { padding-block: clamp(48px, 7vw, 96px); max-width: 520px; margin-inline: auto; }
 .coll .coll-empty p { max-width: 40ch; }
 
@@ -298,12 +282,9 @@ html:not(.js) .coll .coll-tools, html:not(.js) .coll .coll-active { display: non
 .coll .coll-results.is-pending .coll-grid { opacity: 0; animation: coll-unhide 0s 2.5s forwards; }
 @keyframes coll-unhide { to { opacity: 1; } }
 
-/* First row: visible at first paint (it holds the LCP image); it only rises. */
-html.js.motion .coll .coll-grid > .card[data-reveal]:nth-child(-n+4):not(.is-in) { opacity: 1; }
-
 /* Keep browsing (category pages) */
 .coll .coll-more { content-visibility: auto; contain-intrinsic-size: auto 640px; border-top: 1px solid var(--line); }
-.coll .coll-more .section-head h2 { font-size: clamp(1.875rem, 1.4rem + 1.8vw, 2.75rem); }
+.coll .coll-more .section-head h2 { font-size: clamp(1.625rem, 1.25rem + 1.4vw, 2.25rem); }
 .coll .coll-more-list {
   list-style: none; padding: 0; margin: 0;
   display: grid; grid-auto-flow: column; grid-auto-columns: 42%; gap: 14px;
@@ -315,15 +296,15 @@ html.js.motion .coll .coll-grid > .card[data-reveal]:nth-child(-n+4):not(.is-in)
 .coll .coll-more-card { display: grid; gap: 12px; }
 .coll .coll-more-frame { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
 .coll .coll-more-frame .pic { height: 100%; }
-.coll .coll-more-frame img { transition: transform 900ms var(--ease-out); }
+.coll .coll-more-frame img { transition: transform var(--d-slow) var(--ease-out); }
 .coll .coll-more-name {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  font-size: 0.75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  font-size: 0.75rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
 }
-.coll .coll-more-name .icon { transition: transform var(--d-base) var(--ease-out); }
+.coll .coll-more-name .icon { transition: transform var(--d-fast) var(--ease-standard); }
 @media (hover: hover) and (pointer: fine) {
-  .coll .coll-more-card:hover img { transform: scale(1.03); }
-  .coll .coll-more-card:hover .coll-more-name .icon { transform: translateX(4px); }
+  .coll .coll-more-card:hover img { transform: scale(1.02); }
+  .coll .coll-more-card:hover .coll-more-name .icon { transform: translateX(3px); }
 }
 @media (min-width: 760px) { .coll .coll-more-list { grid-auto-columns: 28%; gap: 18px; } }
 @media (min-width: 1040px) {
@@ -346,69 +327,44 @@ html.js.motion .coll .coll-grid > .card[data-reveal]:nth-child(-n+4):not(.is-in)
 .coll .coll-drawer .coll-colours { column-gap: 16px; }
 .coll .coll-drawer-foot { grid-template-columns: auto 1fr; gap: 12px; }
 .coll .coll-drawer-foot .btn { padding-inline: 22px; }
-@media (prefers-reduced-motion: no-preference) {
-  .coll .coll-drawer[open] .coll-group { animation: coll-rise var(--d-slow) var(--ease-out) both; }
-  .coll .coll-drawer[open] .coll-group:nth-child(2) { animation-delay: 40ms; }
-  .coll .coll-drawer[open] .coll-group:nth-child(3) { animation-delay: 80ms; }
-  .coll .coll-drawer[open] .coll-group:nth-child(4) { animation-delay: 120ms; }
-  .coll .coll-drawer[open] .coll-group:nth-child(n+5) { animation-delay: 160ms; }
-}
 
 /* ====================================================================
-   Motion: head entrance and grid view transitions
+   Motion: the sort and filter glide (at most 300 ms)
    ==================================================================== */
 
-@media (prefers-reduced-motion: no-preference) {
-  html.motion .coll .coll-ghost, html.motion .srch .srch-ghost { animation: coll-ghost-in 1400ms var(--ease-out) both; }
-  html.motion .coll .coll-eyebrow { animation: coll-rise var(--d-slow) var(--ease-out) both; }
-  html.motion .coll .coll-title { animation: coll-rise var(--d-slow) var(--ease-out) 60ms both; }
-  html.motion .coll .coll-lede { animation: coll-lift var(--d-slow) var(--ease-out) 120ms both; }
-  html.motion .coll .coll-total { animation: coll-rise var(--d-slow) var(--ease-out) 180ms both; }
-  html.motion .coll .coll-photo img { animation: coll-settle 1600ms var(--ease-out) both; }
-}
-@keyframes coll-ghost-in { from { opacity: 0; transform: translate3d(-2.5%, 0, 0); } }
-@keyframes coll-rise { from { opacity: 0; transform: translate3d(0, 14px, 0); } }
-@keyframes coll-lift { from { transform: translate3d(0, 14px, 0); } }
-@keyframes coll-settle { from { transform: scale(1.06); } }
-
-/* Same-page view transition for filtering and sorting: withTransition()
-   (lib/ui.js) keeps the page still with html.vt-same; lib/catalog-view.js
-   names the on-screen cards and sets html.coll-vt only while it runs. */
+/* withTransition() (lib/ui.js) keeps the page still with html.vt-same;
+   lib/catalog-view.js names the on-screen cards and the tile, and sets
+   html.coll-vt only while it runs. Under reduced motion there is no
+   transition at all (the grid updates at once). */
 html.coll-vt::view-transition { pointer-events: none; } /* clicks reach the page while cards glide */
-html.coll-vt::view-transition-group(*) { animation-duration: 560ms; animation-timing-function: var(--ease-in-out); }
-html.coll-vt::view-transition-new(*):only-child { animation: coll-card-in 520ms var(--ease-out) 60ms both; }
-html.coll-vt::view-transition-old(*):only-child { animation: coll-card-out 220ms var(--ease-in) both; }
+html.coll-vt::view-transition-group(*) { animation-duration: 280ms; animation-timing-function: var(--ease-out); }
+html.coll-vt::view-transition-new(*):only-child { animation: coll-card-in 220ms var(--ease-out) both; }
+html.coll-vt::view-transition-old(*):only-child { animation: coll-card-out 160ms var(--ease-in) both; }
 /* The sticky filter bar stays on top of the moving cards, unchanged. */
 html.coll-vt::view-transition-group(coll-glue-0) { animation: none; }
 html.coll-vt::view-transition-old(coll-glue-0) { display: none; }
 html.coll-vt::view-transition-new(coll-glue-0) { animation: none; }
-@keyframes coll-card-in { from { opacity: 0; transform: scale(.94); } }
-@keyframes coll-card-out { to { opacity: 0; transform: scale(.96); } }
+@keyframes coll-card-in { from { opacity: 0; } }
+@keyframes coll-card-out { to { opacity: 0; } }
 
 /* ====================================================================
    Search
    ==================================================================== */
 
-.srch .srch-head {
-  position: relative; isolation: isolate; container-type: inline-size;
-  padding-block: clamp(44px, 8vw, 120px) clamp(16px, 2vw, 28px);
+.srch .srch-head { padding-block: clamp(16px, 2.6vw, 36px) clamp(10px, 1.4vw, 18px); }
+.srch .srch-title {
+  margin-top: 10px; font-family: var(--display); font-weight: var(--w-heading);
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem); line-height: 1.04; letter-spacing: var(--tracking-display);
 }
-.srch .srch-head > :not(.srch-ghost) { position: relative; z-index: 1; }
-.srch .srch-ghost {
-  top: clamp(4px, 2vw, 28px); left: calc(var(--gutter) - 0.05em);
-  font-size: min(var(--fs-ghost), calc(100cqi / (var(--w, 6) * 0.6)));
-}
-.srch .srch-ghost.is-swap { animation: coll-ghost-in 900ms var(--ease-out) both; }
-.srch .srch-title { margin-top: 14px; font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-display); line-height: 1.02; letter-spacing: var(--tracking-display); }
 
 .srch .srch-form {
-  display: flex; align-items: center; gap: 14px; margin-top: clamp(24px, 3.4vw, 44px);
+  display: flex; align-items: center; gap: 14px; margin-top: clamp(14px, 2vw, 28px);
   padding-block: 8px; border-bottom: 1px solid var(--ink); background: color-mix(in srgb, var(--ivory) 70%, transparent);
 }
 .srch .srch-form > .icon { flex: none; color: var(--muted); }
 .srch .srch-input {
-  flex: 1; min-width: 0; border: 0; background: none; padding: 6px 0; border-radius: 0;
-  font-family: var(--display); font-weight: var(--w-heading); font-size: clamp(1.5rem, 1rem + 2.2vw, 2.75rem); line-height: 1.2;
+  flex: 1; min-width: 0; border: 0; background: none; padding: 4px 0; border-radius: 0;
+  font-family: var(--display); font-weight: var(--w-medium); font-size: clamp(1.25rem, 0.95rem + 1.5vw, 2.125rem); line-height: 1.2;
 }
 .srch .srch-input::placeholder { color: #9A9285; }
 .srch .srch-input:focus { outline: none; }
@@ -417,11 +373,11 @@ html.coll-vt::view-transition-new(coll-glue-0) { animation: none; }
 .srch .srch-clear { display: inline-grid; place-items: center; width: 44px; height: 44px; flex: none; color: var(--muted); border-radius: 50%; }
 @media (hover: hover) { .srch .srch-clear:hover { color: var(--ink); background: rgba(28, 28, 26, .06); } }
 .srch .srch-submit { flex: none; }
-.srch .srch-status { min-height: 1.6em; margin-top: 16px; font-size: 0.6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.srch .srch-status { min-height: 1.6em; margin-top: 12px; font-size: 0.6875rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
 .srch .srch-noscript { margin-top: 18px; max-width: 60ch; }
 
-.srch .srch-results { padding-block: clamp(16px, 2vw, 28px) var(--section); }
-.srch .srch-empty { padding-block: clamp(28px, 4vw, 56px) var(--section); }
+.srch .srch-results { padding-block: clamp(8px, 1.4vw, 20px) var(--section); }
+.srch .srch-empty { padding-block: clamp(20px, 3vw, 44px) var(--section); }
 .srch .srch-empty-text { max-width: 54ch; margin-bottom: clamp(28px, 3.4vw, 44px); }
 .srch .srch-empty-title { font-family: var(--display); font-weight: var(--w-heading); font-size: var(--fs-xl); line-height: 1.1; overflow-wrap: anywhere; }
 .srch .srch-empty-text p { margin-top: 10px; }
@@ -432,13 +388,13 @@ html.coll-vt::view-transition-new(coll-glue-0) { animation: none; }
 .srch .srch-cat { display: grid; gap: 12px; }
 .srch .srch-cat-frame { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--canvas); }
 .srch .srch-cat-frame .pic { height: 100%; }
-.srch .srch-cat-frame img { transition: transform 900ms var(--ease-out); }
+.srch .srch-cat-frame img { transition: transform var(--d-slow) var(--ease-out); }
 .srch .srch-cat-name {
   display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
   font-size: 0.75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
 }
 .srch .srch-cat-n { color: var(--muted); font-size: 0.625rem; letter-spacing: .08em; }
-@media (hover: hover) and (pointer: fine) { .srch .srch-cat:hover img { transform: scale(1.03); } }
+@media (hover: hover) and (pointer: fine) { .srch .srch-cat:hover img { transform: scale(1.02); } }
 
 @media (max-width: 759px) {
   .srch .srch-submit { display: none; }

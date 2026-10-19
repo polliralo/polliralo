@@ -197,13 +197,14 @@ test.describe('2. admin edits reach the store', () => {
     await expect(dialog.locator('.mini-card')).toContainText(OLIVE.name);
     await expect(dialog.locator('.mini-card')).toContainText('$52');
 
-    // Home: five hero slides, no navy polo anywhere, the olive polo at the new price.
+    // Home: three message slides with no prices; the brand slide no longer
+    // shows the hidden navy polo; no navy polo anywhere; the olive polo at the new price.
     await ready(page, '/');
     const carousel = page.locator('[data-carousel]');
-    await expect(carousel.locator('[data-slide]')).toHaveCount(5);
-    await expect(carousel.locator(`[data-slide][data-slug="${NAVY.slug}"]`)).toHaveCount(0);
-    await expect(carousel.locator('[data-hero-total]')).toHaveText('05');
-    await expect(carousel.locator(`[data-slide][data-slug="${OLIVE.slug}"] .home-price`)).toContainText('$52');
+    await expect(carousel.locator('[data-slide]')).toHaveCount(3);
+    await expect(carousel.locator('[data-hero-total]')).toHaveText('03');
+    await expect(carousel.locator('[data-art]')).not.toHaveAttribute('data-art-slug', NAVY.slug);
+    await expect(carousel.locator('img[src*="navy-pique-polo"]')).toHaveCount(0);
     await expect(linksTo(page, NAVY.slug)).toHaveCount(0);
     await expect(page.locator(`[data-new-list] .card[data-slug="${OLIVE.slug}"] .card-price`)).toHaveText('$52');
     await expect(page.locator(`.home-look-list[data-look="look-01"] .home-item[data-slug="${OLIVE.slug}"] .home-item-price`)).toHaveText('$52');
@@ -440,14 +441,17 @@ test.describe('6. persistence and stock', () => {
     await expect(page.locator('[data-pdp-stock]')).toHaveText('Sold out in XXL');
     await expect(sizeRadio(page, 'M')).toBeEnabled();
 
-    // So do the quick add chips and the home hero.
+    // So do the quick add chips and the size chips in the home page's look panel.
     await ready(page, '/collections/polos/');
     await card(page, OLIVE.slug).getByRole('button', { name: `Quick add ${OLIVE.name}` }).click();
     const panel = card(page, OLIVE.slug).locator('[data-quick-panel]');
     await expect(panel.locator('.chip.is-out')).toHaveText('XXL sold out');
     await expect(panel.locator('[data-quick-size="XXL"]')).toHaveCount(0);
     await ready(page, '/');
-    await expect(page.locator(`#hero-${OLIVE.slug}-XXL`)).toBeDisabled();
+    const lookPolo = page.locator(`.home-look-list[data-look="look-01"] .home-item[data-slug="${OLIVE.slug}"]`);
+    await lookPolo.locator('[data-choose]').click();
+    await expect(lookPolo.locator('.chip', { hasText: 'XXL' })).toBeDisabled();
+    await expect(lookPolo.locator('.chip', { hasText: 'XXL' })).toHaveText('XXL sold out');
   });
 
   test('a product deleted in the admin while in the bag blocks checkout until it is removed', async ({ page }) => {

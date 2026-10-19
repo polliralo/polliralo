@@ -108,7 +108,7 @@ function panelHTML(slide, first, art) {
 export function heroSlideHTML(slide, i, total, { art = null } = {}) {
   const first = i === 0;
   const h = `h${slide.level === 1 ? 1 : 2}`;
-  return `<div class="home-slide${first ? ' is-active' : ''}" id="hero-${esc(slide.id)}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" tabindex="-1" data-slide data-slide-id="${esc(slide.id)}"${first ? '' : ' inert'}>`
+  return `<div class="home-slide${first ? ' is-active is-intro' : ''}" id="hero-${esc(slide.id)}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" tabindex="-1" data-slide data-slide-id="${esc(slide.id)}"${first ? '' : ' inert'}>`
     + `<div class="home-copy-col">`
     + `<div class="home-copy">`
     + `<p class="eyebrow home-eyebrow">${esc(slide.eyebrow)}</p>`

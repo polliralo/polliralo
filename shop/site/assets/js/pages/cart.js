@@ -93,7 +93,7 @@ if (page) {
     const express = SHIPPING_OPTIONS[1];
     etaEl.innerHTML = `<span class="co-eta-row"><span>${esc(standard.name)}</span><span>${esc(arrivalText(standard))}</span></span>`
       + (express ? `<span class="co-eta-row"><span>${esc(express.name)}</span><span>${esc(arrivalText(express))}</span></span>` : '')
-      + `<span class="co-eta-note">Estimated arrival. Choose the method at checkout.</span>`;
+      + `<span class="co-eta-note">Demo estimates: nothing ships. Choose the method at checkout.</span>`;
     if (lastSubtotal != null && lastSubtotal !== sub) live.textContent = `Subtotal ${money(sub, { cents: true })}. Estimated total ${money(t.total, { cents: true })}.`;
     lastSubtotal = sub;
 

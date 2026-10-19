@@ -26,12 +26,12 @@ function tileFor(category, ctx) {
       href: '/size-guide/', cta: 'Find your size',
     },
     't-shirts': {
-      image: category.image.key, kicker: 'Wear it with',
+      image: category.image.key, y: '35%', kicker: 'Wear it with',
       line: 'A crew neck under an open Oxford shirt.',
       href: '/collections/shirts/', cta: 'Shop shirts',
     },
     polos: {
-      image: category.image.key, kicker: 'Shop the look',
+      image: category.image.key, y: '35%', kicker: 'Shop the look',
       line: look('look-01')?.line, href: LOOK_HREF, cta: 'See Look 01',
     },
     watches: {
@@ -40,7 +40,7 @@ function tileFor(category, ctx) {
       href: '/collections/accessories/', cta: 'Shop accessories',
     },
     sunglasses: {
-      image: category.image.key, kicker: 'Pair them with',
+      image: category.image.key, y: '22%', kicker: 'Pair them with',
       line: 'A piqué polo in olive or navy.',
       href: '/collections/polos/', cta: 'Shop polos',
     },

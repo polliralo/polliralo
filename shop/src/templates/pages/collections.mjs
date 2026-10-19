@@ -26,7 +26,7 @@ export default function render(ctx) {
   const look = ctx.looks.find((l) => l.id === 'look-01');
   const polos = ctx.getCategory('polos');
   const tile = look && polos && ctx.media[polos.image.key] ? {
-    image: polos.image.key, alt: polos.image.alt, kicker: 'Shop the look',
+    image: polos.image.key, alt: polos.image.alt, y: '35%', kicker: 'Shop the look',
     line: look.line, href: '/#home-look-title', cta: 'See Look 01',
   } : null;
 

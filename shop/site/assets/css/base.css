@@ -263,7 +263,11 @@ html.js .pic img.is-loaded { opacity: 1; }
 .announce a { text-decoration: underline; text-underline-offset: 3px; }
 .announce p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .announce .announce-short { display: none; }
-@media (max-width: 760px) { .announce { font-size: 0.625rem; letter-spacing: .12em; } .announce .announce-long { display: none; } .announce .announce-short { display: inline; } }
+/* Phones: one short line in sentence case, so "How it works" fits even at 320px. */
+@media (max-width: 760px) {
+  .announce { font-size: 0.75rem; letter-spacing: .02em; text-transform: none; padding-inline: 12px; }
+  .announce .announce-long { display: none; } .announce .announce-short { display: inline; }
+}
 
 .site-header {
   position: sticky; top: 0; z-index: 60; height: var(--header-h);
@@ -297,6 +301,15 @@ html.js .pic img.is-loaded { opacity: 1; }
   .tool-btn .tool-text { display: none; }
   .tool-btn { padding: 0 8px; }
 }
+/* Phones: 44px icon buttons, the bag count as a small badge on the icon, so
+   the tools never squeeze the icons (they did at 320px). */
+@media (max-width: 760px) {
+  .header-tools { gap: 0; margin-right: -10px; }
+  .tool-btn { position: relative; justify-content: center; width: 44px; padding: 0; }
+  .tool-btn .icon { flex: none; }
+  .tool-btn .bag-count { position: absolute; top: 5px; right: 1px; min-width: 18px; height: 18px; padding: 0 4px; font-size: 0.625rem; }
+}
+@media (max-width: 360px) { .logo { letter-spacing: .38em; margin-right: -.38em; } }
 
 /* ---------- Dialogs: drawer, menu, search ---------- */
 dialog { padding: 0; border: 0; max-width: none; max-height: none; color: var(--ink); background: var(--ivory); }
@@ -521,7 +534,9 @@ dialog.is-closing::backdrop { animation: fade-out 220ms var(--ease-out) forwards
 }
 
 /* ---------- Footer ---------- */
-.site-footer { content-visibility: auto; contain-intrinsic-size: auto 480px; background: var(--ink); color: var(--night-text); padding-block: clamp(56px, 7vw, 88px) 32px; margin-top: auto; }
+/* No content-visibility on the footer: it is small, and skipping its render
+   hid its dark background from contrast checks and full-page captures. */
+.site-footer { background: var(--ink); color: var(--night-text); padding-block: clamp(56px, 7vw, 88px) 32px; margin-top: auto; }
 .site-footer a { color: inherit; }
 .footer-top { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; }
 .footer-brand .logo { color: var(--night-text); font-size: 1.5rem; }

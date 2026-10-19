@@ -1,6 +1,6 @@
 # MONO
 
-**MONO** is a fictional premium menswear shop, built as a portfolio demo. It has 12 products (shirts, T-shirts, polos, watches, sunglasses and accessories) and every part of a real shop works: browsing, filters, search, product pages, a bag, a validated checkout with a demo payment, order confirmation and a store admin. All prices, stock and orders are demo data. No payment is ever taken and nothing ships.
+**MONO** is a fictional premium menswear shop, built as a portfolio demo. It has 13 products (three shirts, and two each of T-shirts, polos, watches, sunglasses and accessories) and every part of a real shop works: browsing, filters, search, product pages, a bag, a validated checkout with a demo payment, order confirmation and a store admin. All prices, stock and orders are demo data. No payment is ever taken and nothing ships.
 
 ![MONO home page on a desktop screen](docs/screens/home-desktop.jpg)
 
@@ -25,14 +25,14 @@ Use the preview server rather than opening the HTML files directly: the pages lo
 | **Search** | Instant search from the header on every page, plus a full search page (`/search/?q=olive`). |
 | **Product pages** | Angle thumbnails, a full-screen photo viewer, size choice with sold-out sizes marked, a size guide, colour links between the two polos, quantity, add to bag (it will not add clothing without a size), "Complete the look", "More in" this category, details and delivery information. On phones the photos swipe and an Add to bag bar stays at the bottom. A link such as `/products/olive-pique-polo/?size=l` opens with size L chosen. |
 | **Bag** | A side drawer on every page and a full bag page: change quantity, remove with Undo, clear the bag, a free-delivery meter, and clear messages when an item has sold out or changed. |
-| **Checkout** | One page: contact, delivery address (labels and postcode rules follow the chosen country), delivery method and payment. The payment choices are **Test card** (nothing is charged and no card details are asked for) and **Cash on delivery**. Every field is checked, with a summary of problems at the top. Placing the order saves it, lowers the stock and empties the bag. |
+| **Checkout** | One page: contact, delivery address (labels and postcode rules follow the chosen country), delivery method and payment. The payment choices are **Test card** (nothing is charged and no card details are asked for) and **Cash on delivery**. Every field is checked, with a summary of problems at the top. Nothing is filled in for you, and delivery dates are shown as demo estimates. Placing the order saves it, lowers the stock and empties the bag. |
 | **Order confirmation** | The order number, items, totals, address and next steps, clearly marked as a demo order. |
 | **Admin** (`/admin/`) | A dashboard of the demo data, a product editor (add, edit, hide, delete; prices, words, sizes and stock, photos), a restock list, the list of demo orders with their status, a data download and "Reset demo data". Changes show up in the shop straight away. |
 | **Content** | About (with "How this demo works"), Contact (a demo form), Size guide, Privacy, Shipping and returns, and a designed 404 page. |
 
 ## How the demo data works
 
-The 12 products live in `src/data/catalog.json`. The build copies them, with the image list, into `site/assets/data/store.json`, which every page reads. Anything a visitor changes is kept only in **their own browser** (localStorage), so it survives a reload but nobody else sees it:
+The 13 products live in `src/data/catalog.json`. The build copies them, with the image list, into `site/assets/data/store.json`, which every page reads. Anything a visitor changes is kept only in **their own browser** (localStorage), so it survives a reload but nobody else sees it:
 
 | Browser storage key | What it holds |
 | --- | --- |
@@ -66,13 +66,14 @@ The research behind these choices is in `docs/research/seo.md`.
 
 ## Motion
 
-Motion follows `docs/research/motion.md`: calm curves, transform and opacity only, nothing that blocks a click.
+Motion is used only where it explains something: a change of state, a change of image, or the answer to a click. It never slows shopping down. Transform and opacity only, short timings (buttons 160 ms, small changes 240 ms, drawers 300 ms, image reveals 450 ms, the hero 600 ms), no parallax and no bounce. The research behind it is in `docs/research/motion.md`.
 
+- The home hero cross-fades between its three slides. It moves by itself only on wide screens with a mouse, every 8 seconds, with a visible Pause button.
 - Opening a product from a card grows its photo into the product page photo. This uses the browser's page-to-page transitions, in Chrome, Edge and Safari 18.2 and newer; other browsers simply load the page.
-- Sections rise in as they come into view.
-- The bag opens with the new item highlighted, and the bag count gives a small pulse.
+- Editorial photos fade in once as they come into view. Product cards, headings, text and buttons do not animate in.
+- The bag opens with the new item highlighted, and the bag count gives a small pulse. Buttons show a short pressed, busy and done state.
 
-With the operating system's "reduce motion" setting on, everything appears at once and the slider never moves by itself.
+With the operating system's "reduce motion" setting on, everything appears at once and nothing moves by itself.
 
 ## Change the shop
 
@@ -115,9 +116,10 @@ Lighthouse on a phone profile (October 2026, local build of the home, a category
 - Everything a visitor does stays in their browser: no accounts, no emails, no real orders, no shared stock.
 - The admin is a demonstration of the screens, not a secure back office.
 - Prices, stock, delivery rates and the size guide figures are demo data.
+- Shirts has three products; the other five categories have two until new photos arrive. Products are only added with genuinely different photos, never with a copied or recoloured one. The photos needed, with file names and prompts, are listed in `docs/photo-shotlist.md` (round 3).
 - Page-to-page photo transitions need a recent Chrome, Edge or Safari; elsewhere pages load normally.
 
 ## Credits
 
-- Typefaces: [Bodoni Moda](https://fonts.google.com/specimen/Bodoni+Moda) and [Jost](https://fonts.google.com/specimen/Jost), both under the SIL Open Font License, served from this site.
+- Typeface: [Jost](https://fonts.google.com/specimen/Jost) (400, 500, 600 and 700), under the SIL Open Font License, served from this site.
 - Photography: supplied by the owner for this demo. Clothing cut-outs made with [rembg](https://github.com/danielgatis/rembg).
