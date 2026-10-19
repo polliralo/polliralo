@@ -227,6 +227,8 @@ test.describe('page sections', () => {
     await openHome(page);
     const section = page.locator('[data-look-section]');
     await section.scrollIntoViewIfNeeded();
+    // The collections pages link here (/#home-look-title): keep the id on the heading.
+    await expect(section.locator('h2#home-look-title')).toHaveText('Shop the look');
     const one = section.locator('.home-look-list[data-look="look-01"]');
     const two = section.locator('.home-look-list[data-look="look-02"]');
     await expect(one).toBeVisible();

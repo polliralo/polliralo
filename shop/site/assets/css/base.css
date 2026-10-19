@@ -263,6 +263,8 @@ html.js .pic img.is-loaded { opacity: 1; }
 .announce a { text-decoration: underline; text-underline-offset: 3px; }
 .announce p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .announce .announce-short { display: none; }
+/* The long line needs about 780px; below 900px the short one is used. */
+@media (max-width: 900px) { .announce .announce-long { display: none; } .announce .announce-short { display: inline; } }
 /* Phones: one short line in sentence case, so "How it works" fits even at 320px. */
 @media (max-width: 760px) {
   .announce { font-size: 0.75rem; letter-spacing: .02em; text-transform: none; padding-inline: 12px; }

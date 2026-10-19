@@ -281,7 +281,9 @@ test.describe('3. a product made in the admin', () => {
     await expect(c).toBeVisible();
     await expect(c.locator('.card-price')).toHaveText('$72');
     await expect(c.getByRole('link', { name: SAND.name })).toHaveAttribute('href', `/product/?slug=${SAND.slug}`);
-    await expect(page.locator('[data-total]')).toHaveText('3 styles');
+    // The seed shirts plus the one just made.
+    const shirts = catalog.products.filter((x) => x.category === 'shirts').length + 1;
+    await expect(page.locator('[data-total]')).toHaveText(`${shirts} styles`);
 
     // Search.
     await ready(page, '/search/?q=sand');
