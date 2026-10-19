@@ -21,7 +21,7 @@ function init(root) {
   const emptyTitle = $('[data-empty-title]', root);
   const emptyText = $('[data-empty-text]', root);
   const eyebrow = $('[data-search-eyebrow]', root);
-  const grid = cv.createGrid(gridEl, { transition: withTransition });
+  const grid = cv.createGrid(gridEl, { transition: withTransition, eagerFirst: 3 });
   const defaults = { title: emptyTitle.textContent, text: emptyText.textContent };
 
   let ready = false;

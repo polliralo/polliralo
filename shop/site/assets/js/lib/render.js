@@ -84,7 +84,8 @@ export const needsChoice = (product) => (product.variants?.length ?? 0) > 1;
 const CARD_SIZES = '(min-width: 1180px) 24vw, (min-width: 760px) 32vw, 48vw';
 
 /** First image is the card image, second (if any) shows on hover. */
-export function productCard(product, { eager = false, sizes = CARD_SIZES, headingLevel = 3, showNew = true } = {}) {
+/* eager: the page's one high-priority image; loading: 'eager' for the rest of a first row. */
+export function productCard(product, { eager = false, loading = 'lazy', sizes = CARD_SIZES, headingLevel = 3, showNew = true } = {}) {
   const [first, second] = product.images ?? [];
   const url = productUrl(product);
   const stock = stockInfo(product);
@@ -101,7 +102,7 @@ export function productCard(product, { eager = false, sizes = CARD_SIZES, headin
   return `<article class="card${first?.kind === 'cutout' ? ' card-cut' : ''}" data-slug="${esc(product.slug)}">`
     + `<div class="card-frame">`
     + `<a class="card-link" href="${url}" tabindex="-1" aria-hidden="true" data-vt-media="${esc(product.slug)}">`
-    + (first ? picture(first.key, { alt: '', sizes, priority: eager, className: 'card-img' }) : '')
+    + (first ? picture(first.key, { alt: '', sizes, priority: eager, loading, className: 'card-img' }) : '')
     + hover
     + `</a>${label}${quick}`
     + `<div class="card-quick" data-quick-panel hidden></div>`

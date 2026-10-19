@@ -537,6 +537,10 @@ dialog.is-closing::backdrop { animation: fade-out 220ms var(--ease-out) forwards
 }
 
 /* ---------- Footer ---------- */
+/* Main is at least one screen tall, so pages whose content is drawn by
+   JavaScript (bag, checkout, search, admin) never pull the footer up into
+   view and then push it down again (that jump was their layout shift). */
+main#main { min-height: calc(100svh - var(--header-h) - var(--announce-h)); }
 /* No content-visibility on the footer: it is small, and skipping its render
    hid its dark background from contrast checks and full-page captures. */
 .site-footer { background: var(--ink); color: var(--night-text); padding-block: clamp(56px, 7vw, 88px) 32px; margin-top: auto; }

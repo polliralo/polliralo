@@ -152,7 +152,7 @@ if (page) {
     if (newRendered) return;
     const picks = getProducts().filter((p) => p.newArrival).slice(0, 4);
     const fill = picks.length >= 4 ? picks : [...picks, ...getProducts().filter((p) => !picks.includes(p))].slice(0, 4);
-    newGrid.innerHTML = fill.map((p) => productCard(p, { headingLevel: 3, sizes: '(min-width: 1180px) 22vw, (min-width: 760px) 30vw, 46vw' })).join('');
+    newGrid.innerHTML = fill.map((p, i) => productCard(p, { headingLevel: 3, eager: i === 0, loading: i < 2 ? 'eager' : 'lazy', sizes: '(min-width: 1180px) 22vw, (min-width: 760px) 30vw, 46vw' })).join('');
     newSection.hidden = fill.length === 0;
     newRendered = true;
     enhance(newGrid);

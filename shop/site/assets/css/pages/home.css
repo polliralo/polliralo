@@ -307,7 +307,9 @@ html.js.motion .home-cat-media[data-reveal] { transform: none; }
 /* ======================================================================
    5. The watch feature (dark ground)
    ====================================================================== */
-.home-watch { padding-block: var(--section); content-visibility: auto; contain-intrinsic-size: auto 960px; }
+/* No content-visibility here: skipping the render hid this section's dark
+   ground from contrast checks (light words read as if on the ivory page). */
+.home-watch { padding-block: var(--section); }
 .home-watch-grid {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
   gap: clamp(32px, 4.5vw, 72px); align-items: center;

@@ -209,7 +209,11 @@ Images: always `r.picture(key, {...})` with correct `sizes`. Cut-outs (keys
 `cut-*`) have alpha and sit on `--canvas`; give their frame `aspect-ratio: 4 / 5`
 (the media is 1122x1402). Photos are 4:5 except `wide-*` (16:9). Every image
 below the first screen is lazy. The LCP image of a page uses
-`priority: true` and is never faded or hidden at first paint.
+`priority: true` and is never faded or hidden at first paint. One image per
+page has `fetchpriority="high"`: in product grids that is the first card, and
+the rest of the first row uses `loading: 'eager'` (`productCard(p, { eager,
+loading })`). `main` is at least one screen tall, so pages drawn by
+JavaScript never move the footer (no layout shift).
 
 ## 5. Motion (from docs/research/motion.md)
 

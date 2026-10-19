@@ -352,7 +352,7 @@ function dropdownHTML(facet, label, inner, { hidden = false, end = false, value 
  * "Filter and sort" button on phones), active filter chips, the grid and the
  * empty state. The drawer is built by drawerHTML().
  */
-export function listingHTML({ products, facets, state, counts, total, withCategory, eagerCount = 1, title = 'Products', tile = null }) {
+export function listingHTML({ products, facets, state, counts, total, withCategory, eagerCount = 3, title = 'Products', tile = null }) {
   const shown = products.length;
   const filterFacets = (withCategory ? ['category'] : []).concat(['size', 'colour', 'price']);
   const sortLabel = SORTS.find((s) => s.id === state.sort)?.label ?? 'Featured';
@@ -373,7 +373,7 @@ export function listingHTML({ products, facets, state, counts, total, withCatego
     + `<div class="wrap coll-active" data-active${active ? '' : ' hidden'}>${chipsHTML(activeChips(state, facets))}</div>`
     + `<div class="wrap coll-grid-wrap">`
     + `<div class="grid-products coll-grid" data-grid${shown ? '' : ' hidden'}>`
-    + products.map((p, i) => productCard(p, { eager: i < eagerCount, sizes: LISTING_SIZES })).join('')
+    + products.map((p, i) => productCard(p, { eager: i === 0, loading: i < eagerCount ? 'eager' : 'lazy', sizes: LISTING_SIZES })).join('')
     + (tile ? tileHTML(tile, shown) : '')
     + `</div>`
     + `<div class="empty coll-empty" data-empty${shown ? ' hidden' : ''}>`
@@ -471,7 +471,7 @@ const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)
  * Cards on screen get a temporary view-transition-name so they glide to their
  * new places; the names are removed when the transition ends.
  */
-export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], transition = null } = {}) {
+export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], transition = null, eagerFirst = 0 } = {}) {
   const cache = new Map();
   const named = new Set();
   const tile = grid.querySelector(':scope > [data-tile]');
@@ -481,19 +481,21 @@ export function createGrid(grid, { seed = null, cardOptions = {}, glue = [], tra
     cache.set(el.dataset.slug, { el, sig: p ? cardSignature(p) : null });
   });
 
-  function elementFor(p) {
+  // eagerFirst: the first cards of a fresh grid load at once (the first row
+  // is usually the page's largest paint), the rest stay lazy.
+  function elementFor(p, i) {
     const sig = cardSignature(p);
     const hit = cache.get(p.slug);
     if (hit && hit.sig === sig) return { el: hit.el, fresh: false };
     const t = document.createElement('template');
-    t.innerHTML = productCard(p, { headingLevel: 3, sizes: LISTING_SIZES, ...cardOptions });
+    t.innerHTML = productCard(p, { headingLevel: 3, sizes: LISTING_SIZES, ...cardOptions, eager: i === 0 && eagerFirst > 0, loading: i < eagerFirst ? 'eager' : 'lazy' });
     const el = t.content.firstElementChild;
     cache.set(p.slug, { el, sig });
     return { el, fresh: true };
   }
 
   function render(list, { animate = false, update = () => {} } = {}) {
-    const els = list.map((p) => elementFor(p).el);
+    const els = list.map((p, i) => elementFor(p, i).el);
     const kids = [...grid.children].filter((el) => el !== tile);
     const same = els.length === kids.length && els.every((el, i) => kids[i] === el);
     const commit = () => {
