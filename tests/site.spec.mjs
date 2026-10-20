@@ -44,6 +44,8 @@ test.describe('page', () => {
     await page.goto('/');
     await scrollThrough(page);
     await page.waitForLoadState('networkidle');
+    // Photos fade in over 0.7s once loaded; let the last one finish.
+    await page.waitForTimeout(1000);
     const images = await page.locator('img').evaluateAll((imgs) =>
       imgs.map((img) => ({
         src: img.currentSrc,

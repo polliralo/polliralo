@@ -1,0 +1,93 @@
+{
+  "hero-desktop": {
+    "width": 1462,
+    "height": 941,
+    "widths": [
+      640,
+      960,
+      1280,
+      1462
+    ],
+    "fallback": 1280
+  },
+  "hero-mobile": {
+    "width": 1255,
+    "height": 941,
+    "widths": [
+      480,
+      800,
+      1255
+    ],
+    "fallback": 1255
+  },
+  "ac-cleaning": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      480,
+      640,
+      800,
+      1120,
+      1448
+    ],
+    "fallback": 1120
+  },
+  "ac-diagnostics": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      480,
+      640,
+      800,
+      1120,
+      1448
+    ],
+    "fallback": 1120
+  },
+  "ac-installation": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      480,
+      640,
+      800,
+      1120,
+      1448
+    ],
+    "fallback": 1120
+  },
+  "fridge-diagnostics": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      480,
+      640,
+      800,
+      1120,
+      1448
+    ],
+    "fallback": 1120
+  },
+  "close-inspection": {
+    "width": 1316,
+    "height": 1024,
+    "widths": [
+      480,
+      640,
+      800,
+      1120,
+      1316
+    ],
+    "fallback": 1120
+  },
+  "technician-portrait": {
+    "width": 1122,
+    "height": 1402,
+    "widths": [
+      480,
+      800,
+      1122
+    ],
+    "fallback": 1122
+  }
+}

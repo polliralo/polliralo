@@ -1,0 +1,25 @@
+{
+  "name": "coolcare",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CoolCare, an AC and refrigerator service website for a Bangladeshi local market. Static site (HTML, CSS, vanilla JS) built from small components.",
+  "type": "module",
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "media": "node scripts/build-media.mjs",
+    "screens": "node scripts/screenshots.mjs",
+    "zip": "node scripts/build-zip.mjs",
+    "lint": "html-validate site/index.html",
+    "test": "playwright test",
+    "check": "npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "html-validate": "^9.0.0",
+    "sharp": "^0.34.0"
+  }
+}

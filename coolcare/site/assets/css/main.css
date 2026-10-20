@@ -1,0 +1,1950 @@
+/* ==========================================================================
+   COOLCARE
+    1. Font           2. Tokens         3. Base           4. Layout
+    5. Type           6. Controls       7. Header, menu   8. Hero
+    9. Services      10. Why CoolCare  11. How it works  12. About
+   13. Contact       14. Footer        15. Photos, frames 16. Motion
+   17. Print
+   ========================================================================== */
+
+/* 1. Font ----------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manrope.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* A local fallback resized to match Manrope, so text barely moves when the
+   web font finishes loading. */
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans");
+  size-adjust: 103%;
+  ascent-override: 103.5%;
+  descent-override: 29.1%;
+  line-gap-override: 0%;
+}
+
+/* 2. Tokens --------------------------------------------------------------- */
+
+/* lqip:start (written by scripts/build-media.mjs, do not edit by hand) */
+:root {
+  --lqip-hero-desktop: url("data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAwBACdASoYAA8APu1iqU2ppaOiMAgBMB2JYwC7ACIcYxDql0KzvvvoMWAA/t/l1kCwl3qHz4dldBSYLFA15Fr3d85fAhmr1l6KBcWM2Yzf2hCprnvHPUnyeuWEqIH2nX5mAd4x5t39NYaa3XflbsuwLcfVKZrmGxdXp3J6w6zLpkLYzAQpvojnsF2bGhAA");
+  --lqip-hero-mobile: url("data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAABQBQCdASoYABIAPu1iq1AppSOisBgIATAdiWMAtQNfwCvEndQu3A3yUod24S0uCbpGDAAA/tSRRPHyQUKAtybfJCy01fXEd3BBcNsmlboL2JLoz9wSibyChE38ZSZrKufaXFzzV5wkTf6Buj55xNkqz3FpfeR/kWOl0JpRslSNrtBGZHn90GRJr/fXPZcZgo4p6edT/u8ZsvYSz3VnffYAAAA=");
+  --lqip-ac-cleaning: url("data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAABwBQCdASoYABIAPu1qqlGppaOiqAqpMB2JZQDE+TYgxAgg7p9vdOvqo0LoKe19jRyPsC9EAP7HCViwtwxnyNs9HtjeRe4bu9DZfBlU3OvaivXJhWpGQM418IkgEWxQPDTrfb8qMDwr+DzQpRTA40VDTIQXTlWQEBQgxHGqxHzB+E3pRv9MGgy8+WvXOxNml7JaInlZqgkFexvVFzdAE1UKCfRa8itMpOgr/2RWLQYMReqGHvw9bPjuHP1lucDcyCgq0023594N45FwwAAAAA==");
+  --lqip-ac-diagnostics: url("data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAAAwBQCdASoYABIAPu1ur1IppiQjqAgBMB2JQBWGcdgnqKpJ5I7DwI+Lh6gOIpO6bD2coAD8/b5F5L6lWLj4tdLCs3I7qdQRcrVa2NdWlYPqRw+F56l5reNg9kMYfYMc8LAiTul+cRek5/vv1/egzifr016vxdzDsOQgue9TJHBJC3xJpcYXMU9OvQHBcCq2B5CK5xDIr+Fi1uMw29RbK3C2ny2VkQqbPtxRUzLvOwKLgAAA");
+  --lqip-ac-installation: url("data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAAAwBQCdASoYABIAPu1srVCppiQiqAqpMB2JYwCdM4oBlo8TTCsgKQSvtEpByyGdjNFmgAD8hCaGlO/Vj7lGCMpuK+0ZVuV7Thfs5EnRdHTLyRv3Xt3ZgZLih4PyE3vO7gbQAIkKa9nwUoZfpO8iOrDR9xssOH1R/3T3p8Y/FR7wfhsopAqHkeWWp2ga3Kw29rpUkDXoun3JrblAFTdHTHG684+yYhkX6FGAZ65AMCgC88AAAAA=");
+  --lqip-fridge-diagnostics: url("data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAABwBQCdASoYABIAPu1qrVCppaQiqAqpMB2JZQC98Kv/AASrL43lGhP6PmM6qj0Pqt7cUfOAAP5bIS7sZvhbpA/Ek+8gcYrA+PCWiX4UZjzlggVaq2xyk0dSp1ZO5GSTSzzpT9xo2zg694QSrD5xUQyWAcegjqdZTHtYrU9HOFeFhsM4F1lfAmZ4IsV/rMbuIcZ6wEwahF+f3lCTlWT9Fw2aDOZxCHR3xbSseM3DSTlzzswCCI9E2AMcz3qBR6zL/uH7LvBlWz7pnIQJAAA=");
+  --lqip-close-inspection: url("data:image/webp;base64,UklGRroAAABXRUJQVlA4IK4AAADwBACdASoYABMAPu1ur1IppiQiqAgBMB2JYwC/OA6+rhKR4mgT+4p1NTBbT94pJoAAzE0sM+I9LpFvqbx0b9tlZ/tbsWgfdkD3JGaqmMZ8PZBoSNkE2bO8kLqf0srnNQ04E7VUyxCzF1AiZZjgkZEpPTnDRyZtwCmFqjh+fNJOQ1LQQlNmSdvs9Q8ducjwSMh1ZTtifB+AMSURTyVR0rGM1f3UW7cSSFJpEawAAAA=");
+  --lqip-technician-portrait: url("data:image/webp;base64,UklGRgQBAABXRUJQVlA4IPgAAACwBgCdASoYAB4APu1kq06ppaQiKA1RMB2JZgC7INH6rH4BpXGjwqwUe7EXHOSpQw0QTn/YxaGM9rIMu2lgAAD+0SGiFpkgYk/nNy1TpGQx63v5DdQFqOu+0PwYroprvAzQYa6MbRR61KCHWj6rohqsohfDGjd371nJfnL+6gU/IY0B4Fy96ZE7XYQHw5HDNIZtAiNxf1oCKFv9oVpvLeQy2j6AJqJyPIkhTLt32fU7uAME/I3HxVdh+jKj3qyyxk+wltRsfvtd534xrAHLocLuXZbEotqyq7q9PdJEKPRuy598esVu3t6pGHHKsl3Y+v41t9lVQ+gAAA==");
+}
+/* lqip:end */
+
+:root {
+  /* Primitives: the CoolCare palette */
+  --navy-900: #0b1f33;      /* Deep Navy */
+  --navy-850: #112a42;      /* a card on the navy panel */
+  --navy-800: #15324f;      /* hover on navy */
+  --blue-800: #0b4f75;      /* text on light-blue labels: 7.9:1 */
+  --blue-700: #0369a1;      /* Ocean Blue: accent words and numbers on light grounds, 5.3:1 or better */
+  --cyan-500: #18b7d3;      /* Cool Cyan: dots, lines, icons on navy, the closing button */
+  --cyan-400: #4ccbe1;      /* hover on cyan */
+  --cyan-300: #7fd8ea;      /* accent words on navy: 10.3:1 */
+  --cyan-200: #a8e3ee;      /* small labels on navy */
+  --sky-50: #f4f8fb;        /* Ice White: card faces */
+  --sky-100: #eaf4fa;       /* light blue sections */
+  --sky-200: #d9ecf6;       /* photo placeholders */
+  --sky-250: #c6e5f2;       /* the frame plate on light-blue sections */
+  --sky-300: #bfe0f0;       /* frame plates, the timeline */
+  --ink-900: #142334;       /* Primary Text */
+  --slate-500: #637487;     /* Secondary Text, on white: 4.8:1 */
+  --slate-600: #586a7d;     /* Secondary Text on light blue: 5.0:1 (the brief's value falls just short there) */
+  --slate-300: #a9bccd;     /* secondary text on navy: 8.6:1 */
+  --white: #ffffff;
+  --line-200: #dfe7ed;      /* Border */
+  --line-blue: #d5e5ef;     /* card edges */
+  --line-400: #7a8ea1;      /* outline of white buttons: 3:1 on white and on light blue */
+  --navy-rgb: 11 31 51;
+  --cyan-rgb: 24 183 211;
+
+  /* Semantic roles (light-blue sections swap some of these) */
+  --color-bg: var(--white);
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--slate-500);
+  --color-heading: var(--navy-900);
+  --color-accent-text: var(--blue-700);
+  --color-accent: var(--cyan-500);
+  --color-focus: var(--navy-900);
+  --color-inverse-bg: var(--navy-900);
+  --color-inverse-text: var(--sky-50);
+  --color-inverse-muted: var(--slate-300);
+  --color-inverse-rule: rgb(255 255 255 / 0.12);
+  --pill-bg: var(--sky-100);
+  --pill-text: var(--blue-800);
+
+  /* Type */
+  --font-sans: "Manrope", "Manrope Fallback", "Helvetica Neue", Arial, sans-serif;
+  --fs-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --fs-lead: clamp(1.0625rem, 0.98rem + 0.36vw, 1.25rem);
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+  --fs-h3: clamp(1.25rem, 1.12rem + 0.5vw, 1.5rem);
+  --fs-h2: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+
+  /* Space */
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --section-space: clamp(4.5rem, 2.9rem + 6vw, 8rem);
+
+  /* Layout */
+  --container: 82.5rem;
+  --gutter: clamp(1.25rem, 0.55rem + 2.9vw, 3.5rem);
+  --header-h: 4rem;
+
+  /* Shape, depth and motion */
+  --radius-control: 12px;
+  --radius-m: 18px;
+  --radius-l: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+  --shadow-xs: 0 1px 2px rgb(var(--navy-rgb) / 0.06);
+  --shadow-soft: 0 1px 2px rgb(var(--navy-rgb) / 0.05), 0 14px 34px -22px rgb(var(--navy-rgb) / 0.28);
+  --shadow-lift: 0 2px 6px rgb(var(--navy-rgb) / 0.05), 0 30px 60px -32px rgb(var(--navy-rgb) / 0.42);
+  --shadow-float: 0 2px 6px rgb(var(--navy-rgb) / 0.06), 0 22px 46px -22px rgb(var(--navy-rgb) / 0.45);
+  --shadow-button: 0 8px 18px -12px rgb(var(--navy-rgb) / 0.45);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration: 260ms;
+  --duration-slow: 700ms;
+
+  /* Components */
+  --btn-height: 3rem;
+  --btn-height-sm: 2.75rem;
+  --btn-height-lg: 3.375rem;
+}
+
+@media (min-width: 64em) {
+  :root {
+    --header-h: 4.75rem;
+  }
+}
+
+/* 3. Base ----------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The open phone menu keeps the page behind it still. */
+html:has(.menu[open]) {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  overflow-x: clip;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  font-feature-settings: "calt", "liga";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Zero specificity, so a list styled as a card keeps its own padding. */
+:where(ul[role="list"], ol[role="list"]) {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--cyan-500);
+  color: var(--navy-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-control);
+  background: var(--navy-900);
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* 4. Layout --------------------------------------------------------------- */
+
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-space);
+  background: var(--color-bg);
+}
+
+/* Light-blue sections: secondary text and labels adjust to keep contrast. */
+.section--sky {
+  --color-bg: var(--sky-100);
+  --color-text-muted: var(--slate-600);
+  --pill-bg: var(--white);
+}
+
+.section-head {
+  margin-bottom: clamp(2.5rem, 1.9rem + 2.4vw, 4rem);
+}
+
+.section-head--center {
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-head--center .section-title {
+  margin-inline: auto;
+}
+
+.section-intro {
+  max-width: 44ch;
+  margin-top: var(--space-m);
+  color: var(--color-text-muted);
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+}
+
+@media (min-width: 64em) {
+  .section-head--split {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+    gap: var(--space-l);
+  }
+
+  .section-head--split .section-intro {
+    margin-top: 0;
+    padding-bottom: 0.4rem;
+  }
+}
+
+/* 5. Type ----------------------------------------------------------------- */
+
+/* A small pill label above each title, carrying the cyan status dot of the
+   logo: the one motif that runs through the page. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 0.4375rem 0.875rem 0.4375rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--pill-bg);
+  color: var(--pill-text);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 50%;
+  background: var(--cyan-500);
+  box-shadow: 0 0 0 3px rgb(var(--cyan-rgb) / 0.2);
+}
+
+.eyebrow--inverse {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--cyan-200);
+}
+
+.section-title {
+  max-width: 21ch;
+  color: var(--color-heading);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* The accent words of a title, in Ocean Blue. */
+.accent {
+  color: var(--color-accent-text);
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+}
+
+.caption::before {
+  content: "";
+  flex: none;
+  width: 1.5rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-accent);
+}
+
+/* 6. Controls ------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: var(--btn-height);
+  padding: 0 1.375rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    box-shadow var(--duration) ease,
+    transform var(--duration-fast) ease;
+}
+
+.btn .icon {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.btn--sm {
+  min-height: var(--btn-height-sm);
+  padding: 0 1rem;
+  font-size: 0.875rem;
+}
+
+.btn--lg {
+  min-height: var(--btn-height-lg);
+  padding: 0 1.625rem;
+  font-size: 1rem;
+}
+
+.btn--primary {
+  background: var(--navy-900);
+  color: var(--white);
+  box-shadow: var(--shadow-button);
+}
+
+.btn--primary:hover {
+  background: var(--navy-800);
+  transform: translateY(-1px);
+}
+
+.btn--secondary {
+  border-color: var(--line-400);
+  background: var(--white);
+  color: var(--navy-900);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn--secondary:hover {
+  border-color: var(--navy-900);
+  transform: translateY(-1px);
+}
+
+.btn--accent {
+  background: var(--cyan-500);
+  color: var(--navy-900);
+}
+
+.btn--accent:hover {
+  background: var(--cyan-400);
+  transform: translateY(-1px);
+}
+
+.btn--inverse {
+  border-color: rgb(255 255 255 / 0.36);
+  background: transparent;
+  color: var(--white);
+}
+
+.btn--inverse:hover {
+  border-color: var(--white);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.btn:active,
+.btn--primary:active,
+.btn--secondary:active,
+.btn--accent:active {
+  transform: translateY(1px);
+}
+
+/* Inline text links: underline drawn in cyan, darkening on hover. */
+.hero__note a,
+.facts a {
+  color: var(--navy-900);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--cyan-500);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+  transition: text-decoration-color var(--duration-fast) ease;
+}
+
+.hero__note a:hover,
+.facts a:hover {
+  text-decoration-color: var(--navy-900);
+}
+
+/* A round icon disc: light blue with an Ocean Blue line icon. */
+.badge-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--sky-100);
+  color: var(--blue-700);
+}
+
+.badge-icon .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.badge-icon--sm {
+  width: 2rem;
+  height: 2rem;
+}
+
+.badge-icon--sm .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.badge-icon--inverse {
+  background: rgb(var(--cyan-rgb) / 0.14);
+  color: var(--cyan-300);
+}
+
+/* The round arrow at the end of each service card. */
+.arrow-button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--navy-900);
+  color: var(--white);
+  transition:
+    background-color var(--duration) ease,
+    color var(--duration) ease,
+    transform var(--duration) var(--ease-out);
+}
+
+.arrow-button .icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* 7. Header, menu --------------------------------------------------------- */
+
+/* At the top the bar is the hero's light blue, so the first screen reads as
+   one surface; once the page moves it turns white with a hairline. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--sky-100);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--duration) ease,
+    border-color var(--duration) ease,
+    box-shadow var(--duration) ease;
+}
+
+.site-header.is-scrolled {
+  background: var(--white);
+  border-bottom-color: var(--line-200);
+  box-shadow: 0 12px 32px -26px rgb(var(--navy-rgb) / 0.5);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  height: var(--header-h);
+  margin-inline: auto;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 44px;
+  color: var(--navy-900);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.logo__mark {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.logo--inverse {
+  color: var(--white);
+}
+
+.logo--inverse .logo__mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-inline: -0.125rem;
+}
+
+.site-nav {
+  display: none;
+}
+
+.site-nav__list {
+  display: flex;
+  gap: clamp(1.25rem, 0.2rem + 1.7vw, 2.5rem);
+}
+
+.site-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-900);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+
+.site-nav__link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.4rem;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration) var(--ease-out);
+}
+
+.site-nav__link:hover,
+.site-nav__link[aria-current="true"] {
+  color: var(--blue-700);
+}
+
+.site-nav__link:hover::after,
+.site-nav__link[aria-current="true"]::after {
+  transform: scaleX(1);
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.site-header__whatsapp,
+.site-header__call-full {
+  display: none;
+}
+
+/* The bar is already raised above the page, so its buttons stay flat. */
+.site-header .btn {
+  box-shadow: none;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.25rem 0 0.5rem;
+  border: 0;
+  background: none;
+  color: var(--navy-900);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.menu-toggle .icon {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+/* Small phones: a little less space between logo and buttons, and below
+   360px the menu button shows its icon only (the word stays for screen readers). */
+@media (max-width: 24.99em) {
+  .site-header__inner {
+    gap: var(--space-s);
+  }
+}
+
+@media (max-width: 22.49em) {
+  .menu-toggle {
+    justify-content: center;
+    min-width: 44px;
+    padding: 0;
+  }
+
+  .menu-toggle span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 64em) {
+  .site-nav {
+    display: block;
+    margin-inline: auto;
+  }
+
+  .site-header__actions {
+    margin-left: 0;
+  }
+
+  .site-header__whatsapp {
+    display: inline-flex;
+  }
+
+  .site-header__call-full {
+    display: inline;
+  }
+
+  .site-header__call-short,
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* Without JavaScript the menu cannot open, so phones show the links instead. */
+@media (max-width: 63.99em) {
+  .no-js .menu-toggle {
+    display: none;
+  }
+
+  .no-js .site-header {
+    position: static;
+  }
+
+  .no-js .site-header__inner {
+    flex-wrap: wrap;
+    height: auto;
+    padding-block: 0.5rem;
+    column-gap: var(--space-s);
+  }
+
+  .no-js .site-nav {
+    display: block;
+    order: 3;
+    width: 100%;
+  }
+
+  .no-js .site-nav__list {
+    flex-wrap: wrap;
+    column-gap: var(--space-m);
+  }
+}
+
+.menu {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0 var(--gutter) max(1.5rem, env(safe-area-inset-bottom));
+  border: 0;
+  background: var(--white);
+  color: var(--color-text);
+  overflow-y: auto;
+}
+
+.menu[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu::backdrop {
+  background: rgb(var(--navy-rgb) / 0.4);
+}
+
+.menu__bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  border-bottom: 1px solid var(--line-200);
+}
+
+.menu__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.25rem 0 0.5rem;
+  border: 0;
+  background: none;
+  color: var(--navy-900);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.menu__close .icon {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.menu__nav {
+  padding-top: var(--space-s);
+}
+
+.menu__link {
+  display: flex;
+  align-items: center;
+  min-height: 3.75rem;
+  border-bottom: 1px solid var(--line-200);
+  color: var(--navy-900);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+}
+
+.menu__actions {
+  display: grid;
+  gap: var(--space-xs);
+  margin-top: auto;
+  padding: var(--space-m);
+  margin-inline: calc(-1 * var(--space-xs));
+  border-radius: var(--radius-l);
+  background: var(--sky-100);
+}
+
+.menu__note {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.75rem;
+  margin-top: var(--space-2xs);
+  color: var(--slate-600);
+  font-size: var(--fs-small);
+  text-align: center;
+}
+
+.menu__note a {
+  color: var(--navy-900);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu[open] {
+    animation: menu-in var(--duration) var(--ease-out);
+  }
+
+  .menu[open]::backdrop {
+    animation: fade-in var(--duration) ease;
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* 8. Hero ----------------------------------------------------------------- */
+
+.hero {
+  --pill-bg: var(--white);
+  --color-text-muted: var(--slate-600);
+  overflow: hidden;
+  background: var(--sky-100);
+}
+
+.hero__inner {
+  display: grid;
+  gap: clamp(2.25rem, 1.75rem + 2.5vw, 3.5rem);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-block: clamp(2rem, 1.25rem + 3.5vw, 3.5rem) clamp(3.5rem, 2.5rem + 4vw, 5rem);
+}
+
+.hero__content {
+  container-type: inline-size;
+}
+
+.hero__title {
+  color: var(--navy-900);
+  font-size: clamp(2.125rem, 1.1rem + 3.9vw, 4.25rem);
+  font-size: clamp(2.125rem, 12cqi, 4.25rem);
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: -0.035em;
+}
+
+/* Each line of the headline stays whole: "AC & Refrigerator / Service You /
+   Can Rely On". The size above keeps the longest line inside the column. */
+.hero__line {
+  display: block;
+}
+
+.hero__text {
+  max-width: 34rem;
+  margin-top: 1.375rem;
+  color: var(--color-text-muted);
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  text-wrap: balance;
+}
+
+.hero__actions,
+.cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.hero__actions {
+  margin-top: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+}
+
+/* Narrow phones: both buttons full width, one above the other, easy to hit. */
+@media (max-width: 29.99em) {
+  .hero__actions,
+  .cta__actions {
+    flex-direction: column;
+  }
+}
+
+.hero__note {
+  margin-top: 1.25rem;
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+}
+
+.hero__visual {
+  position: relative;
+  padding: 0 0.75rem 2.25rem 0;
+}
+
+.hero__media {
+  --lqip: var(--lqip-hero-mobile);
+  aspect-ratio: 4 / 3;
+}
+
+/* The small white card on the photo's corner: the service area. Only the
+   card touches the photo; its words sit on white. */
+.hero__badge {
+  position: absolute;
+  bottom: 0;
+  left: 0.875rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: calc(100% - 2.5rem);
+  padding: 0.75rem 1.125rem 0.75rem 0.75rem;
+  border-radius: var(--radius-m);
+  background: var(--white);
+  box-shadow: var(--shadow-float);
+}
+
+.hero__badge-label {
+  display: block;
+  color: var(--slate-500);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero__badge-value {
+  display: block;
+  color: var(--navy-900);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+@media (min-width: 40em) and (max-width: 63.99em) {
+  .hero__media {
+    aspect-ratio: 16 / 10;
+  }
+
+  .hero__media .media__img {
+    object-position: 50% 30%;
+  }
+}
+
+@media (min-width: 64em) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: clamp(2.5rem, -1rem + 5vw, 5rem);
+    min-height: clamp(34rem, calc(100svh - var(--header-h)), 46rem);
+    padding-block: 3rem 4rem;
+  }
+
+  .hero__text {
+    max-width: 30rem;
+  }
+
+  .hero__visual {
+    padding: 0 1.5rem 1.5rem 0;
+  }
+
+  .hero__media {
+    --lqip: var(--lqip-hero-desktop);
+    aspect-ratio: 1462 / 941;
+  }
+
+  .hero__badge {
+    bottom: 3rem;
+    left: -1.75rem;
+    max-width: 18.5rem;
+  }
+}
+
+/* 9. Services ------------------------------------------------------------- */
+
+.service-grid {
+  display: grid;
+  gap: clamp(1.25rem, 0.75rem + 1.6vw, 2rem);
+}
+
+@media (min-width: 40em) {
+  .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .service-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .service-grid__item--wide {
+    grid-column: span 7;
+  }
+
+  .service-grid__item--narrow {
+    grid-column: span 5;
+  }
+}
+
+/* A light-blue card holding its photo like a mount, so the photo sits in a
+   frame. On hover it rises a little onto white. */
+.service-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0.625rem;
+  border: 1px solid var(--line-blue);
+  border-radius: calc(var(--radius-l) + 4px);
+  background: var(--sky-50);
+  transition:
+    transform var(--duration) var(--ease-out),
+    box-shadow var(--duration) ease,
+    border-color var(--duration) ease,
+    background-color var(--duration) ease;
+}
+
+.service-card__media {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-m);
+}
+
+/* On wide screens both photos in a row share one height, so the wide and
+   narrow cards differ in proportion but line up. */
+@media (min-width: 64em) {
+  .service-card__media {
+    aspect-ratio: auto;
+    height: clamp(18rem, 3rem + 24vw, 26rem);
+  }
+}
+
+.service-card--narrow .media__img {
+  object-position: 62% 50%;
+}
+
+#service-ac-cleaning .media__img {
+  object-position: 50% 40%;
+}
+
+#service-refrigerator-repair .media__img {
+  object-position: 50% 30%;
+}
+
+.service-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.25rem 0.875rem 0.625rem;
+}
+
+.service-card__index {
+  margin-bottom: 0.875rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--line-blue);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--blue-700);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.service-card__title {
+  color: var(--navy-900);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.service-card__link {
+  text-decoration: none;
+}
+
+/* The whole card is the link's click area. */
+.service-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.service-card__text {
+  max-width: 46ch;
+  margin-top: 0.5rem;
+  color: var(--slate-600);
+}
+
+.service-card__cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+  align-self: stretch;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  color: var(--navy-900);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .service-card:hover {
+    border-color: var(--sky-300);
+    background: var(--white);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-4px);
+  }
+
+  .service-card:hover .media__img {
+    transform: scale(1.04);
+  }
+
+  .service-card:hover .arrow-button {
+    background: var(--cyan-500);
+    color: var(--navy-900);
+    transform: rotate(-45deg);
+  }
+}
+
+/* Keyboard focus outlines the whole card, not just the title. */
+@supports selector(:has(*)) {
+  .service-card__link:focus-visible {
+    outline: none;
+  }
+
+  .service-card:has(.service-card__link:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+    background: var(--white);
+  }
+
+  .service-card:has(.service-card__link:focus-visible) .arrow-button {
+    background: var(--cyan-500);
+    color: var(--navy-900);
+  }
+}
+
+/* 10. Why CoolCare -------------------------------------------------------- */
+
+.why__inner {
+  display: grid;
+  gap: clamp(3rem, 2.5rem + 2vw, 4rem);
+}
+
+.why__media {
+  aspect-ratio: 4 / 3;
+}
+
+.why__media .media__img {
+  object-position: 40% 50%;
+}
+
+.why__figure .caption {
+  margin-top: 1.25rem;
+  padding-left: 0.25rem;
+}
+
+/* The four principles on one white card, like a technician's checklist. */
+.principles {
+  margin-top: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  padding: 0.375rem clamp(1.25rem, 0.9rem + 1.2vw, 1.75rem);
+  border-radius: var(--radius-l);
+  background: var(--white);
+  box-shadow: var(--shadow-soft);
+}
+
+.principle {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--line-200);
+}
+
+.principle:last-child {
+  border-bottom: 0;
+}
+
+.principle__icon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--sky-100);
+  color: var(--blue-700);
+}
+
+.principle__icon .icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  stroke-width: 2.25;
+}
+
+.principle__title {
+  color: var(--navy-900);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.principle__text {
+  max-width: 48ch;
+  margin-top: 0.25rem;
+  color: var(--slate-500);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 40em) and (max-width: 63.99em) {
+  .why__media {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (min-width: 64em) {
+  .why__inner {
+    grid-template-columns: minmax(0, 6.4fr) minmax(0, 5.6fr);
+    align-items: center;
+    gap: clamp(3rem, -1rem + 6vw, 6rem);
+  }
+
+  .why__media {
+    aspect-ratio: 5 / 4;
+  }
+}
+
+/* 11. How it works -------------------------------------------------------- */
+
+/* The three steps on one light-blue panel, like a route drawn on a card. */
+.steps {
+  --ring: 3.5rem;
+  --steps-gap: var(--space-xl);
+  --color-text-muted: var(--slate-600);
+  display: grid;
+  gap: var(--steps-gap);
+  padding: clamp(1.75rem, 1.2rem + 2.4vw, 3.5rem) clamp(1.25rem, 0.6rem + 2.8vw, 3rem);
+  border: 1px solid var(--line-blue);
+  border-radius: var(--radius-xl);
+  background: var(--sky-50);
+}
+
+.step {
+  position: relative;
+}
+
+/* Each number sits in a ring, joined to the next by a dashed line. */
+.step__number {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--ring);
+  height: var(--ring);
+  border: 1px solid var(--sky-300);
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 0 0 6px var(--sky-100), var(--shadow-xs);
+  color: var(--blue-700);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.step::after {
+  content: "";
+  position: absolute;
+  background-image: linear-gradient(var(--sky-300) 55%, transparent 0);
+  background-size: 2px 10px;
+}
+
+.step:last-child::after {
+  display: none;
+}
+
+.step__title {
+  color: var(--navy-900);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.step__text {
+  max-width: 32ch;
+  margin-top: 0.5rem;
+  color: var(--color-text-muted);
+}
+
+/* Phones: a vertical line down the left, the words beside each number. */
+@media (max-width: 47.99em) {
+  .step {
+    display: grid;
+    grid-template-columns: var(--ring) minmax(0, 1fr);
+    column-gap: 1.25rem;
+  }
+
+  .step__number {
+    grid-row: span 2;
+  }
+
+  .step__title,
+  .step__text {
+    grid-column: 2;
+  }
+
+  .step__title {
+    padding-top: 0.875rem;
+  }
+
+  .step::after {
+    top: calc(var(--ring) + 0.75rem);
+    bottom: calc(0.75rem - var(--steps-gap));
+    left: calc(var(--ring) / 2 - 1px);
+    width: 2px;
+  }
+}
+
+/* Wider: three steps across, centred, the line running between the rings. */
+@media (min-width: 48em) {
+  .steps {
+    --ring: 4.5rem;
+    --steps-gap: var(--space-l);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    text-align: center;
+  }
+
+  .step__number {
+    margin: 0 auto var(--space-m);
+    font-size: 1.375rem;
+  }
+
+  .step__text {
+    margin-inline: auto;
+  }
+
+  .step::after {
+    top: calc(var(--ring) / 2 - 1px);
+    left: calc(50% + var(--ring) / 2 + 0.75rem);
+    width: calc(100% + var(--steps-gap) - var(--ring) - 1.5rem);
+    height: 2px;
+    background-image: linear-gradient(90deg, var(--sky-300) 55%, transparent 0);
+    background-size: 10px 2px;
+  }
+}
+
+/* 12. About --------------------------------------------------------------- */
+
+.about__inner {
+  display: grid;
+  gap: clamp(3rem, 2.5rem + 2vw, 4rem);
+}
+
+.about__text {
+  display: grid;
+  gap: var(--space-s);
+  max-width: 38rem;
+  margin-top: var(--space-m);
+  color: var(--ink-900);
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+}
+
+.about__text p + p {
+  color: var(--color-text-muted);
+}
+
+/* The key facts on one white card. */
+.facts {
+  max-width: 38rem;
+  margin-top: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  padding: 0.25rem clamp(1.25rem, 0.9rem + 1.2vw, 1.75rem);
+  border-radius: var(--radius-l);
+  background: var(--white);
+  box-shadow: var(--shadow-soft);
+}
+
+.facts__row {
+  display: grid;
+  grid-template-columns: minmax(10.5rem, 0.42fr) minmax(0, 1fr);
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line-200);
+}
+
+.facts__row:last-child {
+  border-bottom: 0;
+}
+
+.facts dt {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--slate-500);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.facts dd {
+  color: var(--navy-900);
+  font-weight: 600;
+}
+
+@media (max-width: 29.99em) {
+  .facts__row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .facts dd {
+    padding-left: 2.75rem;
+  }
+}
+
+.about__frame {
+  max-width: 30rem;
+  margin-right: 1.25rem;
+}
+
+.about__media {
+  aspect-ratio: 4 / 5;
+}
+
+.about__media .media__img {
+  object-position: 50% 20%;
+}
+
+@media (min-width: 40em) and (max-width: 63.99em) {
+  .about__frame {
+    max-width: none;
+  }
+
+  .about__media {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (min-width: 64em) {
+  .about__inner {
+    grid-template-columns: minmax(0, 6.6fr) minmax(0, 5.4fr);
+    align-items: center;
+    gap: clamp(3rem, -1rem + 6vw, 6rem);
+  }
+
+  .about__frame {
+    justify-self: end;
+    width: calc(100% - 1.5rem);
+    margin-right: 1.5rem;
+  }
+}
+
+/* 13. Contact ------------------------------------------------------------- */
+
+.cta {
+  --color-focus: var(--cyan-500);
+  padding-block: var(--section-space) clamp(3.5rem, 2.4rem + 4.5vw, 6.5rem);
+  background: var(--color-bg);
+}
+
+/* A Deep Navy panel with the logo's ring drawn large and faint in a corner,
+   passing behind the contact card (wide screens only, where no words sit
+   under it). */
+.cta__panel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: var(--space-xl);
+  overflow: hidden;
+  padding: clamp(2rem, 0.8rem + 5vw, 5rem);
+  border-radius: var(--radius-xl);
+  background: var(--color-inverse-bg);
+  color: var(--color-inverse-text);
+}
+
+.cta__rings {
+  display: none;
+  position: absolute;
+  top: -10rem;
+  right: -10rem;
+  z-index: -1;
+  width: 28rem;
+  height: 28rem;
+  color: rgb(var(--cyan-rgb) / 0.22);
+  pointer-events: none;
+}
+
+.cta__title {
+  max-width: 15ch;
+  color: var(--white);
+  font-size: clamp(2.25rem, 1.35rem + 3.2vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.cta .accent {
+  color: var(--cyan-300);
+}
+
+.cta__text {
+  max-width: 44ch;
+  margin-top: 1.25rem;
+  color: var(--color-inverse-muted);
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+}
+
+.cta__actions {
+  margin-top: clamp(2rem, 1.6rem + 1.5vw, 2.75rem);
+}
+
+.cta__details {
+  padding: 0.375rem clamp(1.25rem, 0.9rem + 1.2vw, 1.75rem);
+  border: 1px solid var(--color-inverse-rule);
+  border-radius: var(--radius-l);
+  background: var(--navy-850);
+}
+
+.cta__detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem var(--space-s);
+  padding-block: 1.125rem;
+  border-bottom: 1px solid var(--color-inverse-rule);
+}
+
+.cta__detail:last-child {
+  border-bottom: 0;
+}
+
+.cta__detail dt {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-inverse-muted);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cta__detail dd {
+  color: var(--white);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cta__detail a {
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color var(--duration-fast) ease;
+}
+
+.cta__detail a:hover {
+  text-decoration-color: var(--cyan-500);
+}
+
+@media (min-width: 64em) {
+  .cta__panel {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  .cta__rings {
+    display: block;
+  }
+}
+
+/* 14. Footer -------------------------------------------------------------- */
+
+/* Light blue, so the navy contact panel above stays the page's one dark
+   moment. */
+.site-footer {
+  padding-block: clamp(3rem, 2.4rem + 2.5vw, 4.5rem) 2rem;
+  background: var(--sky-100);
+  color: var(--slate-600);
+  font-size: 0.9375rem;
+}
+
+.site-footer__top {
+  display: grid;
+  gap: var(--space-xl) var(--space-l);
+}
+
+.site-footer__tagline {
+  max-width: 32ch;
+  margin-top: var(--space-s);
+}
+
+.site-footer__heading {
+  margin-bottom: var(--space-xs);
+  color: var(--navy-900);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.site-footer__list {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.site-footer__list li {
+  display: flex;
+  align-items: center;
+  min-height: 2.25rem;
+}
+
+.site-footer__list a,
+.site-footer__top-link {
+  color: var(--ink-900);
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+
+.site-footer__list a:hover,
+.site-footer__top-link:hover {
+  color: var(--blue-700);
+}
+
+.site-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s) var(--space-l);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--line-blue);
+  font-size: 0.8125rem;
+}
+
+.site-footer__note {
+  flex: 1 1 24rem;
+  max-width: 62ch;
+}
+
+.site-footer__top-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.site-footer__top-link .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Tablets: the brand line across the top, services and contact side by side. */
+@media (min-width: 40em) {
+  .site-footer__top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64em) {
+  .site-footer__top {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .site-footer__brand {
+    grid-column: auto;
+  }
+}
+
+/* Touch screens: every footer link gets a full-size tap area. */
+@media (pointer: coarse) {
+  .site-footer__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* 15. Photos, frames ------------------------------------------------------ */
+
+/* Each photo sits on a tiny blurred preview of itself until it arrives. */
+.media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--sky-200);
+  background-image: var(--lqip, none);
+  background-position: center;
+  background-size: cover;
+}
+
+.media picture {
+  display: contents;
+}
+
+/* One transition list for both the fade-in and the hover zoom on cards, so
+   neither overrides the other. */
+.media__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 520ms ease,
+    transform var(--duration-slow) var(--ease-out);
+}
+
+/* A framed photo: rounded corners and a soft shadow, with a coloured plate
+   offset behind it. The plate's colour and offset change per frame. */
+.frame {
+  position: relative;
+  isolation: isolate;
+}
+
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: var(--plate-inset, 1rem -0.75rem -0.75rem 1rem);
+  z-index: -1;
+  border-radius: var(--radius-xl);
+  background: var(--plate, var(--sky-300));
+}
+
+.frame__media {
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-soft);
+}
+
+.frame--hero {
+  --plate-inset: 1.25rem -0.75rem -0.75rem 1.25rem;
+}
+
+/* Offset up and to the left, so the caption below the photo stays clear. */
+.frame--plate-start {
+  --plate: var(--sky-250);
+  --plate-inset: -0.75rem 1rem 1rem -0.75rem;
+}
+
+.frame--plate-navy {
+  --plate: var(--navy-900);
+  --plate-inset: -0.75rem -0.75rem 1.25rem 1.25rem;
+}
+
+@media (min-width: 64em) {
+  .frame--hero {
+    --plate-inset: 2rem -1.5rem -1.5rem 2rem;
+  }
+
+  .frame--plate-start {
+    --plate-inset: -1.5rem 2rem 2rem -1.5rem;
+  }
+
+  .frame--plate-navy {
+    --plate-inset: -1.5rem -1.5rem 2.5rem 2.5rem;
+  }
+}
+
+/* main.js adds .media-ready, then fades each photo in once it has loaded. The
+   hero photo is shown at once, so the first screen never waits for a fade. */
+.media-ready .media__img:not([fetchpriority]) {
+  opacity: 0;
+}
+
+.media-ready .media__img.is-loaded {
+  opacity: 1;
+}
+
+/* 16. Motion -------------------------------------------------------------- */
+
+/* main.js adds .reveal-ready, so nothing is hidden if the script never runs. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 17. Print --------------------------------------------------------------- */
+
+@media print {
+  /* Paper shows the final state of everything, with nothing mid-fade. */
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .site-header {
+    position: static;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .site-nav,
+  .site-header__actions,
+  .menu,
+  .skip-link,
+  .site-footer__top-link,
+  .cta__rings {
+    display: none !important;
+  }
+
+  .reveal-ready [data-reveal],
+  .media-ready .media__img {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .section,
+  .hero,
+  .cta,
+  .site-footer {
+    break-inside: avoid-page;
+  }
+
+  .cta__panel,
+  .site-footer {
+    background: none;
+    color: #000;
+  }
+
+  .cta__title,
+  .cta .accent,
+  .cta__detail dd,
+  .site-footer__heading,
+  .logo--inverse {
+    color: #000;
+  }
+}

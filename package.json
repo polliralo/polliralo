@@ -14,7 +14,12 @@
     "zip": "node scripts/build-zip.mjs",
     "lint": "html-validate site/index.html",
     "test": "playwright test",
-    "check": "npm run lint && npm test"
+    "check": "npm run lint && npm test",
+    "check:all": "npm run check && npm run coolcare:check",
+    "coolcare": "npm --prefix coolcare start",
+    "coolcare:build": "npm --prefix coolcare run build",
+    "coolcare:check": "npm --prefix coolcare run check",
+    "coolcare:zip": "npm --prefix coolcare run zip"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",

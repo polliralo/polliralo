@@ -1,5 +1,7 @@
 # Nivara Coast
 
+> This repository also holds **CoolCare**, an AC and refrigerator service website, in [`coolcare/`](coolcare/) with its own README. `npm run check:all` checks both sites.
+
 The homepage for **NIVARA COAST**, a fictional private-island resort concept. It's built with plain HTML, CSS and one small JavaScript file. There's no framework and no build step, so it runs on any web host as-is.
 
 ![The Nivara Coast homepage on desktop](docs/preview-desktop.jpg)
